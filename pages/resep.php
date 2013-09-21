@@ -228,7 +228,7 @@ function form_receipt() {
                     '<table width=100%>'+
                         '<tr><td width=25%>Nomor Resep:</td><td><?= form_input('noresep', NULL, 'id=noresep size=10') ?></td></tr>'+
                         '<tr><td>Waktu:</td><td><?= form_input('waktu', date("d/m/Y"), 'id=waktu size=10') ?></td></tr>'+
-                        '<tr><td>Dokter:</td><td><?= form_input('dokter', $_SESSION['nama'], 'id=dokter style="width: 90%"') ?><?= form_hidden('id_dokter', $_SESSION['id_user'], 'id=id_dokter') ?></td></tr>'+
+                        '<tr><td>Dokter:</td><td><?= form_input('dokter', NULL, 'id=dokter style="width: 90%"') ?><?= form_hidden('id_dokter', NULL , 'id=id_dokter') ?></td></tr>'+
                         '<tr><td>Pasien:</td><td><?= form_input('pasien', NULL, 'id=pasien style="width: 90%"') ?><?= form_hidden('id_pasien', NULL, 'id=id_pasien') ?></td></tr>'+
                         '<tr><td>Keterangan:</td><td><?= form_input('keterangan', NULL, ' style="width: 90%" id=keterangan') ?></td></tr>'+
                     '</table></td><td width=33% style="padding-left: 10px; border-right: 1px solid #ccc;">'+
