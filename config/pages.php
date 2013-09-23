@@ -50,6 +50,7 @@ $pageTitles['defecta.php'] = "Defecta";
 $pageTitles['rencana-pemesanan.php'] = "Rencana Order";
 $pageTitles['pendaftaran.php'] = "Pendaftaran";
 $pageTitles['uang-in-out.php'] = "Pemasukkan Pengeluaran Uang";
+$pageTitles['billing.php'] = "Pembayaran Billing";
 
 /*Laporan*/
 $pageTitles['arus-stok.php'] = "Arus Stok";

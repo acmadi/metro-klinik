@@ -2,14 +2,16 @@
 include_once '../models/masterdata.php';
 include_once '../inc/functions.php';
 ?>
-<table cellspacing="0" width="50%" class="list-data">
+<table cellspacing="0" width="100%" class="list-data">
 <thead>
 <tr class="italic">
-    <th width="5%">No.</th>
-    <th width="35%">Nama layanan</th>
-    <th width="20%">Nominal (Rp.)</th>
-    <th width="10%">Kode Akun</th>
-    <th width="4%">#</th>
+    <th width="3%">No.</th>
+    <th width="55%">Nama layanan</th>
+    <th width="10%">Jasa Perawat (Rp.)</th>
+    <th width="10%">Jasa Dokter (Rp.)</th>
+    <th width="10%">Jasa Sarana (Rp.)</th>
+    <th width="10%">Nominal (Rp.)</th>
+    <th width="3%">#</th>
 </tr>
 </thead>
 <tbody>
@@ -33,16 +35,19 @@ include_once '../inc/functions.php';
     $master_barang = $list_data['data'];
     $total_data = $list_data['total'];
     foreach ($master_barang as $key => $data) { 
-        $str = $data->id.'#'.$data->nama.'#'.$data->nominal.'#'.$data->kode_akun;
+        $str = $data->id.'#'.
+        $data->nama.'#'.rupiah($data->jasa_dokter).'#'.rupiah($data->jasa_perawat).'#'.rupiah($data->jasa_sarana).'#'.rupiah($data->nominal);
         ?>
     <tr class="<?= ($key%2==0)?'even':'odd' ?>">
-        <td align="center"><?= ++$key ?></td>
+        <td align="center"><?= (++$key+$offset) ?></td>
         <td><?= $data->nama ?></td>
+        <td align="right"><?= rupiah($data->jasa_perawat) ?></td>
+        <td align="right"><?= rupiah($data->jasa_dokter) ?></td>
+        <td align="right"><?= rupiah($data->jasa_sarana) ?></td>
         <td align="right"><?= rupiah($data->nominal) ?></td>
-        <td><?= $data->kode_akun ?></td>
         <td class='aksi' align='center'>
-            <a class='edition' onclick="edit_layanan('<?= $str ?>');" title="Klik untuk edit layanan">&nbsp;</a>
-            <a class='deletion' onclick="delete_layanan('<?= $data->id ?>', '<?= $page ?>');" title="Klik untuk hapus layanan">&nbsp;</a>
+            <a class='edition' onclick="edit_layanan('<?= $str ?>');" title="Klik untuk edit">&nbsp;</a>
+            <a class='deletion' onclick="delete_layanan('<?= $data->id ?>', '<?= $page ?>');" title="Klik untuk hapus">&nbsp;</a>
         </td>
     </tr>
     <?php } ?>

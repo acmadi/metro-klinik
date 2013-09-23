@@ -2,7 +2,7 @@
 $subNav = array(
 	"Penjualan Bebas ; penjualan-nr.php ; #509601;",
         "Entri Resep ; resep.php ; #509601;",
-        "Penjualan Resep ; penjualan.php ; #509601;"
+        "Penyerahan Resep ; penjualan.php ; #509601;"
 );
 set_include_path("../");
 include_once("inc/essentials.php");

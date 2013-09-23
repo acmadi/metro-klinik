@@ -12,7 +12,7 @@ include_once '../pages/message.php';
 <script type="text/javascript">
 function add_diagnosis(id, nama) {
     var str = '<tr>'+
-                '<td><input type=hidden name=id_diagnosis[] value="'+id+'" /> '+nama+'</td>'+
+                '<td width=99%><input type=hidden name=id_diagnosis[] value="'+id+'" /> '+nama+'</td><td width=1% class=aksi align=center><a class="deletion" onclick="delete_diagnosis(this);" title="Klik untuk hapus">&nbsp;</a></td>'+
               '</tr>';
     $('.diagnosis').append(str);
     $('#diagnosis,#id_diagnosis').val('');
@@ -21,11 +21,21 @@ function add_diagnosis(id, nama) {
 
 function add_tindakan(id, nama, nominal) {
     var str = '<tr>'+
-                '<td><input type=hidden name=id_tindakan[] value="'+id+'" /> '+nama+' <input type=hidden name=nominal[] value="'+nominal+'" /></td>'+
+                '<td width=99%><input type=hidden name=id_tindakan[] value="'+id+'" /> '+nama+' <input type=hidden name=nominal[] value="'+nominal+'" /></td><td width=1% class=aksi align=center><a class="deletion" onclick="delete_tindakan(this);" title="Klik untuk hapus">&nbsp;</a></td>'+
               '</tr>';
     $('.tindakan').append(str);
     $('#tindakan,#id_tindakan').val('');
     $('#tindakan').focus();
+}
+
+function delete_diagnosis(el) {
+    var parent = el.parentNode.parentNode;
+    parent.parentNode.removeChild(parent);
+}
+
+function delete_tindakan(el) {
+    var parent = el.parentNode.parentNode;
+    parent.parentNode.removeChild(parent);
 }
 
 function form_pemeriksaan(id_daftar, id_pasien, nama) {
@@ -48,12 +58,12 @@ function form_pemeriksaan(id_daftar, id_pasien, nama) {
                         '<tr><td>Tindakan:</td><td><?= form_input('tindakan', NULL, 'id=tindakan size=40') ?><?= form_hidden('id_tindakan', NULL, 'id=id_tindakan') ?></td></tr>'+
                     '</table>'+
                     '</td><td id=foto></td></tr></table>'+
-                    '<table width=100% cellspacing="0" class="list-data-input" id="penjualan-list">\n\
-                        <thead><tr>'+
+                    '<table width=100% cellspacing="0" class="list-data-input" id="penjualan-list">'+
+                        '<thead><tr>'+
                             '<th width=50%>DIAGNOSIS</th>'+
                             '<th width=50%>TINDAKAN</th>'+
                         '</tr></thead>'+
-                        '<tbody><tr><td valign=top><table width=100% class=diagnosis></table></td><td valign=top><table width=100% class=tindakan></td></tr></tbody>'+
+                        '<tbody><tr><td valign=top><table width=100% style="border-right: none;" class=diagnosis></table></td><td valign=top><table width=100% style="border-right: none;" class=tindakan></td></tr></tbody>'+
                     '</table>'+
                 '</form>'+
               '</div>';
@@ -170,7 +180,7 @@ function form_pemeriksaan(id_daftar, id_pasien, nama) {
             return parsed;
         },
         formatItem: function(data,i,max){
-            var str = '<div class=result>'+data.nama+'<br/> '+data.nominal+'</div>';
+            var str = '<div class=result>'+data.nama+'<br/> '+numberToCurrency(data.nominal)+'</div>';
             return str;
         },
         width: lebar, // panjang tampilan pencarian autocomplete yang akan muncul di bawah textbox pencarian
@@ -195,7 +205,8 @@ function form_pemeriksaan(id_daftar, id_pasien, nama) {
             success:  function(data) {
                 if (data.status === true) {
                     $('#form_pemeriksaan').dialog().remove();
-                    alert_refresh('Data berhasil di simpan !');
+                    alert_tambah();
+                    location.href='#!/pemeriksaan';
                 }
             }
         });
@@ -225,7 +236,6 @@ function form_pemeriksaan(id_daftar, id_pasien, nama) {
             $(this).dialog().remove();
             $.cookie('session', 'false');
         }, open: function() {
-            
             $.ajax({
                 url: 'models/autocomplete.php?method=get_no_pemeriksaan',
                 cache: false,
@@ -235,6 +245,7 @@ function form_pemeriksaan(id_daftar, id_pasien, nama) {
                 }
             });
             $.cookie('session', 'true');
+            $('#dokter').focus();
         }
     });
     $('#tanggal').datepicker();
@@ -244,6 +255,8 @@ $(function() {
     load_data_pendaftaran();
     $('#simpan, #reset').button();
     $('#reset').click(function() {
+        $('input[type=text], input[type=hidden]').val('');
+        $('#noantri').html('');
         load_data_pendaftaran();
     });
     var lebar = $('#pasien').width();

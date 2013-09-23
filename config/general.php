@@ -1,9 +1,9 @@
 <?php
 /* GENERAL CONFIG */
 
-$siteTitle = 'Metro Apotek'; /* will be displayed above the url-bar / in tab / on Google */
-$siteName = 'Metro Apotek'; /* The biggest title on your homepage */
-$siteDesc ='Sistem Informasi Management Operasional Apotek'; /* subtitle on your homepage */
+$siteTitle = 'Metro Klinik'; /* will be displayed above the url-bar / in tab / on Google */
+$siteName = 'Metro Klinik'; /* The biggest title on your homepage */
+$siteDesc ='Sistem Informasi Management Operasional Klinik'; /* subtitle on your homepage */
 $siteTitleHome = 'Home'; // will be displayed above the url-ba / in tab / in google when the home-page is open
 $siteFooter = '© mycss';
 

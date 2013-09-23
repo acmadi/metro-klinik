@@ -759,14 +759,20 @@ if ($method === 'delete_karyawan') {
 
 if ($method === 'save_layanan') {
     $nama       = $_POST['nama'];
+    $jDokter    = currencyToNumber($_POST['jasa_dokter']);
+    $jPerawat   = currencyToNumber($_POST['jasa_perawat']);
+    $jSarana    = currencyToNumber($_POST['jasa_sarana']);
     $nominal    = $_POST['nominal'];
-    $akun       = $_POST['akun'];
+    $akun       = '';
     $id_layanan = $_POST['id_layanan'];
     
     if ($id_layanan === '') {
         $sql = "
             insert into tarif set
                 nama = '$nama',
+                jasa_dokter = '$jDokter',
+                jasa_perawat = '$jPerawat',
+                jasa_sarana = '$jSarana',
                 nominal = '".currencyToNumber($nominal)."',
                 kode_akun = ".(($akun !== '')?$akun:'NULL')."
         ";
@@ -776,6 +782,9 @@ if ($method === 'save_layanan') {
         $sql = "
             update tarif set
                 nama = '$nama',
+                jasa_dokter = '$jDokter',
+                jasa_perawat = '$jPerawat',
+                jasa_sarana = '$jSarana',
                 nominal = '".currencyToNumber($nominal)."',
                 kode_akun = ".(($akun !== '')?$akun:'NULL')."    
             where id = '$id_layanan'
@@ -910,13 +919,16 @@ if ($method === 'save_item_kit') {
     $margin_rp  = $_POST['margin_rp'];
     $diskon_pr  = $_POST['diskon_pr'];
     $diskon_rp  = $_POST['diskon_rp'];
+    $harga_jual = $_POST['harga_jual'];
     
     $query = "insert into item_kit set
         nama = '$nama',
         margin_persen = '$margin_pr',
         margin_rupiah = '$margin_rp',
         diskon_persen = '$diskon_pr',
-        diskon_rupiah = '$diskon_rp'";
+        diskon_rupiah = '$diskon_rp',
+        harga_jual = '$harga_jual',
+        status = 'TRUE'";
     mysql_query($query);
     $id_item_kit= mysql_insert_id();
     $id_barang  = $_POST['id_barang']; // array

@@ -88,6 +88,25 @@ function removeMe(el) {
     hitung_total_penjualan();
 }
 
+function add_new_rows_ik(id_item_kit, nama_brg, jumlah, harga_jual) {
+    var jml = $('.tr_rows').length+1;
+    
+    var str = '<tr class="tr_rows">'+
+                '<td align=center>'+jml+'</td>'+
+                '<td>&nbsp;'+nama_brg+' <input type=hidden name=id_ikit[] value="'+id_item_kit+'" class=id_ikit id=id_ikit'+jml+' /></td>'+
+                '<td><input type=text name=jumlah[] id=jumlah'+jml+' value="'+jumlah+'" style="text-align: center;" /></td>'+
+                '<td align=center><input type=hidden name=harga_jual[] id=harga_jual'+jml+' value='+numberToCurrency(harga_jual)+' />KIT</td>'+
+                '<td align=center>-</td>'+
+                '<td align=center id=sisa'+jml+'>-</td>'+
+                '<td align=right id=hargajual'+jml+'>'+numberToCurrency(harga_jual)+'</td>'+
+                '<td><input type=text name=diskon_rupiah_ik[] style="text-align: right;" id=diskon_rupiah_ik'+jml+' value="0" onblur="FormNum(this)" /></td>'+
+                '<td><input type=text name=diskon_persen_ik[] style="text-align: center;" id=diskon_persen_ik'+jml+' value="0" /></td>'+
+                '<td align=right id=subtotal'+jml+'>'+numberToCurrency(jumlah*harga_jual)+'</td>'+
+                '<td align=center><img onclick=removeMe(this); title="Klik untuk hapus" src="img/icons/delete.png" class=add_kemasan align=left /></td>'+
+              '</tr>';
+    $('#pesanan-list tbody').append(str);
+    hitung_total_penjualan();
+}
 function add_new_rows(id_brg, nama_brg, jumlah, id_packing) {
     var jml = $('.tr_rows').length+1;
     
@@ -330,7 +349,7 @@ function form_add() {
             '</table></td><td width=50%><table width=100%>'+
                 '<tr><td width=20%>Barcode:</td><td><?= form_input('barcode', NULL, 'id=barcode size=40') ?></td></tr>'+
                 '<tr><td width=20%>Nama Barang:</td><td><?= form_input('barang', NULL, 'id=barang size=40') ?><?= form_hidden('id_barang', NULL, 'id=id_barang') ?></td></tr>'+
-                '<tr><td>Jumlah:</td><td><input type=text value="1" size=5 id=pilih /></td></tr>'+
+                '<tr><td>Jumlah:</td><td><input type=text value="1" size=5 id=pilih /><?= form_hidden(NULL, NULL, 'id=status') ?><?= form_hidden(NULL, NULL, 'id=hjual') ?></td></tr>'+
                 '<tr><td>TOTAL:</td><td style="font-size: 45px;"><span>Rp. </span><span id=total-penjualan>0</span>, 00</td></tr>'+
             '</table><input type=hidden name=total_penjualan id=total_penjualan /></td></tr></table>'+
             '<table width=100% cellspacing="0" class="list-data-input" id="pesanan-list"><thead>'+
@@ -366,15 +385,20 @@ function form_add() {
             var id_barang   = $('#id_barang').val();
             var nama        = $('#barang').val();
             var jumlah      = $('#pilih').val();
+            var hjual       = $('#hjual').val();
             if (id_barang !== '') {
-                $.ajax({
-                    url: 'models/autocomplete.php?method=get_detail_harga_barang_resep&id='+id_barang+'&jumlah='+jumlah,
-                    dataType: 'json',
-                    cache: false,
-                    success: function(data) {
-                        add_new_rows(id_barang, nama, jumlah ,data.id_packing);
-                    }
-                });
+                if ($('#status').val() === 'TRUE') {
+                    add_new_rows_ik(id_barang, nama, jumlah, hjual);
+                } else {
+                    $.ajax({
+                        url: 'models/autocomplete.php?method=get_detail_harga_barang_resep&id='+id_barang+'&jumlah='+jumlah,
+                        dataType: 'json',
+                        cache: false,
+                        success: function(data) {
+                            add_new_rows(id_barang, nama, jumlah ,data.id_packing);
+                        }
+                    });
+                }
             }
             $('#id_barang, #pilih').val('');
             $('#barang').val('').focus();
@@ -476,6 +500,8 @@ function form_add() {
     function(event,data,formated){
         $(this).val(data.nama_barang);
         $('#id_barang').val(data.id);
+        $('#status').val(data.status);
+        $('#hjual').val(data.harga_jual);
     });
     var wWidth = $(window).width();
     var dWidth = wWidth * 1;

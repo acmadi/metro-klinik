@@ -52,9 +52,9 @@ include_once '../inc/functions.php';
         <td><?= $data->dokter ?></td>
         <td class='aksi' align='center'>
             <?php if ($data->id_pemeriksaan === NULL) { ?>
-            <span style="cursor: pointer;" onclick="form_pemeriksaan('<?= $data->id ?>','<?= $data->id_pelanggan ?>','<?= $data->nama ?>')">BELUM PERIKSA</span>
+            <span style="cursor: pointer;" onclick="form_pemeriksaan('<?= $data->id ?>','<?= $data->id_pelanggan ?>','<?= $data->nama ?>')" title="Klik untuk melakukan pemeriksaan">BELUM PERIKSA</span>
             <?php } else { ?>
-            <span style="cursor: pointer; color: green; font-weight: bold;">SUDAH PERIKSA</span>
+            <span style="cursor: pointer; color: green; font-weight: bold;" title="Klik untuk melakukan pemeriksaan">SUDAH PERIKSA</span>
             <?php } ?>
         </td>
     </tr>

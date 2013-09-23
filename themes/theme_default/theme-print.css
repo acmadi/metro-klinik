@@ -17,7 +17,7 @@ h1 { font-size: 11px; text-align: center; }
 h1.kop-surat { border-bottom: 1px solid #000; padding-bottom: 10px; }
 body, .default-printing table { font-size: 11px; }
 .layout-print-struk th { font-size: 11px; text-align: left; }
-.layout-print-struk table td { width: 100%; font-family: Arial; font-size: 10px; line-height: 9px; }
+.layout-print-struk table td { font-family: Arial; font-size: 10px; line-height: 9px; }
 
 
 .list-data-print { text-transform: uppercase; border-top: 1px solid #000; border-left: 1px solid #000; margin: 10px 0; background: #fff; color: #000; font-size: inherit; }

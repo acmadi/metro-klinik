@@ -83,16 +83,18 @@ if ($method === 'supplier') {
 
 if ($method === 'barang') {
     $rows = array();
-    $sql = mysql_query("select b.*, p.nama as pabrik, g.nama as golongan, st.nama as satuan, sd.nama as sediaan,
-        concat_ws(' ', b.nama, b.kekuatan, st.nama) as nama_barang
+    $sql = mysql_query("select b.id, b.barcode, b.nama, b.id_pabrik, b.id_golongan, b.kekuatan, b.satuan_kekuatan, 
+        p.nama as pabrik, g.nama as golongan, st.nama as satuan, sd.nama as sediaan,
+        concat_ws(' ', b.nama, b.kekuatan, st.nama) as nama_barang, b.id as status, b.hna as harga_jual
         from barang b 
         left join pabrik p on (b.id_pabrik = p.id)
         left join golongan g on (b.id_golongan = g.id)
         left join satuan st on (b.satuan_kekuatan = st.id)
         left join sediaan sd on (b.id_sediaan = sd.id) having nama_barang like ('%$q%')
         UNION
-        select b.*, p.nama as pabrik, g.nama as golongan, st.nama as satuan, sd.nama as sediaan,
-        i.nama as nama_barang
+        select i.id, b.barcode, b.nama, b.id_pabrik, b.id_golongan, b.kekuatan, b.satuan_kekuatan, 
+        p.nama as pabrik, g.nama as golongan, st.nama as satuan, sd.nama as sediaan,
+        i.nama as nama_barang, i.status, i.harga_jual
         from item_kit i
         join item_kit_detail id on (i.id = id.id_item_kit)
         join kemasan k on (k.id = id.id_kemasan)
@@ -507,5 +509,34 @@ if ($method === 'get_expiry_barang') {
         $rows[] = $data;
     }
     die(json_encode($rows));
+}
+
+if ($method === 'pasien_pendaftar') {
+    $sql = mysql_query("select p.*, a.nama as asuransi, a.diskon as reimburse, pd.id as id_pendaftaran from pelanggan p
+        left join asuransi a on (p.id_asuransi = a.id) 
+        join pendaftaran pd on (pd.id_pelanggan = p.id)
+        inner join (
+            select id_pelanggan, max(id) as id_max from pendaftaran group by id_pelanggan
+        ) pdf on (pd.id_pelanggan = pdf.id_pelanggan and pd.id = pdf.id_max)
+        where p.nama like ('%$q%') or p.id like ('%$q%') order by locate('$q', p.id)");
+    $rows = array();
+    while ($data = mysql_fetch_object($sql)) {
+        $rows[] = $data;
+    }
+    die(json_encode($rows));
+}
+
+if ($method === 'get_total_tagihan') {
+    $id  = $_GET['id_daftar'];
+    $sql = mysql_query("select sum(p.total) as total_obat from resep r 
+        join penjualan p on (r.id = p.id_resep)
+        where r.id_pendaftaran = '$id'");
+    $row = mysql_fetch_object($sql);
+    
+    $sqw = mysql_query("select sum(nominal) as total_jasa from tindakan where id_pendaftaran = '$id'");
+    $roq = mysql_fetch_object($sqw);
+    
+    $total_tagihan = $row->total_obat+$roq->total_jasa;
+    die(json_encode(array('total' => $total_tagihan)));
 }
 ?>

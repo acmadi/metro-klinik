@@ -115,7 +115,7 @@ function form_add() {
     var str = '<div id="item_kit"><form id="form_item_kit">'+
                 '<table width=100% class=data-input><tr valign=top><td width=50%>'+
                     '<table width=100%>'+
-                        '<tr><td width=30%>Nama Item:</td><td><?= form_input('nama_item', NULL, 'id=nama_item size=40') ?></td></tr>'+
+                        '<tr><td width=30%>Nama Item:</td><td><?= form_input('nama_item', NULL, 'id=nama_item size=40 onBlur="javascript:this.value=this.value.toUpperCase();"') ?></td></tr>'+
                         '<tr><td>Margin:</td><td><?= form_input('margin_pr', '0', 'id=margin_pr size=10') ?> %, Rp. <?= form_input('margin_rp', '0', 'id=margin_rp onblur="FormNum(this)" size=10') ?></td></tr>'+
                         '<tr><td>Diskon:</td><td><?= form_input('diskon_pr', '0', 'id=diskon_pr size=10') ?> %, Rp. <?= form_input('diskon_rp', '0', 'id=diskon_rp onblur="FormNum(this)" size=10') ?></td></tr>'+
                     '</table>'+

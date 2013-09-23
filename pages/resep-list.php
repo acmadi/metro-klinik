@@ -68,7 +68,7 @@ $(document).tooltip();
         <td class='aksi' align='center'>
             <?php
             if ($data->id_resep !== $id_resep) { ?>
-            <a class='printing' onclick="cetak_copy_resep('<?= $data->id_resep ?>');" title="Klik untuk cetak copy resep">&nbsp;</a>
+                <a class='printing' onclick="cetak_copy_resep('<?= $data->id_resep ?>');" title="Klik untuk cetak copy resep">&nbsp;</a>
                 <a class='edition' onclick="edit_resep('<?= $str ?>','<?= $data->id_resep ?>');" title="Klik untuk edit resep">&nbsp;</a>
                 <a class='deletion' onclick="delete_resep('<?= $data->id_resep ?>', '<?= $page ?>');" title="Klik untuk hapus">&nbsp;</a>
             <?php } ?>

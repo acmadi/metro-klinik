@@ -497,16 +497,13 @@ function pemeriksaan_load_data($param) {
         $q.=" and p.id = '".$param['id']."'";
     }
     $limit = " limit ".$param['start'].", ".$param['limit']."";
-    $sql = "select p.*, pl.nama as pasien, d.nama as dokter, py.topik, py.sub_kode, tr.id as id_tarif, tr.nama as tarif, t.nominal from pemeriksaan p
+    $sql = "select p.*, pl.nama as pasien, d.nama as dokter
+        from pemeriksaan p
         join pendaftaran pd on (p.id_pendaftaran = pd.id)
         join pelanggan pl on (pd.id_pelanggan = pl.id)
         join dokter d on (p.id_dokter = d.id)
-        left join diagnosis dg on (p.id = dg.id_pemeriksaan)
-        left join penyakit py on (dg.id_penyakit = py.id)
-        left join tindakan t on (p.id = t.id_pemeriksaan)
-        left join tarif tr on (t.id_tarif = tr.id)
         where p.id is not NULL $q order by p.tanggal desc";
-    
+    //echo "<pre>".$sql."</pre>";
     $query = mysql_query($sql.$limit);
     $data = array();
     while ($row = mysql_fetch_object($query)) {
@@ -756,6 +753,94 @@ function retur_penjualan_load_data($param) {
     $result['data'] = $data;
     $result['total']= $total;
     return $result;
+}
+
+function diagnosis_load_by_pendaftaran($id_daftar) {
+    $sql = "select p.topik from diagnosis d join penyakit p on (d.id_penyakit = p.id) where d.id_pendaftaran = '$id_daftar'";
+    $query = mysql_query($sql);
+    $data = array();
+    while ($row = mysql_fetch_object($query)) {
+        $data[] = $row;
+    }
+    return $data;
+}
+
+function tindakan_load_by_pendaftaran($id_daftar) {
+    $sql = "select tr.nama, tr.nominal from tindakan t join tarif tr on (t.id_tarif = tr.id) where id_pendaftaran = '$id_daftar'";
+    $query = mysql_query($sql);
+    $data = array();
+    while ($row = mysql_fetch_object($query)) {
+        $data[] = $row;
+    }
+    return $data;
+}
+
+function load_data_billing($param) {
+    $q = NULL;
+    if ($param['id'] !== '') {
+        $q.="";
+    }
+    $limit = " limit ".$param['start'].", ".$param['limit']."";
+    $sql = "select pb.*, p.waktu, p.no_antri, s.nama as layanan, pl.nama as pasien
+        from pembayaran_billing pb 
+        join pendaftaran p on (pb.id_pendaftaran = p.id)
+        join pelanggan pl on (p.id_pelanggan = pl.id)
+        join spesialisasi s on (p.id_spesialisasi = s.id)
+        where pb.id is not NULL";
+    $query = mysql_query($sql.$limit);
+    $data = array();
+    while ($row = mysql_fetch_object($query)) {
+        $data[] = $row;
+    }
+    $total = mysql_num_rows(mysql_query($sql));
+    $result['data'] = $data;
+    $result['total']= $total;
+    return $result;
+}
+
+function nota_billing_load_data($id_billing, $id_daftar) {
+    $sqw = "select pb.*, pl.id as no_rm, pl.nama as pelanggan from pembayaran_billing pb
+        join pendaftaran p on (pb.id_pendaftaran = p.id)
+        join pelanggan pl on (pl.id = p.id_pelanggan)
+        where pb.id = '$id_billing'";
+    $qwe = array();
+    $ewq = mysql_query($sqw);
+    while ($asd = mysql_fetch_object($ewq)) {
+        $qwe[] = $asd;
+    }
+    
+    $return['atribute'] = $qwe;
+    
+    $sql = "select b.*, s.nama as satuan, dp.qty, dp.harga_jual, 
+        p.waktu, p.total, p.tuslah, p.embalage, p.ppn, p.diskon_persen, p.diskon_rupiah, p.id_resep, pl.nama as pelanggan,
+        (dp.qty*dp.harga_jual) as subtotal from detail_penjualan dp
+        join penjualan p on (dp.id_penjualan = p.id)
+        join resep r on (r.id = p.id_resep)
+        join pendaftaran pdf on (pdf.id = r.id_pendaftaran)
+        left join pelanggan pl on (p.id_pelanggan = pl.id)
+        join kemasan k on (dp.id_kemasan = k.id)
+        join barang b on (k.id_barang = b.id)
+        left join satuan s on (b.satuan_kekuatan = s.id)
+        where r.id_pendaftaran = '$id_daftar'";
+    //echo "<pre>".$sql."</pre>";
+    $query = mysql_query($sql);
+    $data = array();
+    while ($row = mysql_fetch_object($query)) {
+        $data[] = $row;
+    }
+    
+    $sqk = "select count(tr.id) as frek, t.*, tr.nama from tindakan t
+        join tarif tr on (t.id_tarif = tr.id)
+        where t.id_pendaftaran = '$id_daftar' group by tr.id";
+    $result = mysql_query($sqk);
+    $rows = array();
+    while ($metallica = mysql_fetch_object($result)) {
+        $rows[] = $metallica;
+    }
+    
+    $return['list_barang'] = $data;
+    $return['list_jasa'] = $rows;
+    return $return;
 }
 
 ?>

@@ -37,12 +37,12 @@ $(function() {
         <th width="3%">No.</th>
         <th width="5%">Kode</th>
         <th width="5%">Tanggal</th>
-        <th width="10%">Pasien</th>
+        <th width="15%">Pasien</th>
         <th width="15%">Dokter</th>
         <th width="15%">Anamnesis</th>
-        <th width="15%">Diagnosis</th>
-        <th width="15%">Tindakan</th>
-        <th width="5%">#</th>
+        <th width="20%">Diagnosis</th>
+        <th width="20%">Tindakan</th>
+        <th width="2%">#</th>
     </tr>
 </thead>
 <tbody>
@@ -69,7 +69,8 @@ $(function() {
     $no = 1;
     $tindakan = "";
     foreach ($list_data as $key => $data) { 
-        
+        $diagnosis = diagnosis_load_by_pendaftaran($data->id_pendaftaran);
+        $tindakan  = tindakan_load_by_pendaftaran($data->id_pendaftaran);
         ?>
         <tr valign="top" id="<?= $data->id ?>" class="detail <?= ($id !== $data->id)?'odd':NULL ?>">
             <td align="center"><?= ($id !== $data->id)?($no+$offset):NULL ?></td>
@@ -78,8 +79,19 @@ $(function() {
             <td title="<img src='img/pemeriksaan/<?= $data->foto ?>' width='200px' />"><?= ($id !== $data->id)?$data->pasien:NULL ?></td>
             <td><?= ($id !== $data->id)?$data->dokter:NULL ?></td>
             <td><?= ($id !== $data->id)?$data->anamnesis:NULL ?></td>
-            <td><?= $data->topik ?></td>
-            <td><?= ($tindakan !== $data->id_tarif)?$data->tarif:NULL ?></td>
+            <td><ul>
+                <?php foreach ($diagnosis as $rows) { ?>
+                    <li><?= $rows->topik ?></li>
+                <?php } ?>
+                </ul>
+            </td>
+            <td>
+                <ul>
+                <?php foreach ($tindakan as $rows) { ?>
+                    <li><?= $rows->nama ?></li>
+                <?php } ?>
+                </ul>
+            </td>
             <td class='aksi' align='center'>
                 <!--<a class='edition' onclick="edit_pemeriksaan('<?= $str ?>');" title="Klik untuk edit">&nbsp;</a>-->
                 <?php if ($id !== $data->id) { ?>
@@ -91,7 +103,7 @@ $(function() {
     if ($id !== $data->id) {
         $no++;
     }
-    $tindakan = $data->id_tarif;
+    
     $id = $data->id;
     }
     ?>

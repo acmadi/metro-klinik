@@ -1,8 +1,4 @@
 <?php
-$subNav = array(
-	"Utama ; layanan.php ; #509601;"
-);
-
 set_include_path("../");
 include_once("inc/essentials.php");
 include_once("inc/functions.php");
@@ -14,24 +10,44 @@ $akun = load_data_akun();
 <script type="text/javascript">
 $(function() {
     load_data_layanan();
+    $('#search').keyup(function() {
+        var value = $(this).val();
+        load_data_layanan('',value,'');
+    });
 });
+function hitung_total_tarif() {
+    var jDokter     = parseInt(currencyToNumber($('#jasa_dokter').val()));
+    var jPerawat    = parseInt(currencyToNumber($('#jasa_perawat').val()));
+    var jSarana     = parseInt(currencyToNumber($('#jasa_sarana').val()));
+    if (jDokter === '' || jPerawat === '' || jSarana === '') {
+        jDokter     = '0'; jPerawat = '0'; jSarana = '0';
+    }
+    var total       = jDokter+jPerawat+jSarana;
+    $('#nominal').val(numberToCurrency(total));
+}
 function form_add() {
 var str = '<div id=form_add>'+
             '<form action="" method=post id="save_barang">'+
             '<?= form_hidden('id_layanan', NULL, 'id=id_layanan') ?>'+
             '<table width=100% class=data-input>'+
                 '<tr><td width=40%>Nama layanan:</td><td><?= form_input('nama', NULL, 'id=nama size=40 onBlur="javascript:this.value=this.value.toUpperCase();"') ?></td></tr>'+
-                '<tr><td>Nominal (Rp.):</td><td><?= form_input('nominal', NULL, 'id=nominal onblur="FormNum(this);" onfocus="javascript:this.value=currencyToNumber(this.value);" size=40') ?></td></tr>'+
-                '<tr><td width=40%>Kode Akun:</td><td><select name=akun id=akun><option value="">Pilih ...</option><?php foreach ($akun as $data) { echo '<option value="'.$data->kode.'">'.$data->kode.' '.$data->kelompok.'</option>'; } ?></select></td></tr>'+
+                '<tr><td>Jasa Dokter (Rp.):</td><td><?= form_input('jasa_dokter', NULL, 'id=jasa_dokter onblur="FormNum(this);" onfocus="javascript:this.value=currencyToNumber(this.value);" size=40') ?></td></tr>'+
+                '<tr><td>Jasa Perawat (Rp.):</td><td><?= form_input('jasa_perawat', NULL, 'id=jasa_perawat onblur="FormNum(this);" onfocus="javascript:this.value=currencyToNumber(this.value);" size=40') ?></td></tr>'+
+                '<tr><td>Jasa Sarana (Rp.):</td><td><?= form_input('jasa_sarana', NULL, 'id=jasa_sarana onblur="FormNum(this);" onfocus="javascript:this.value=currencyToNumber(this.value);" size=40') ?></td></tr>'+
+                '<tr><td>Nominal (Rp.):</td><td><?= form_input('nominal', NULL, 'id=nominal onblur="FormNum(this);" onfocus="javascript:this.value=currencyToNumber(this.value);" readonly size=40') ?></td></tr>'+
+//                '<tr><td width=40%>Kode Akun:</td><td><select name=akun id=akun><option value="">Pilih ...</option><?php foreach ($akun as $data) { echo '<option value="'.$data->kode.'">'.$data->kode.' '.$data->kelompok.'</option>'; } ?></select></td></tr>'+
             '</table>'+
             '</form>'+
             '</div>';
     $('body').append(str);
+    $('#jasa_dokter, #jasa_perawat, #jasa_sarana').keyup(function() {
+        hitung_total_tarif();
+    });
     $('#form_add').dialog({
         title: 'Tambah layanan',
         autoOpen: true,
         width: 480,
-        height: 200,
+        height: 240,
         modal: true,
         hide: 'clip',
         show: 'blind',
@@ -142,8 +158,10 @@ function edit_layanan(str) {
     $('#form_add').dialog({ title: 'Edit layanan' });
     $('#id_layanan').val(arr[0]);
     $('#nama').val(arr[1]);
-    $('#nominal').val(arr[2]);
-    $('#akun').val(arr[3]);
+    $('#jasa_dokter').val(arr[2]);
+    $('#jasa_perawat').val(arr[3]);
+    $('#jasa_sarana').val(arr[4]);
+    $('#nominal').val(arr[5]);
 }
 function delete_layanan(id, page) {
     $('<div id=alert>Anda yakin akan menghapus data ini?</div>').dialog({
@@ -168,11 +186,13 @@ function delete_layanan(id, page) {
         }
     });
 }
+
 </script>
 <h1 class="margin-t-0">Data layanan</h1>
 <hr>
 <button id="button">Tambah Data</button>
 <button id="reset">Reset</button>
+<?= form_input('search', NULL, 'id=search placeholder="Search ..." class=search') ?>
 <div id="result-layanan">
     
 </div>

@@ -224,6 +224,7 @@ function form_receipt() {
     var str = '<div id=form_resep>'+
                 '<form id=resep_save>'+
                 '<input type=hidden name=id_resep id=id_resep />'+
+                '<input type=hidden name=id_pendaftaran id=id_pendaftaran />'+
                 '<table width=100% class=data-input><tr valign=top><td width=33% style="border-right: 1px solid #ccc;">'+
                     '<table width=100%>'+
                         '<tr><td width=25%>Nomor Resep:</td><td><?= form_input('noresep', NULL, 'id=noresep size=10') ?></td></tr>'+
@@ -377,7 +378,7 @@ function form_receipt() {
         $('#id_dokter').val(data.id);
         $('#pasien').focus().select();
     });
-    $('#pasien').autocomplete("models/autocomplete.php?method=pasien",
+    $('#pasien').autocomplete("models/autocomplete.php?method=pasien_pendaftar",
     {
         parse: function(data){
             var parsed = [];
@@ -401,6 +402,7 @@ function form_receipt() {
         $(this).val(data.id+' '+data.nama);
         $('#id_pasien').val(data.id);
         $('#keterangan').focus().select();
+        $('#id_pendaftaran').val(data.id_pendaftaran);
     });
     $('#resep_save').submit(function() {
         if ($('#id_dokter').val() === '') {
