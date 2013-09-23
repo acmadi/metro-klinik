@@ -5,17 +5,19 @@ include_once '../inc/functions.php';
 <script type="text/javascript">
 
 </script>
+
 <table cellspacing="0" width="100%" class="list-data">
 <thead>
 <tr class="italic">
     <th width="3%">No.</th>
     <th width="10%">Waktu</th>
     <th width="10%">No. RM</th>
-    <th width="25%">Customer</th>
+    <th width="10%">Customer</th>
     <th width="5%">No. Antri</th>
     <th width="10%">Pelayanan</th>
     <th width="10%">Waktu Dilayani</th>
-    <th width="25%">Nama Dokter</th>
+    <th width="15%">Nama Nakes</th>
+    <th width="20%">Rekomendasi Tindakan</th>
     <th width="10%">Status</th>
 </tr>
 </thead>
@@ -40,8 +42,9 @@ include_once '../inc/functions.php';
     $master_pendaftaran = $list_data['data'];
     $total_data = $list_data['total'];
     foreach ($master_pendaftaran as $key => $data) { 
+        $rek_tindakan  = rek_tindakan_load_by_pendaftaran($data->id);
         ?>
-    <tr class="<?= ($key%2==0)?'even':'odd' ?>">
+    <tr valign="top" class="<?= ($key%2==0)?'even':'odd' ?>">
         <td align="center"><?= (++$key+$offset) ?></td>
         <td align="center"><?= datetimefmysql($data->waktu,'yes') ?></td>
         <td align="center"><?= isset($data->id_pelanggan)?$data->id_pelanggan:NULL ?></td>
@@ -50,6 +53,13 @@ include_once '../inc/functions.php';
         <td><?= $data->spesialisasi ?></td>
         <td align="center"><?= datetimefmysql($data->waktu_pelayanan,'yes') ?></td>
         <td><?= $data->dokter ?></td>
+        <td>
+            <ul>
+            <?php foreach ($rek_tindakan as $rows) { ?>
+                <li><?= $rows->nama ?></li>
+            <?php } ?>
+            </ul>
+        </td>
         <td class='aksi' align='center'>
             <?php if ($data->id_pemeriksaan === NULL) { ?>
             <span style="cursor: pointer;" onclick="form_pemeriksaan('<?= $data->id ?>','<?= $data->id_pelanggan ?>','<?= $data->nama ?>')" title="Klik untuk melakukan pemeriksaan">BELUM PERIKSA</span>

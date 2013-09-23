@@ -273,7 +273,6 @@ function form_pembayaran() {
             height: 300,
             buttons: {
                 "Simpan": function() {
-                    $('#save_penjualan').submit();
                     $('#form-pembayaran').dialog().remove();
                     $('.adding').remove();
                 }
@@ -296,6 +295,8 @@ function form_pembayaran() {
                     $('#kembalian').html('0');
                     $('#pembayaran').focus().select();
                 }
+                $('#save_penjualan').submit();
+                $(this).dialog().remove();
             }
             ,close: function() {
                 $('#form-pembayaran').dialog().remove();

@@ -593,7 +593,7 @@ if ($method === 'save_dokter') {
     $kelamin    = $_POST['kelamin'];
     $alamat     = $_POST['alamat'];
     $telp       = $_POST['telp'];
-    $email      = $_POST['email'];
+    $profesi    = $_POST['jabatan'];
     $nostr      = $_POST['nostr'];
     $spesialis  = $_POST['spesialis'];
     $tgl_praktek= $_POST['tglmulai'];
@@ -606,7 +606,7 @@ if ($method === 'save_dokter') {
             kelamin = '$kelamin',
             alamat = '$alamat',
             telp = '$telp',
-            email = '$email',
+            profesi = '$profesi',
             no_str = '$nostr',
             spesialis = '$spesialis',
             tgl_mulai_praktek = '".date2mysql($tgl_praktek)."',
@@ -622,7 +622,7 @@ if ($method === 'save_dokter') {
             kelamin = '$kelamin',
             alamat = '$alamat',
             telp = '$telp',
-            email = '$email',
+            profesi = '$profesi',
             no_str = '$nostr',
             spesialis = '$spesialis',
             tgl_mulai_praktek = '".date2mysql($tgl_praktek)."',

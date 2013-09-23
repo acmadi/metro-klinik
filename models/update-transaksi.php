@@ -477,7 +477,7 @@ if ($method === 'save_penjualan') {
         $sql = "insert into penjualan set
             waktu = '$tanggal',
             id_resep = '$id_resep',
-            id_pelanggan = $customer,
+            id_pelanggan = '$customer',
             diskon_persen = '$diskon_pr',
             diskon_rupiah = '$diskon_rp',
             ppn = '$ppn',
@@ -486,6 +486,7 @@ if ($method === 'save_penjualan') {
             embalage = '$embalage',
             id_asuransi = $asuransi,
             reimburse = '$reimburse'";
+        //echo $sql;
         mysql_query($sql);
         $id_penjualan = mysql_insert_id();
     
@@ -553,6 +554,7 @@ if ($method === 'save_pemeriksaan') {
     
     $id_diagnosis = $_POST['id_diagnosis'];
     $id_tindakan  = $_POST['id_tindakan'];
+    $id_rek_tindakan = $_POST['id_rek_tindakan'];
     $nominal      = $_POST['nominal'];
     $UploadDirectory	= '../img/pemeriksaan/'; //Upload Directory, ends with slash & make sure folder exist
     $NewFileName= "";
@@ -616,28 +618,43 @@ if ($method === 'save_pemeriksaan') {
         where id = '$id_daftar'";
    mysql_query($sql2);
    
-   foreach ($id_diagnosis as $key => $data) {
-       $query = "insert into diagnosis set
-            id_pendaftaran = '$id_daftar',
-            waktu = '$tanggal ".date("H:i:s")."',
-            id_penyakit = '$data'";
-       mysql_query($query);
+   if (count($id_diagnosis) > 0) {
+        foreach ($id_diagnosis as $key => $data) {
+            $query = "insert into diagnosis set
+                 id_pendaftaran = '$id_daftar',
+                 waktu = '$tanggal ".date("H:i:s")."',
+                 id_penyakit = '$data'";
+            mysql_query($query);
+        }
    }
 
-   foreach ($id_tindakan as $key => $data) {
-       $get   = mysql_fetch_object(mysql_query("select * from tarif where id = '$data'"));
-       $query = "insert into tindakan set
-            waktu = '$tanggal ".date("H:i:s")."',
-            id_pendaftaran = '$id_daftar',
-            id_tarif = '$data',
-            jasa_dokter = '".$get->jasa_dokter."',
-            jasa_perawat = '".$get->jasa_perawat."',
-            jasa_sarana = '".$get->jasa_sarana."',
-            nominal = '".$get->nominal."'
-            ";
-       mysql_query($query);
+   if (count($id_tindakan) > 0) {
+        foreach ($id_tindakan as $key => $data) {
+            $get   = mysql_fetch_object(mysql_query("select * from tarif where id = '$data'"));
+            $query = "insert into tindakan set
+                 waktu = '$tanggal ".date("H:i:s")."',
+                 id_pendaftaran = '$id_daftar',
+                 id_tarif = '$data',
+                 jasa_dokter = '".$get->jasa_dokter."',
+                 jasa_perawat = '".$get->jasa_perawat."',
+                 jasa_sarana = '".$get->jasa_sarana."',
+                 nominal = '".$get->nominal."'
+                 ";
+            mysql_query($query);
+        }
    }
-   die(json_encode(array('status' => TRUE, 'id' => $id_pemeriksaan)));
+   
+   if (count($id_rek_tindakan) > 0) {
+        foreach ($id_rek_tindakan as $key => $data) {
+            $get   = mysql_fetch_object(mysql_query("select * from tarif where id = '$data'"));
+            $query = "insert into rek_tindakan set
+                 waktu = '$tanggal ".date("H:i:s")."',
+                 id_pendaftaran = '$id_daftar',
+                 id_tarif = '$data'";
+            mysql_query($query);
+        }
+   }
+   die(json_encode(array('status' => TRUE, 'id' => $id_daftar)));
 }
 
 if ($method === 'delete_pemeriksaan') {
@@ -782,12 +799,13 @@ if ($method === 'delete_in_out_uang') {
 }
 
 if ($method === 'save_billing') {
-    $id_daftar  = $_POST['id_pendaftaran'];
+    $id_pasien  = $_POST['id_pasien'];
     $pembayaran = currencyToNumber($_POST['pembayaran']);
     $nominal    = currencyToNumber($_POST['serahuang']);
     
     $sql = "insert into pembayaran_billing set
-        id_pendaftaran = '$id_daftar',
+        id_pelanggan = '$id_pasien',
+        tanggal = NOW(),
         waktu = NOW(),
         bayar = '$pembayaran',
         uang_serah = '$nominal'";

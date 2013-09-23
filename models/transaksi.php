@@ -14,7 +14,7 @@ function header_surat() {
 }
 
 function get_bottom_label() {
-    $sql = "select * from apotek";
+    $sql = "select * from klinik";
     $result = mysql_query($sql);
     $data   = mysql_fetch_object($result);
     return $data;
@@ -604,13 +604,17 @@ function pemesanan_plant_load_data($param = NULL) {
 }
 
 function load_data_pendaftaran($param) {
+    $q = NULL;
+    if ($param['search'] !== '') {
+        $q.=" and (pl.id like ('%".$param['search']."%') or pl.nama like ('%".$param['search']."%') or s.nama like ('%".$param['search']."%') or d.nama like ('%".$param['search']."%'))";
+    }
     $limit = " limit ".$param['start'].", ".$param['limit']."";
     $sql = "select p.*, pl.nama, s.nama as spesialisasi, d.nama as dokter, pm.id as id_pemeriksaan from pendaftaran p
         join pelanggan pl on (p.id_pelanggan = pl.id)
         join spesialisasi s on (p.id_spesialisasi = s.id)
         left join dokter d on (p.id_dokter = d.id)
         left join pemeriksaan pm on (p.id = pm.id_pendaftaran)
-        where date(p.waktu) = '".date("Y-m-d")."' order by s.id, p.no_antri";
+        where date(p.waktu) = '".date("Y-m-d")."' $q order by s.id, p.no_antri";
     //echo $sql;
     $query = mysql_query($sql.$limit);
     $data = array();
@@ -775,17 +779,25 @@ function tindakan_load_by_pendaftaran($id_daftar) {
     return $data;
 }
 
+function rek_tindakan_load_by_pendaftaran($id_daftar) {
+    $sql = "select tr.nama, tr.nominal from rek_tindakan t join tarif tr on (t.id_tarif = tr.id) where id_pendaftaran = '$id_daftar'";
+    $query = mysql_query($sql);
+    $data = array();
+    while ($row = mysql_fetch_object($query)) {
+        $data[] = $row;
+    }
+    return $data;
+}
+
 function load_data_billing($param) {
     $q = NULL;
     if ($param['id'] !== '') {
         $q.="";
     }
     $limit = " limit ".$param['start'].", ".$param['limit']."";
-    $sql = "select pb.*, p.waktu, p.no_antri, s.nama as layanan, pl.nama as pasien
-        from pembayaran_billing pb 
-        join pendaftaran p on (pb.id_pendaftaran = p.id)
-        join pelanggan pl on (p.id_pelanggan = pl.id)
-        join spesialisasi s on (p.id_spesialisasi = s.id)
+    $sql = "select pb.*, pl.nama as pasien
+        from pembayaran_billing pb
+        join pelanggan pl on (pb.id_pelanggan = pl.id)
         where pb.id is not NULL";
     $query = mysql_query($sql.$limit);
     $data = array();
@@ -798,11 +810,11 @@ function load_data_billing($param) {
     return $result;
 }
 
-function nota_billing_load_data($id_billing, $id_daftar) {
+function nota_billing_load_data($id_pelanggan, $tanggal) {
     $sqw = "select pb.*, pl.id as no_rm, pl.nama as pelanggan from pembayaran_billing pb
-        join pendaftaran p on (pb.id_pendaftaran = p.id)
-        join pelanggan pl on (pl.id = p.id_pelanggan)
-        where pb.id = '$id_billing'";
+        join pelanggan pl on (pl.id = pb.id_pelanggan)
+        where pb.id_pelanggan = '$id_pelanggan' and pb.tanggal = '$tanggal'";
+    //echo $sqw;
     $qwe = array();
     $ewq = mysql_query($sqw);
     while ($asd = mysql_fetch_object($ewq)) {
@@ -821,7 +833,7 @@ function nota_billing_load_data($id_billing, $id_daftar) {
         join kemasan k on (dp.id_kemasan = k.id)
         join barang b on (k.id_barang = b.id)
         left join satuan s on (b.satuan_kekuatan = s.id)
-        where r.id_pendaftaran = '$id_daftar'";
+        where p.id_pelanggan = '$id_pelanggan' and date(p.waktu) = '$tanggal'";
     //echo "<pre>".$sql."</pre>";
     $query = mysql_query($sql);
     $data = array();
@@ -831,7 +843,8 @@ function nota_billing_load_data($id_billing, $id_daftar) {
     
     $sqk = "select count(tr.id) as frek, t.*, tr.nama from tindakan t
         join tarif tr on (t.id_tarif = tr.id)
-        where t.id_pendaftaran = '$id_daftar' group by tr.id";
+        join pendaftaran pdf on (t.id_pendaftaran = pdf.id)
+        where pdf.id_pelanggan = '$id_pelanggan' and date(pdf.waktu) = '$tanggal' group by tr.id";
     $result = mysql_query($sqk);
     $rows = array();
     while ($metallica = mysql_fetch_object($result)) {

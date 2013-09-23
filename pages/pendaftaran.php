@@ -19,6 +19,15 @@ function add_diagnosis(id, nama) {
     $('#diagnosis').focus();
 }
 
+function add_rek_tindakan(id, nama) {
+    var str = '<tr>'+
+                '<td width=99%><input type=hidden name=id_rek_tindakan[] value="'+id+'" /> '+nama+'</td><td width=1% class=aksi align=center><a class="deletion" onclick="delete_tindakan(this);" title="Klik untuk hapus">&nbsp;</a></td>'+
+              '</tr>';
+    $('.rek_tindakan').append(str);
+    $('#rek_tindakan,#id_rek_tindakan').val('');
+    $('#rek_tindakan').focus();
+}
+
 function add_tindakan(id, nama, nominal) {
     var str = '<tr>'+
                 '<td width=99%><input type=hidden name=id_tindakan[] value="'+id+'" /> '+nama+' <input type=hidden name=nominal[] value="'+nominal+'" /></td><td width=1% class=aksi align=center><a class="deletion" onclick="delete_tindakan(this);" title="Klik untuk hapus">&nbsp;</a></td>'+
@@ -49,21 +58,27 @@ function form_pemeriksaan(id_daftar, id_pasien, nama) {
                         '<tr><td>Tanggal:</td><td><?= form_input('tanggal', date("d/m/Y"), 'id=tanggal size=10') ?></td></tr>'+
                         '<tr><td>Nomor PMR:</td><td><?= form_input('norm', NULL, 'id=norm size=40') ?></td></tr>'+
                         '<tr><td>Nama Pasien:</td><td><?= form_input('pasien', NULL, 'id=pasien size=40') ?><?= form_hidden('id_pasien', NULL, 'id=id_pasien') ?></td></tr>'+
-                        '<tr><td>Dokter:</td><td><?= form_input('dokter', NULL, 'id=dokter size=40') ?><?= form_hidden('id_dokter', NULL, 'id=id_dokter') ?></td></tr>'+
+                        '<tr><td>Nama Nakes:</td><td><?= form_input('dokter', NULL, 'id=dokter size=40') ?><?= form_hidden('id_dokter', NULL, 'id=id_dokter') ?></td></tr>'+
                         '<tr><td>Foto Pasien:</td><td><?= form_upload('mFile') ?></td></tr>'+
                     '</table></td><td width=33%>'+
                     '<table width=100%>'+
                         '<tr><td valign=top>Anamnesis:</td><td><?= form_textarea('anamnesis', NULL, 'id=anamnesis cols=37 style="height: 30px"') ?></td></tr>'+
                         '<tr><td>Diagnosis:</td><td><?= form_input('diagnosis', NULL, 'id=diagnosis size=40') ?><?= form_hidden('id_diagnosis', NULL, 'id=id_diagnosis') ?></td></tr>'+
                         '<tr><td>Tindakan:</td><td><?= form_input('tindakan', NULL, 'id=tindakan size=40') ?><?= form_hidden('id_tindakan', NULL, 'id=id_tindakan') ?></td></tr>'+
+                        '<tr><td>Rekomendasi Tindakan:</td><td><?= form_input('rek_tindakan', NULL, 'id=rek_tindakan size=40') ?><?= form_hidden('id_rek_tindakan', NULL, 'id=id_rek_tindakan') ?></td></tr>'+
                     '</table>'+
                     '</td><td id=foto></td></tr></table>'+
                     '<table width=100% cellspacing="0" class="list-data-input" id="penjualan-list">'+
                         '<thead><tr>'+
-                            '<th width=50%>DIAGNOSIS</th>'+
-                            '<th width=50%>TINDAKAN</th>'+
+                            '<th width=33%>DIAGNOSIS</th>'+
+                            '<th width=33%>Rekomendasi TINDAKAN</th>'+
+                            '<th width=33%>TINDAKAN</th>'+
                         '</tr></thead>'+
-                        '<tbody><tr><td valign=top><table width=100% style="border-right: none;" class=diagnosis></table></td><td valign=top><table width=100% style="border-right: none;" class=tindakan></td></tr></tbody>'+
+                        '<tbody><tr>'+
+                            '<td valign=top><table width=100% style="border-right: none;" class=diagnosis></table></td>'+
+                            '<td valign=top><table width=100% style="border-right: none;" class=rek_tindakan></table></td>'+
+                            '<td valign=top><table width=100% style="border-right: none;" class=tindakan></table></td>'+
+                        '</tr></tbody>'+
                     '</table>'+
                 '</form>'+
               '</div>';
@@ -166,6 +181,31 @@ function form_pemeriksaan(id_daftar, id_pasien, nama) {
         $('#id_diagnosis').val(data.id);
         add_diagnosis(data.id, data.topik);
     });
+    $('#rek_tindakan').autocomplete("models/autocomplete.php?method=tindakan",
+    {
+        parse: function(data){
+            var parsed = [];
+            for (var i=0; i < data.length; i++) {
+                parsed[i] = {
+                    data: data[i],
+                    value: data[i].nama // nama field yang dicari
+                };
+            }
+            $('#id_tindakan').val('');
+            return parsed;
+        },
+        formatItem: function(data,i,max){
+            var str = '<div class=result>'+data.nama+'<br/> '+numberToCurrency(data.nominal)+'</div>';
+            return str;
+        },
+        width: lebar, // panjang tampilan pencarian autocomplete yang akan muncul di bawah textbox pencarian
+        dataType: 'json' // tipe data yang diterima oleh library ini disetup sebagai JSON
+    }).result(
+    function(event,data,formated){
+        $(this).val(data.nama);
+        $('#id_tindakan').val(data.id);
+        add_rek_tindakan(data.id, data.nama);
+    });
     $('#tindakan').autocomplete("models/autocomplete.php?method=tindakan",
     {
         parse: function(data){
@@ -253,6 +293,10 @@ function form_pemeriksaan(id_daftar, id_pasien, nama) {
 $(function() {
     displayTime();
     load_data_pendaftaran();
+    $('#search').keyup(function() {
+        var value = $(this).val();
+        load_data_pendaftaran('',value,'');
+    });
     $('#simpan, #reset').button();
     $('#reset').click(function() {
         $('input[type=text], input[type=hidden]').val('');
@@ -387,7 +431,8 @@ function load_data_pendaftaran(page, search, id) {
 </script>
 <h1 class="margin-t-0">Formulir Pendaftaran Antrian</h1>
 <div class="input-parameter">
-    <table width="100%">
+    <?= form_input('search', NULL, 'id=search placeholder="Search ..." size=40 class=search style="margin-top: 13px; margin-right: 10px;"') ?>
+    <table width="70%">
         <tr><td width="15%">Waktu:</td><td><?= form_input('waktu', date("d/m/Y H:i"), 'size=27 readonly id=waktu') ?></td></tr>
         <tr><td>No. RM / Nama Pasien:</td><td><?= form_input('pasien', NULL, 'id=pasien size=40') ?><?= form_hidden('id_pasien', NULL, 'id=id_pasien') ?></td></tr>
         <tr><td>Nama Pelayanan:</td><td><?= form_input('spesialisasi', NULL, 'id=spesialisasi size=40') ?><?= form_hidden('id_spesialisasi', NULL, 'id=id_spesialisasi') ?></td></tr>

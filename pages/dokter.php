@@ -1,10 +1,10 @@
 <?php
 $subNav = array(
 	"Karyawan ; karyawan.php ; #509601;",
-        "Dokter ; dokter.php ; #509601;",
-        "Jadwal Praktek Dokter ; jadwalpraktek.php ; #509601;",
+        "Nakes ; dokter.php ; #509601;",
+        "Jadwal Praktek ; jadwalpraktek.php ; #509601;",
 );
-
+$jabatan = array('Dokter','Perawat','Apoteker','Nakes Lain');
 set_include_path("../");
 include_once("inc/essentials.php");
 include_once("inc/functions.php");
@@ -30,7 +30,7 @@ var str = '<div id=form_add>'+
                 '<tr><td>Kelamin:</td><td><input type="radio" name=kelamin value="P" checked id="prm" /> <label for="prm">Perempuan</label> <input type="radio" name=kelamin value="L" id="l" /> <label for="l">Laki-laki</label></td></tr>'+
                 '<tr><td>Alamat:</td><td><?= form_input('alamat', NULL, 'id=alamat size=40 onBlur="javascript:this.value=this.value.toUpperCase();"') ?><input type=hidden name="id_pabrik" /></td></tr>'+
                 '<tr><td>Telp:</td><td><?= form_input('telp', '', 'id=telp size=40') ?></td></tr>'+
-                '<tr><td>Email:</td><td><?= form_input('email','', 'id=email size=40') ?></td></tr>'+
+                '<tr><td>Jabatan:</td><td><select name=jabatan id=jabatan><?php foreach($jabatan as $data) { ?><option value="<?= $data ?>"><?= $data ?></option><?php } ?></select></td></tr>'+
                 '<tr><td>No. STR:</td><td><?= form_input('nostr', '', 'id=nostr size=40') ?></td></tr>'+
                 '<tr><td>Spesialis:</td><td><?= form_input('spesialis', '', 'id=spesialis size=40') ?></td></tr>'+
                 '<tr><td>Tgl Mulai Praktek:</td><td><?= form_input('tglmulai', '', 'id=tglmulai size=40') ?></td></tr>'+
@@ -43,7 +43,7 @@ var str = '<div id=form_add>'+
         this.value=this.value.toUpperCase();
     });
     $('#form_add').dialog({
-        title: 'Tambah Customer',
+        title: 'Tambah Nakes',
         autoOpen: true,
         width: 480,
         height: 350,
@@ -65,19 +65,6 @@ var str = '<div id=form_add>'+
         changeYear: true,
         changeMonth: true
     });
-    
-    $('#pabrik').dblclick(function() {
-        $('<div title="Data pabrik" id="pabrik-data"></div>').dialog({
-            autoOpen: true,
-            modal: true,
-            width: 500,
-            height: 350,
-            buttons: {
-                
-            }
-        });
-    });
-    
     
     $('#save_dokter').submit(function() {
         if ($('#nama').val() === '') {
@@ -153,14 +140,14 @@ function edit_dokter(str) {
     
     var arr = str.split('#');
     form_add();
-    $('#form_add').dialog({ title: 'Edit dokter' });
+    $('#form_add').dialog({ title: 'Edit Nakes' });
     $('#id_dokter').val(arr[0]);
     $('#nama').val(arr[1]);
     if (arr[2] === 'P') { $('#prm').attr('checked','checked'); }
     if (arr[2] === 'L') { $('#l').attr('checked','checked'); }
     $('#alamat').val(arr[3]);
     $('#telp').val(arr[4]);
-    $('#email').val(arr[5]);
+    $('#jabatan').val(arr[5]);
     $('#nostr').val(arr[6]);
     $('#spesialis').val(arr[7]);
     $('#tglmulai').val(arr[8]);
@@ -195,7 +182,7 @@ $.plugin($afterSubPageShow,{ // <-- event is here
     }
 });
 </script>
-<h1 class="margin-t-0">Data dokter</h1>
+<h1 class="margin-t-0">Data Tenaga Kesehatan</h1>
 <hr>
 <button id="button">Tambah Data</button>
 <button id="reset">Reset</button>

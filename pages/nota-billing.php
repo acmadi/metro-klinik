@@ -4,7 +4,7 @@ include_once '../models/masterdata.php';
 include_once '../inc/functions.php';
 
 $apt = apotek_atribute();
-$attr= nota_billing_load_data($_GET['id'], $_GET['id_daftar']);
+$attr= nota_billing_load_data($_GET['id'], $_GET['tanggal']);
 foreach ($attr['atribute'] as $rows);
 ?>
 <title>Nota</title>
@@ -23,7 +23,7 @@ function cetak() {
         <tr><td align="center" style="font-size: 12px;">Telp. <?= $apt->telp ?></td> </tr>
     </table>
     <table width="100%" style="border-bottom: 1px solid #000;">
-        <tr><td width="40%">Nomor:</td><td><?= $_GET['id'] ?></td></tr>
+        <tr><td width="40%">Nomor:</td><td><?= $rows->id ?></td></tr>
         <tr><td>Waktu:</td><td style="white-space: nowrap"><?= datetimefmysql(date("Y-m-d H:i:s"), TRUE) ?></td></tr>
         <tr><td>Pelanggan:</td><td style="white-space: nowrap"><?= $rows->no_rm ?> / <?= $rows->pelanggan ?></td></tr>
     </table>

@@ -9,7 +9,6 @@ include_once '../inc/functions.php';
     <th width="10%">Waktu</th>
     <th width="25%">Pasien</th>
     <th width="20%">Layanan</th>
-    <th width="10%">No. Antri</th>
     <th width="10%">Nominal (Rp.)</th>
     <th width="3%">#</th>
 </tr>
@@ -40,11 +39,16 @@ include_once '../inc/functions.php';
         <td align="center"><?= (++$key+$offset) ?></td>
         <td align="center"><?= datetimefmysql($data->waktu, TRUE) ?></td>
         <td><?= $data->pasien ?></td>
-        <td><?= $data->layanan ?></td>
-        <td align="center"><?= $data->no_antri ?></td>
+        <td>
+<!--            <ul>
+            <?php foreach ($tindakan as $rows) { ?>
+               <li><?= $rows->nama ?></li>
+            <?php } ?>
+            </ul>-->
+        </td>
         <td align="right"><?= rupiah($data->bayar) ?></td>
         <td class='aksi' align='center'>
-            <a class='printing' onclick="cetak_nota('<?= $data->id ?>','<?= $data->id_pendaftaran ?>');" title="Klik untuk cetak ulang nota">&nbsp;</a>
+            <a class='printing' onclick="cetak_nota('<?= $data->id_pelanggan ?>','<?= $data->tanggal ?>');" title="Klik untuk cetak ulang nota">&nbsp;</a>
             <a class='deletion' onclick="delete_billing('<?= $data->id ?>', '<?= $page ?>');" title="Klik untuk hapus">&nbsp;</a>
         </td>
     </tr>

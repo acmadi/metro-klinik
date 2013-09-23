@@ -37,11 +37,12 @@ $(function() {
         <th width="3%">No.</th>
         <th width="5%">Kode</th>
         <th width="5%">Tanggal</th>
-        <th width="15%">Pasien</th>
-        <th width="15%">Dokter</th>
-        <th width="15%">Anamnesis</th>
+        <th width="10%">Pasien</th>
+        <th width="10%">Dokter</th>
+        <th width="10%">Anamnesis</th>
         <th width="20%">Diagnosis</th>
         <th width="20%">Tindakan</th>
+        <th width="20%">Rekomendasi<br/>Tindakan</th>
         <th width="2%">#</th>
     </tr>
 </thead>
@@ -71,6 +72,7 @@ $(function() {
     foreach ($list_data as $key => $data) { 
         $diagnosis = diagnosis_load_by_pendaftaran($data->id_pendaftaran);
         $tindakan  = tindakan_load_by_pendaftaran($data->id_pendaftaran);
+        $rek_tindakan  = rek_tindakan_load_by_pendaftaran($data->id_pendaftaran);
         ?>
         <tr valign="top" id="<?= $data->id ?>" class="detail <?= ($id !== $data->id)?'odd':NULL ?>">
             <td align="center"><?= ($id !== $data->id)?($no+$offset):NULL ?></td>
@@ -88,6 +90,13 @@ $(function() {
             <td>
                 <ul>
                 <?php foreach ($tindakan as $rows) { ?>
+                    <li><?= $rows->nama ?></li>
+                <?php } ?>
+                </ul>
+            </td>
+            <td>
+                <ul>
+                <?php foreach ($rek_tindakan as $rows) { ?>
                     <li><?= $rows->nama ?></li>
                 <?php } ?>
                 </ul>

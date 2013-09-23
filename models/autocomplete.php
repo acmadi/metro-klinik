@@ -527,13 +527,16 @@ if ($method === 'pasien_pendaftar') {
 }
 
 if ($method === 'get_total_tagihan') {
-    $id  = $_GET['id_daftar'];
+    $id  = $_GET['id_pasien']; // idpasien
     $sql = mysql_query("select sum(p.total) as total_obat from resep r 
-        join penjualan p on (r.id = p.id_resep)
-        where r.id_pendaftaran = '$id'");
+        left join penjualan p on (r.id = p.id_resep)
+        where r.id_pasien = '$id' and date(r.waktu) = '".date("Y-m-d")."'");
     $row = mysql_fetch_object($sql);
     
-    $sqw = mysql_query("select sum(nominal) as total_jasa from tindakan where id_pendaftaran = '$id'");
+    $sqw = mysql_query("select sum(nominal) as total_jasa 
+        from tindakan t 
+        join pendaftaran pdf on (t.id_pendaftaran = pdf.id) 
+        where pdf.id_pelanggan = '$id' and date(pdf.waktu) = '".date("Y-m-d")."'");
     $roq = mysql_fetch_object($sqw);
     
     $total_tagihan = $row->total_obat+$roq->total_jasa;
