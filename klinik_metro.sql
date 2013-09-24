@@ -3,18 +3,12 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 23, 2013 at 06:58 AM
+-- Generation Time: Sep 24, 2013 at 07:17 AM
 -- Server version: 5.5.27
 -- PHP Version: 5.4.7
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
 
 --
 -- Database: `klinik_metro`
@@ -57,7 +51,7 @@ CREATE TABLE IF NOT EXISTS `arus_kas` (
   `keterangan` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `id_users` (`id_users`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=20 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=26 ;
 
 --
 -- Dumping data for table `arus_kas`
@@ -74,7 +68,13 @@ INSERT INTO `arus_kas` (`id`, `transaksi`, `id_transaksi`, `id_users`, `waktu`, 
 (16, 'Penjualan Non Resep', 0, 2, '2013-09-22 20:53:04', 25200, 0, ''),
 (17, 'Penjualan Non Resep', 70, 2, '2013-09-22 20:55:33', 20300, 0, ''),
 (18, 'Penjualan Non Resep', 71, 2, '2013-09-22 20:58:23', 25200, 0, ''),
-(19, 'Penjualan Non Resep', 72, 2, '2013-09-22 21:05:52', 25100, 0, '');
+(19, 'Penjualan Non Resep', 72, 2, '2013-09-22 21:05:52', 25100, 0, ''),
+(20, 'Penjualan Resep', 0, 2, '2013-09-23 21:51:38', 45600, 0, ''),
+(21, 'Penjualan Resep', 0, 2, '2013-09-23 21:52:13', 45600, 0, ''),
+(22, 'Penjualan Resep', 0, 2, '2013-09-23 21:54:23', 45600, 0, ''),
+(23, 'Penjualan Resep', 1, 2, '2013-09-23 21:56:01', 45600, 0, ''),
+(24, 'Penjualan Resep', 2, 2, '2013-09-23 21:57:05', 45600, 0, ''),
+(25, 'Penjualan Resep', 3, 2, '2013-09-23 21:57:29', 45600, 0, '');
 
 -- --------------------------------------------------------
 
@@ -1561,7 +1561,14 @@ CREATE TABLE IF NOT EXISTS `detail_bayar_penjualan` (
   `bayar` double NOT NULL,
   PRIMARY KEY (`id`),
   KEY `id_penjualan` (`id_penjualan`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=59 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
+
+--
+-- Dumping data for table `detail_bayar_penjualan`
+--
+
+INSERT INTO `detail_bayar_penjualan` (`id`, `waktu`, `id_penjualan`, `bayar`) VALUES
+(6, '2013-09-23 21:57:29', 3, 45600);
 
 -- --------------------------------------------------------
 
@@ -1645,7 +1652,14 @@ CREATE TABLE IF NOT EXISTS `detail_penjualan` (
   PRIMARY KEY (`id`),
   KEY `id_penjualan` (`id_penjualan`),
   KEY `id_barang` (`id_kemasan`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=143 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
+
+--
+-- Dumping data for table `detail_penjualan`
+--
+
+INSERT INTO `detail_penjualan` (`id`, `id_penjualan`, `id_kemasan`, `qty`, `harga_jual`) VALUES
+(6, 3, 6861, 12, 3800);
 
 -- --------------------------------------------------------
 
@@ -1695,7 +1709,7 @@ CREATE TABLE IF NOT EXISTS `diagnosis` (
   PRIMARY KEY (`id`),
   KEY `id_penyakit` (`id_penyakit`),
   KEY `id_pemeriksaan` (`id_pendaftaran`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=15 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=17 ;
 
 --
 -- Dumping data for table `diagnosis`
@@ -1703,7 +1717,9 @@ CREATE TABLE IF NOT EXISTS `diagnosis` (
 
 INSERT INTO `diagnosis` (`id`, `id_pendaftaran`, `waktu`, `id_penyakit`) VALUES
 (13, 14, '2013-09-22 12:35:22', 2),
-(14, 14, '2013-09-22 12:35:22', 3);
+(14, 14, '2013-09-22 12:35:22', 3),
+(15, 15, '2013-09-23 20:37:55', 10),
+(16, 15, '2013-09-23 20:37:55', 9);
 
 -- --------------------------------------------------------
 
@@ -1748,20 +1764,21 @@ CREATE TABLE IF NOT EXISTS `dokter` (
   `kelamin` enum('L','P') NOT NULL,
   `alamat` text NOT NULL,
   `telp` varchar(15) NOT NULL,
-  `email` varchar(50) NOT NULL,
+  `profesi` enum('Dokter','Perawat','Apoteker','Nakes Lain') NOT NULL,
   `no_str` varchar(30) NOT NULL,
   `spesialis` varchar(50) NOT NULL,
   `tgl_mulai_praktek` date NOT NULL,
   `fee` double NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
 
 --
 -- Dumping data for table `dokter`
 --
 
-INSERT INTO `dokter` (`id`, `nama`, `kelamin`, `alamat`, `telp`, `email`, `no_str`, `spesialis`, `tgl_mulai_praktek`, `fee`) VALUES
-(000004, 'DR. BAMBANG SUJIWO', 'L', 'BANJARNEGARA', '-', '-', '-', '-', '2013-09-02', 10);
+INSERT INTO `dokter` (`id`, `nama`, `kelamin`, `alamat`, `telp`, `profesi`, `no_str`, `spesialis`, `tgl_mulai_praktek`, `fee`) VALUES
+(000004, 'DR. BAMBANG SUJIWO', 'L', 'BANJARNEGARA', '-', '', '-', '-', '2013-09-02', 10),
+(000005, 'DR. ACHIRUDIN TIMORA', 'L', 'JL. KALIURANG KM 12', '0274-223123', 'Dokter', 'NO.12134', '', '2013-09-01', 0);
 
 -- --------------------------------------------------------
 
@@ -1982,7 +1999,7 @@ CREATE TABLE IF NOT EXISTS `jadwal_dokter` (
   `akhir` time NOT NULL,
   PRIMARY KEY (`id`),
   KEY `id_dokter` (`id_dokter`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -3803,20 +3820,21 @@ INSERT INTO `pelanggan` (`id`, `nama`, `jenis`, `kelamin`, `tempat_lahir`, `tang
 
 CREATE TABLE IF NOT EXISTS `pembayaran_billing` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `id_pendaftaran` int(11) NOT NULL,
+  `id_pelanggan` varchar(20) NOT NULL,
+  `tanggal` date NOT NULL,
   `waktu` datetime NOT NULL,
   `bayar` double NOT NULL,
   `uang_serah` double NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `id_pendaftaran` (`id_pendaftaran`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+  KEY `id_pelanggan` (`id_pelanggan`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 --
 -- Dumping data for table `pembayaran_billing`
 --
 
-INSERT INTO `pembayaran_billing` (`id`, `id_pendaftaran`, `waktu`, `bayar`, `uang_serah`) VALUES
-(1, 14, '2013-09-22 16:56:39', 175000, 175000);
+INSERT INTO `pembayaran_billing` (`id`, `id_pelanggan`, `tanggal`, `waktu`, `bayar`, `uang_serah`) VALUES
+(2, 'MDN20130920002', '2013-09-23', '2013-09-23 21:59:54', 1120600, 1120600);
 
 -- --------------------------------------------------------
 
@@ -3840,7 +3858,10 @@ CREATE TABLE IF NOT EXISTS `pemeriksaan` (
 --
 
 INSERT INTO `pemeriksaan` (`id`, `tanggal`, `anamnesis`, `id_pendaftaran`, `id_dokter`, `foto`) VALUES
-('PR.001-09/2013', '2013-09-22', 'Kulit bersisik', 14, 000004, 'arvin_nizar_775432698.jpg');
+('PR.001-09/2013', '2013-09-22', 'Kulit bersisik', 14, 000004, 'arvin_nizar_775432698.jpg'),
+('PR.002-09/2013', '2013-09-23', 'wawancara', 15, 000005, 'singgih_prabowo_adi_506871351.png'),
+('PR.003-09/2013', '2013-09-23', '', 16, 000005, ''),
+('PR.004-09/2013', '2013-09-23', '', 17, 000004, '');
 
 -- --------------------------------------------------------
 
@@ -3887,7 +3908,7 @@ CREATE TABLE IF NOT EXISTS `pendaftaran` (
   KEY `id_pelanggan` (`id_pelanggan`),
   KEY `id_spesialisasi` (`id_spesialisasi`),
   KEY `id_dokter` (`id_dokter`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=15 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=18 ;
 
 --
 -- Dumping data for table `pendaftaran`
@@ -3897,7 +3918,10 @@ INSERT INTO `pendaftaran` (`id`, `waktu`, `id_pelanggan`, `no_antri`, `waktu_pel
 (10, '2013-09-21 20:52:26', 'MDN20130920001', 1, NULL, 3, NULL),
 (12, '2013-09-21 20:58:16', 'MDN20130920002', 2, NULL, 3, NULL),
 (13, '2013-09-21 20:59:34', 'MDN20130920003', 1, NULL, 4, NULL),
-(14, '2013-09-22 11:39:49', 'MDN20130920001', 1, '2013-09-22 12:35:22', 4, 000004);
+(14, '2013-09-22 11:39:49', 'MDN20130920001', 1, '2013-09-22 12:35:22', 4, 000004),
+(15, '2013-09-23 19:33:51', 'MDN20130920002', 1, '2013-09-23 20:37:55', 4, 000005),
+(16, '2013-09-23 20:59:45', 'MDN20130920002', 1, '2013-09-23 21:26:21', 5, 000005),
+(17, '2013-09-23 21:34:11', 'MDN20130920002', 2, '2013-09-23 21:35:00', 5, 000004);
 
 -- --------------------------------------------------------
 
@@ -3956,7 +3980,14 @@ CREATE TABLE IF NOT EXISTS `penjualan` (
   KEY `id_customer` (`id_pelanggan`),
   KEY `id_asuransi` (`id_asuransi`),
   KEY `id_resep` (`id_resep`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=73 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+
+--
+-- Dumping data for table `penjualan`
+--
+
+INSERT INTO `penjualan` (`id`, `waktu`, `id_resep`, `id_pelanggan`, `diskon_persen`, `diskon_rupiah`, `ppn`, `total`, `tuslah`, `embalage`, `id_asuransi`, `reimburse`) VALUES
+(3, '2013-09-23 21:57:29', '001-09/2013', 'MDN20130920002', 0, 0, 0, 45600, 0, 0, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -4027,6 +4058,30 @@ INSERT INTO `privileges` (`id`, `module_id`, `form_nama`, `url`, `icon`, `show_d
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `rek_tindakan`
+--
+
+CREATE TABLE IF NOT EXISTS `rek_tindakan` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `waktu` datetime NOT NULL,
+  `id_pendaftaran` int(11) NOT NULL,
+  `id_tarif` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_pemeriksaan` (`id_pendaftaran`),
+  KEY `id_tarif` (`id_tarif`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+
+--
+-- Dumping data for table `rek_tindakan`
+--
+
+INSERT INTO `rek_tindakan` (`id`, `waktu`, `id_pendaftaran`, `id_tarif`) VALUES
+(1, '2013-09-23 20:37:55', 15, 13),
+(2, '2013-09-23 20:37:55', 15, 12);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `resep`
 --
 
@@ -4043,6 +4098,13 @@ CREATE TABLE IF NOT EXISTS `resep` (
   KEY `pasien_penduduk_id` (`id_pasien`),
   KEY `id_pendaftaran` (`id_pendaftaran`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `resep`
+--
+
+INSERT INTO `resep` (`id`, `waktu`, `id_dokter`, `id_pendaftaran`, `id_pasien`, `keterangan`, `id_users`) VALUES
+('001-09/2013', '2013-09-23 21:45:07', 000005, 17, 'MDN20130920002', '', NULL);
 
 -- --------------------------------------------------------
 
@@ -4072,7 +4134,14 @@ CREATE TABLE IF NOT EXISTS `resep_r` (
   KEY `tarif_id` (`id_tarif`),
   KEY `id_karyawan` (`id_karyawan`),
   KEY `id_barang` (`id_barang`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=67 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `resep_r`
+--
+
+INSERT INTO `resep_r` (`id`, `id_resep`, `r_no`, `resep_r_jumlah`, `tebus_r_jumlah`, `aturan`, `pakai`, `iter`, `id_tarif`, `nominal`, `id_karyawan`, `id_barang`, `jual_harga`, `dosis_racik`, `jumlah_pakai`, `formularium`) VALUES
+(1, '001-09/2013', 1, 12, 12, 2, 1, 0, NULL, 0, NULL, 6950, 45599, 500, 12, NULL);
 
 -- --------------------------------------------------------
 
@@ -4223,7 +4292,7 @@ CREATE TABLE IF NOT EXISTS `spesialisasi` (
   `id` int(3) NOT NULL AUTO_INCREMENT,
   `nama` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
 
 --
 -- Dumping data for table `spesialisasi`
@@ -4231,7 +4300,8 @@ CREATE TABLE IF NOT EXISTS `spesialisasi` (
 
 INSERT INTO `spesialisasi` (`id`, `nama`) VALUES
 (3, 'Gigi'),
-(4, 'Poli Kecantikan');
+(4, 'Poli Kecantikan'),
+(5, 'Kulit');
 
 -- --------------------------------------------------------
 
@@ -4252,7 +4322,7 @@ CREATE TABLE IF NOT EXISTS `stok` (
   `Keterangan` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `id_barang` (`id_barang`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9580 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9578 ;
 
 --
 -- Dumping data for table `stok`
@@ -5637,7 +5707,11 @@ INSERT INTO `stok` (`id`, `waktu`, `id_transaksi`, `transaksi`, `nobatch`, `id_b
 (9568, '2013-09-22 20:51:51', 0, 'Penjualan', '', 6821, NULL, 0, 2, ''),
 (9569, '2013-09-22 20:53:04', 0, 'Penjualan', '', 7736, '0000-00-00', 0, 2, ''),
 (9570, '2013-09-22 20:53:04', 0, 'Penjualan', '', 7131, NULL, 0, 2, ''),
-(9571, '2013-09-22 20:53:04', 0, 'Penjualan', '', 6821, NULL, 0, 2, '');
+(9571, '2013-09-22 20:53:04', 0, 'Penjualan', '', 6821, NULL, 0, 2, ''),
+(9572, '2013-09-23 21:51:38', 0, 'Penjualan', '', 6950, '2015-09-01', 0, 12, ''),
+(9573, '2013-09-23 21:52:13', 0, 'Penjualan', '', 6950, '2015-09-01', 0, 12, ''),
+(9574, '2013-09-23 21:54:23', 0, 'Penjualan', '', 6950, '2015-09-01', 0, 12, ''),
+(9577, '2013-09-23 21:57:29', 3, 'Penjualan', '', 6950, '2015-09-01', 0, 12, '');
 
 -- --------------------------------------------------------
 
@@ -5913,7 +5987,7 @@ CREATE TABLE IF NOT EXISTS `tindakan` (
   PRIMARY KEY (`id`),
   KEY `id_pemeriksaan` (`id_pendaftaran`),
   KEY `id_tarif` (`id_tarif`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=12 ;
 
 --
 -- Dumping data for table `tindakan`
@@ -5921,7 +5995,10 @@ CREATE TABLE IF NOT EXISTS `tindakan` (
 
 INSERT INTO `tindakan` (`id`, `waktu`, `id_pendaftaran`, `id_tarif`, `jasa_dokter`, `jasa_perawat`, `jasa_sarana`, `nominal`) VALUES
 (7, '2013-09-22 12:35:22', 14, 18, 25000, 10000, 40000, 75000),
-(8, '2013-09-22 12:35:22', 14, 10, 0, 0, 0, 100000);
+(8, '2013-09-22 12:35:22', 14, 10, 0, 0, 0, 100000),
+(9, '2013-09-23 20:37:55', 15, 18, 25000, 10000, 40000, 75000),
+(10, '2013-09-23 21:26:21', 16, 12, 0, 0, 0, 500000),
+(11, '2013-09-23 21:35:00', 17, 13, 0, 0, 0, 500000);
 
 -- --------------------------------------------------------
 
@@ -5985,8 +6062,8 @@ ALTER TABLE `detail_bayar_penjualan`
 -- Constraints for table `detail_pemesanan`
 --
 ALTER TABLE `detail_pemesanan`
-  ADD CONSTRAINT `detail_pemesanan_ibfk_3` FOREIGN KEY (`id_pemesanan`) REFERENCES `pemesanan` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `detail_pemesanan_ibfk_2` FOREIGN KEY (`id_kemasan`) REFERENCES `kemasan` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `detail_pemesanan_ibfk_2` FOREIGN KEY (`id_kemasan`) REFERENCES `kemasan` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `detail_pemesanan_ibfk_3` FOREIGN KEY (`id_pemesanan`) REFERENCES `pemesanan` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `detail_penerimaan`
@@ -6013,8 +6090,8 @@ ALTER TABLE `detail_retur_penerimaan`
 -- Constraints for table `diagnosis`
 --
 ALTER TABLE `diagnosis`
-  ADD CONSTRAINT `diagnosis_ibfk_3` FOREIGN KEY (`id_pendaftaran`) REFERENCES `pendaftaran` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `diagnosis_ibfk_2` FOREIGN KEY (`id_penyakit`) REFERENCES `penyakit` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `diagnosis_ibfk_2` FOREIGN KEY (`id_penyakit`) REFERENCES `penyakit` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `diagnosis_ibfk_3` FOREIGN KEY (`id_pendaftaran`) REFERENCES `pendaftaran` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `dinamic_harga_jual`
@@ -6065,7 +6142,7 @@ ALTER TABLE `pelanggan`
 -- Constraints for table `pembayaran_billing`
 --
 ALTER TABLE `pembayaran_billing`
-  ADD CONSTRAINT `pembayaran_billing_ibfk_1` FOREIGN KEY (`id_pendaftaran`) REFERENCES `pendaftaran` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `pembayaran_billing_ibfk_1` FOREIGN KEY (`id_pelanggan`) REFERENCES `pelanggan` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `pemeriksaan`
@@ -6084,33 +6161,40 @@ ALTER TABLE `pemesanan`
 -- Constraints for table `pendaftaran`
 --
 ALTER TABLE `pendaftaran`
-  ADD CONSTRAINT `pendaftaran_ibfk_4` FOREIGN KEY (`id_pelanggan`) REFERENCES `pelanggan` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `pendaftaran_ibfk_2` FOREIGN KEY (`id_spesialisasi`) REFERENCES `spesialisasi` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `pendaftaran_ibfk_3` FOREIGN KEY (`id_dokter`) REFERENCES `dokter` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+  ADD CONSTRAINT `pendaftaran_ibfk_3` FOREIGN KEY (`id_dokter`) REFERENCES `dokter` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `pendaftaran_ibfk_4` FOREIGN KEY (`id_pelanggan`) REFERENCES `pelanggan` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `penerimaan`
 --
 ALTER TABLE `penerimaan`
-  ADD CONSTRAINT `penerimaan_ibfk_4` FOREIGN KEY (`id_pemesanan`) REFERENCES `pemesanan` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `penerimaan_ibfk_1` FOREIGN KEY (`id_supplier`) REFERENCES `supplier` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `penerimaan_ibfk_3` FOREIGN KEY (`id_users`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `penerimaan_ibfk_3` FOREIGN KEY (`id_users`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `penerimaan_ibfk_4` FOREIGN KEY (`id_pemesanan`) REFERENCES `pemesanan` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `penjualan`
 --
 ALTER TABLE `penjualan`
-  ADD CONSTRAINT `penjualan_ibfk_4` FOREIGN KEY (`id_pelanggan`) REFERENCES `pelanggan` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `penjualan_ibfk_1` FOREIGN KEY (`id_asuransi`) REFERENCES `asuransi` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `penjualan_ibfk_3` FOREIGN KEY (`id_resep`) REFERENCES `resep` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `penjualan_ibfk_3` FOREIGN KEY (`id_resep`) REFERENCES `resep` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `penjualan_ibfk_4` FOREIGN KEY (`id_pelanggan`) REFERENCES `pelanggan` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `rek_tindakan`
+--
+ALTER TABLE `rek_tindakan`
+  ADD CONSTRAINT `rek_tindakan_ibfk_1` FOREIGN KEY (`id_pendaftaran`) REFERENCES `pendaftaran` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `rek_tindakan_ibfk_2` FOREIGN KEY (`id_tarif`) REFERENCES `tarif` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `resep`
 --
 ALTER TABLE `resep`
-  ADD CONSTRAINT `resep_ibfk_3` FOREIGN KEY (`id_pendaftaran`) REFERENCES `pendaftaran` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `resep_ibfk_1` FOREIGN KEY (`id_dokter`) REFERENCES `dokter` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `resep_ibfk_2` FOREIGN KEY (`id_pasien`) REFERENCES `pelanggan` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `resep_ibfk_2` FOREIGN KEY (`id_pasien`) REFERENCES `pelanggan` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `resep_ibfk_3` FOREIGN KEY (`id_pendaftaran`) REFERENCES `pendaftaran` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `resep_r`
@@ -6143,14 +6227,11 @@ ALTER TABLE `tarif`
 -- Constraints for table `tindakan`
 --
 ALTER TABLE `tindakan`
-  ADD CONSTRAINT `tindakan_ibfk_2` FOREIGN KEY (`id_tarif`) REFERENCES `tarif` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `tindakan_ibfk_2` FOREIGN KEY (`id_tarif`) REFERENCES `tarif` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `tindakan_ibfk_3` FOREIGN KEY (`id_pendaftaran`) REFERENCES `pendaftaran` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `users`
 --
 ALTER TABLE `users`
   ADD CONSTRAINT `users_ibfk_1` FOREIGN KEY (`id_karyawan`) REFERENCES `karyawan` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
