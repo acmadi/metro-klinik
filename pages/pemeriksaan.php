@@ -60,7 +60,7 @@ function add_tindakan(id, nama, nominal) {
 
 function form_add() {
     var str = '<div id=form_pemeriksaan>'+
-                '<form id=save_pemeriksaan action="models/update-transaksi.php?method=save_pemeriksaan" enctype=multipart/form-data>'+
+                '<form method=post id=save_pemeriksaan action="models/update-transaksi.php?method=save_pemeriksaan" enctype=multipart/form-data>'+
                     '<span id=output></span><?= form_hidden('id_pendaftaran', NULL, 'id=id_pendaftaran') ?>'+
                     '<table width=100% class=data-input><tr valign=top><td width=33%>'+
                     '<table width=100%>'+
@@ -73,8 +73,8 @@ function form_add() {
                     '</table></td><td width=33%>'+
                     '<table width=100%>'+
                         '<tr><td valign=top>Anamnesis:</td><td><?= form_textarea('anamnesis', NULL, 'id=anamnesis cols=37 style="height: 30px"') ?></td></tr>'+
-                        '<tr><td>Diagnosis:</td><td><?= form_input('diagnosis', NULL, 'id=diagnosis size=40') ?><?= form_hidden('id_diagnosis', NULL, 'id=id_diagnosis') ?></td></tr>'+
-                        '<tr><td>Tindakan:</td><td><?= form_input('tindakan', NULL, 'id=tindakan size=40') ?><?= form_hidden('id_tindakan', NULL, 'id=id_tindakan') ?></td></tr>'+
+                        '<tr><td>Diagnosis:</td><td><?= form_input('diagnosis', NULL, 'id=diagnosis size=40') ?><?= form_hidden('id_diagnosisisme', NULL, 'id=id_diagnosis') ?></td></tr>'+
+                        '<tr><td>Tindakan:</td><td><?= form_input('tindakan', NULL, 'id=tindakan size=40') ?><?= form_hidden('id_tindakanisme', NULL, 'id=id_tindakan') ?></td></tr>'+
                     '</table>'+
                     '</td><td id=foto></td></tr></table>'+
                     '<table width=100% cellspacing="0" class="list-data-input" id="penjualan-list">\n\
@@ -278,7 +278,7 @@ function load_data_pemeriksaan(page, search, id) {
         }
     });
 }
-function delete_pemeriksaan(id, page) {
+function delete_pemeriksaan(id, id_daftar, page) {
     $('<div id=alert>Anda yakin akan menghapus data ini?</div>').dialog({
         title: 'Konfirmasi Penghapusan',
         autoOpen: true,
@@ -286,7 +286,7 @@ function delete_pemeriksaan(id, page) {
         buttons: {
             "OK": function() {
                 $.ajax({
-                    url: 'models/update-transaksi.php?method=delete_pemeriksaan&id='+id,
+                    url: 'models/update-transaksi.php?method=delete_pemeriksaan&id='+id+'&id_daftar='+id_daftar,
                     cache: false,
                     success: function() {
                         load_data_pemeriksaan(page);

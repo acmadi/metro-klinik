@@ -63,9 +63,9 @@ function form_pemeriksaan(id_daftar, id_pasien, nama) {
                     '</table></td><td width=33%>'+
                     '<table width=100%>'+
                         '<tr><td valign=top>Anamnesis:</td><td><?= form_textarea('anamnesis', NULL, 'id=anamnesis cols=37 style="height: 30px"') ?></td></tr>'+
-                        '<tr><td>Diagnosis:</td><td><?= form_input('diagnosis', NULL, 'id=diagnosis size=40') ?><?= form_hidden('id_diagnosis', NULL, 'id=id_diagnosis') ?></td></tr>'+
-                        '<tr><td>Tindakan:</td><td><?= form_input('tindakan', NULL, 'id=tindakan size=40') ?><?= form_hidden('id_tindakan', NULL, 'id=id_tindakan') ?></td></tr>'+
-                        '<tr><td>Rekomendasi Tindakan:</td><td><?= form_input('rek_tindakan', NULL, 'id=rek_tindakan size=40') ?><?= form_hidden('id_rek_tindakan', NULL, 'id=id_rek_tindakan') ?></td></tr>'+
+                        '<tr><td>Diagnosis:</td><td><?= form_input('diagnosis', NULL, 'id=diagnosis size=40') ?><?= form_hidden('id_diagnosisisme', NULL, 'id=id_diagnosis') ?></td></tr>'+
+                        '<tr><td>Tindakan:</td><td><?= form_input('tindakan', NULL, 'id=tindakan size=40') ?><?= form_hidden('id_tindakanisme', NULL, 'id=id_tindakan') ?></td></tr>'+
+                        '<tr><td>Rekomendasi Tindakan:</td><td><?= form_input('rek_tindakan', NULL, 'id=rek_tindakan size=40') ?><?= form_hidden('id_rek_tindakanisme', NULL, 'id=id_rek_tindakan') ?></td></tr>'+
                     '</table>'+
                     '</td><td id=foto></td></tr></table>'+
                     '<table width=100% cellspacing="0" class="list-data-input" id="penjualan-list">'+

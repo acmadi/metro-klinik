@@ -582,13 +582,14 @@ if ($method === 'save_pemeriksaan') {
     $anamnesis  = $_POST['anamnesis'];
     $id_dokter  = $_POST['id_dokter'];
     
-    $id_diagnosis = $_POST['id_diagnosis'];
-    $id_tindakan  = $_POST['id_tindakan'];
-    $id_rek_tindakan = $_POST['id_rek_tindakan'];
-    $nominal      = $_POST['nominal'];
+    $id_diagnosis = isset($_POST['id_diagnosis'])?$_POST['id_diagnosis']:'NULL';
+    $id_tindakan  = isset($_POST['id_tindakan'])?$_POST['id_tindakan']:'NULL';
+    $id_rek_tindakan = isset($_POST['id_rek_tindakan'])?$_POST['id_rek_tindakan']:'NULL';
+    $nominal      = isset($_POST['nominal'])?$_POST['nominal']:'NULL';
     $UploadDirectory	= '../img/pemeriksaan/'; //Upload Directory, ends with slash & make sure folder exist
     $NewFileName= "";
         // replace with your mysql database details
+    //echo $id_diagnosis." - ".$id_tindakan." -  ".$id_rek_tindakan."<br/>";
     if (!@file_exists($UploadDirectory)) {
             //destination folder does not exist
             die("Make sure Upload directory exist!");
@@ -648,7 +649,7 @@ if ($method === 'save_pemeriksaan') {
         where id = '$id_daftar'";
    mysql_query($sql2);
    
-   if (count($id_diagnosis) > 0) {
+   if ($id_diagnosis !== 'NULL') {
         foreach ($id_diagnosis as $key => $data) {
             $query = "insert into diagnosis set
                  id_pendaftaran = '$id_daftar',
@@ -658,7 +659,7 @@ if ($method === 'save_pemeriksaan') {
         }
    }
 
-   if (count($id_tindakan) > 0) {
+   if ($id_tindakan !== 'NULL') {
         foreach ($id_tindakan as $key => $data) {
             $get   = mysql_fetch_object(mysql_query("select * from tarif where id = '$data'"));
             $query = "insert into tindakan set
@@ -674,7 +675,7 @@ if ($method === 'save_pemeriksaan') {
         }
    }
    
-   if (count($id_rek_tindakan) > 0) {
+   if ($id_rek_tindakan !== 'NULL') {
         foreach ($id_rek_tindakan as $key => $data) {
             $get   = mysql_fetch_object(mysql_query("select * from tarif where id = '$data'"));
             $query = "insert into rek_tindakan set
@@ -689,6 +690,10 @@ if ($method === 'save_pemeriksaan') {
 
 if ($method === 'delete_pemeriksaan') {
     mysql_query("delete from pemeriksaan where id = '$_GET[id]'");
+    mysql_query("delete from diagnosis where id_pendaftaran = '$_GET[id_daftar]'");
+    mysql_query("delete from tindakan where id_pendaftaran = '$_GET[id_daftar]'");
+    mysql_query("delete from rek_tindakan where id_pendaftaran = '$_GET[id_daftar]'");
+    mysql_query("update pendaftaran set waktu_pelayanan = NULL and id_dokter = NULL where id = '$_GET[id_daftar]'");
 }
 
 if ($method === 'save_inkaso') {

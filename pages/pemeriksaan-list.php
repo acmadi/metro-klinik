@@ -104,7 +104,7 @@ $(function() {
             <td class='aksi' align='center'>
                 <!--<a class='edition' onclick="edit_pemeriksaan('<?= $str ?>');" title="Klik untuk edit">&nbsp;</a>-->
                 <?php if ($id !== $data->id) { ?>
-                    <a class='deletion' onclick="delete_pemeriksaan('<?= $data->id ?>','<?= $page ?>');" title="Klik untuk hapus">&nbsp;</a>
+                    <a class='deletion' onclick="delete_pemeriksaan('<?= $data->id ?>','<?= $data->id_pendaftaran ?>','<?= $page ?>');" title="Klik untuk hapus">&nbsp;</a>
                 <?php } ?>
             </td>
         </tr>
