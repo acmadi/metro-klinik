@@ -856,4 +856,51 @@ function nota_billing_load_data($id_pelanggan, $tanggal) {
     return $return;
 }
 
+function billing_load_data($param) {
+    $q = NULL;
+    if (isset($param['awal'])) {
+        $q.=" and date(p.waktu) between '".$param['awal']."' and '".$param['akhir']."'";
+    }
+    $sql = "select p.*, date(p.waktu) as tanggal, pl.nama as pelanggan, pb.bayar as terbayar
+        from pendaftaran p
+        join pelanggan pl on (p.id_pelanggan = pl.id)
+        left join pembayaran_billing pb on (p.id_pelanggan = pb.id_pelanggan and date(p.waktu) = pb.tanggal)
+        where p.id is not NULL $q group by p.id_pelanggan, pb.tanggal";
+    //echo $sql;
+    $result = mysql_query($sql);
+    $rows = array();
+    while ($metallica = mysql_fetch_object($result)) {
+        $rows[] = $metallica;
+    }
+    
+    $return['data'] = $rows;
+    return $return;
+    
+}
+
+function billing_get_total_barang($tanggal, $id_pelanggan) {
+    $sql = "select b.*, s.nama as satuan, dp.qty, dp.harga_jual, 
+        p.waktu, p.total, p.tuslah, p.embalage, p.ppn, p.diskon_persen, p.diskon_rupiah, p.id_resep, pl.nama as pelanggan,
+        sum(dp.qty*dp.harga_jual) as total_barang from detail_penjualan dp
+        join penjualan p on (dp.id_penjualan = p.id)
+        join resep r on (r.id = p.id_resep)
+        join pendaftaran pdf on (pdf.id = r.id_pendaftaran)
+        left join pelanggan pl on (p.id_pelanggan = pl.id)
+        join kemasan k on (dp.id_kemasan = k.id)
+        join barang b on (k.id_barang = b.id)
+        left join satuan s on (b.satuan_kekuatan = s.id)
+        where p.id_pelanggan = '$id_pelanggan' and date(p.waktu) = '$tanggal'";
+    $row = mysql_fetch_object(mysql_query($sql));
+    return $row;
+}
+
+function billing_get_total_jasa($tanggal, $id_pelanggan) {
+    $sqk = "select sum(t.nominal) as total_jasa, t.*, tr.nama from tindakan t
+        join tarif tr on (t.id_tarif = tr.id)
+        join pendaftaran pdf on (t.id_pendaftaran = pdf.id)
+        where pdf.id_pelanggan = '$id_pelanggan' and date(pdf.waktu) = '$tanggal' group by tr.id";
+    $result =  mysql_fetch_object(mysql_query($sqk));
+    return $result;
+}
+
 ?>

@@ -378,6 +378,7 @@ if ($method === 'save_retur_penerimaan') {
 }
 
 if ($method === 'save_resep') {
+    //session_start();
     $noresep    = $_POST['noresep'];
     $waktu      = date2mysql($_POST['waktu']).' '.date("H:i:s");
     $dokter     = $_POST['id_dokter'];
@@ -385,7 +386,7 @@ if ($method === 'save_resep') {
     $keterangan = $_POST['keterangan'];
     $id_resep   = $_POST['id_resep'];
     $id_daftar  = $_POST['id_pendaftaran'];
-    
+    $id_ikit    = isset($_POST['id_ikit'])?$_POST['id_ikit']:'NULL';
     //$id_user    = 'NULL';
     if ($id_resep === '') {
         $sql = "insert into resep set
@@ -426,25 +427,54 @@ if ($method === 'save_resep') {
     $harga_brg  = $_POST['hrg_barang'];
     
     foreach ($no_r as $arr => $data) {
-        $query = "insert into resep_r set
-            id_resep = '$id',
-            r_no = '$data',
-            resep_r_jumlah = '$jml_minta[$arr]',
-            tebus_r_jumlah = '$jml_tebus[$arr]',
-            aturan = '$aturan[$arr]',
-            pakai = '$pakai[$arr]',
-            iter = '$iterasi[$arr]',
-            id_tarif = ".(($id_tarif[$arr] !== '0')?$id_tarif[$arr]:'NULL').",
-            nominal = '".  currencyToNumber($jasa_apt[$arr])."',
-            id_barang = '$id_barang[$arr]',
-            jual_harga = '".  currencyToNumber($harga_brg[$arr])."',
-            dosis_racik = '$dosis_racik[$arr]',
-            jumlah_pakai = '$jml_pakai[$arr]'
-            ";
-        //echo $query."<br/>";
-        mysql_query($query);
-        //$id_resep_r = mysql_insert_id();
-        
+        if (isset($id_barang[$arr])) {
+            $query = "insert into resep_r set
+                id_resep = '$id',
+                r_no = '$data',
+                resep_r_jumlah = '$jml_minta[$arr]',
+                tebus_r_jumlah = '$jml_tebus[$arr]',
+                aturan = '$aturan[$arr]',
+                pakai = '$pakai[$arr]',
+                iter = '$iterasi[$arr]',
+                id_tarif = ".(($id_tarif[$arr] !== '0')?$id_tarif[$arr]:'NULL').",
+                nominal = '".  currencyToNumber($jasa_apt[$arr])."',
+                id_barang = '$id_barang[$arr]',
+                jual_harga = '".  currencyToNumber($harga_brg[$arr])."',
+                dosis_racik = '$dosis_racik[$arr]',
+                jumlah_pakai = '$jml_pakai[$arr]'
+                ";
+            //echo $query."<br/>";
+            mysql_query($query);
+            //$id_resep_r = mysql_insert_id();
+        } else {
+            foreach ($id_ikit as $nu => $rows) {
+                $get = mysql_query("select id.*, b.hna+(b.hna*(b.margin_resep/100)) as harga_jual, k.id_barang 
+                        from item_kit i 
+                        join item_kit_detail id on (i.id = id.id_item_kit) 
+                        join kemasan k on (id.id_kemasan = k.id) 
+                        join barang b on (k.id_barang = b.id)
+                        where i.id = '$rows'");
+                while ($do = mysql_fetch_object($get)) {
+                    $query = "insert into resep_r set
+                        id_resep = '$id',
+                        r_no = '$no_r[$arr]',
+                        resep_r_jumlah = '$jml_minta[$arr]',
+                        tebus_r_jumlah = '$jml_tebus[$arr]',
+                        aturan = '$aturan[$arr]',
+                        pakai = '$pakai[$arr]',
+                        iter = '$iterasi[$arr]',
+                        id_tarif = ".(($id_tarif[$arr] !== '0')?$id_tarif[$arr]:'NULL').",
+                        nominal = '".  currencyToNumber($jasa_apt[$arr])."',
+                        id_barang = '".$do->id_barang."',
+                        jual_harga = '".$do->harga_jual."',
+                        dosis_racik = '$dosis_racik[$arr]',
+                        jumlah_pakai = '$jml_pakai[$arr]'
+                        ";
+                    //echo $query."<br/>";
+                    mysql_query($query);
+                }
+            }
+        }
     }
     $result['status'] = TRUE;
     $result['id'] = $id;

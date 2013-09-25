@@ -128,7 +128,7 @@ function addnoresep() {
     var p           = $('#p').val();
     var iterasi     = $('#it').val();
     var jasa        = jasa_apt[1];
-    var kekuatan    = $('#kekuatan').html();
+    //var kekuatan    = $('#kekuatan').html();
     var dosis_racik = $('#dr').val();
     var jml_pakai   = $('#jmlpakai').val();
     var str = '<tr class="tr_rows">'+
@@ -170,6 +170,42 @@ function addnoresep() {
             $('#sisa'+i).html(sisa);
         }
     });
+}
+
+function addnoresep_ik() {
+    var jasa_apt    = $('#ja').val().split('-');
+    var i           = $('.tr_rows').length+1;
+    var barang      = $('#pb').val();
+    var id_barang   = $('#id_pb').val();
+    var no_r        = $('#nr').val();
+    var permintaan  = $('#jr').val();
+    var tebus       = $('#jt').val();
+    //var aturan_pakai= $('#a').val()+'DD'+$('#p').val();
+    var a           = $('#a').val();
+    var p           = $('#p').val();
+    var iterasi     = $('#it').val();
+    var jasa        = jasa_apt[1];
+    //var kekuatan    = $('#kekuatan').html();
+    var dosis_racik = $('#dr').val();
+    var jml_pakai   = $('#jmlpakai').val();
+    var harga_jual  = numberToCurrency($('#hjual').val());
+    var str = '<tr class="tr_rows">'+
+                '<td align=center>'+i+'</td>'+
+                '<td><input type=text name=no_r[] id=no_r'+i+' value="'+no_r+'" style="text-align: center;" /></td>'+
+                '<td>'+barang+' <input type=hidden name=id_ikit[] value="'+id_barang+'" class=id_ikit id=id_ikit'+i+' /></td>'+
+                '<td><input type=text name=jp[] id=jp'+i+' value="'+permintaan+'" style="text-align: center;" /></td>'+
+                '<td><input type=text name=jt[] id=jt'+i+' value="'+tebus+'" style="text-align: center;" /></td>'+
+                '<td align=center id=sisa'+i+'>-</td>'+
+                '<td><input type=text name=a[] id=a'+i+' value="'+a+'" style="text-align: right; width: 40%" /> X <input type=text name=p[] id=p'+i+' value="'+p+'" style="text-align: left; width: 40%" /></td>'+
+                '<td><input type=text name=it[] id=it'+i+' value="'+iterasi+'" style="text-align: center;" /></td>'+
+                '<td><input type=text name=dr[] id=dr'+i+' value="'+dosis_racik+'" style="text-align: center;" /></td>'+
+                '<td><input type=text name=jpi[] id=jpi'+i+' value="'+jml_pakai+'" style="text-align: center;" /></td>'+
+                '<td><input type=hidden name=id_tarif[] id=id_tarif'+i+' value="'+jasa_apt[0]+'" /> <input type=text name=jasa[] id=jasa'+i+' onkeyup=FormNum(this) value="'+numberToCurrency(jasa)+'" style="text-align: right;" /></td>'+
+                '<td><input type=text name=hrg_barang[] id=hrg_barang'+i+' value="'+harga_jual+'" style="text-align: right;" /></td>'+
+                '<td class=aksi><img onclick=removeMe(this); title="Klik untuk hapus" src="img/icons/delete.png" class=add_kemasan align=left /></td>'+
+              '</tr>';
+        $('#resep-list tbody').append(str);
+        total_perkiraan_resep();
 }
 
 function removeMe(el) {
@@ -250,7 +286,7 @@ function form_receipt() {
                             '<input type=hidden name=id_pb id=id_pb class=id_pb /></td></tr>'+
                         '<tr><td>Kekuatan:</td><td><span class=label id=kekuatan>-</span></td></tr>'+
                         '<tr><td>Dosis Racik:</td><td> <input type=text name=dr id=dr class=dr size=10 onblur="hitung_jml_pakai();" /></td></tr>'+
-                        '<tr><td>Jumlah Pakai:</td><td><?= form_input('jmlpakai', NULL, 'id=jmlpakai size=10') ?></td></tr>'+
+                        '<tr><td>Jumlah Pakai:</td><td><?= form_input('jmlpakai', NULL, 'id=jmlpakai size=10') ?><?= form_hidden(NULL, NULL, 'id=status') ?><?= form_hidden(NULL, NULL, 'id=hjual') ?></td></tr>'+
                         '<tr><td>TOTAL:</td><td style="font-size: 30px;"><span>Rp </span><span id=total></span>,00</td></tr>'+
                     '</table>'+
                     '</td></tr></table>'+
@@ -293,10 +329,17 @@ function form_receipt() {
     var lebar = $('#dokter').width();
     $('#jmlpakai').keydown(function(e) {
         if (e.keyCode === 13) {
-            addnoresep();
-            $('#pb,#id_pb,#dr,#jmlpakai,#ja').val('');
-            $('#kekuatan').html('-');
-            $('#pb').focus();
+            if ($('#status').val() === 'TRUE') {
+                addnoresep_ik();
+                $('#pb,#id_pb,#dr,#jmlpakai,#ja,#status,#hjual').val('');
+                $('#kekuatan').html('-');
+                $('#pb').focus();
+            } else {
+                addnoresep();
+                $('#pb,#id_pb,#dr,#jmlpakai,#ja').val('');
+                $('#kekuatan').html('-');
+                $('#pb').focus();
+            }
         }
     });
     $('#keterangan').keydown(function(e) {
@@ -351,7 +394,12 @@ function form_receipt() {
         $('#id_pb').val(data.id);
         $('#kekuatan').html(data.kekuatan);
         $('#dr').val(data.kekuatan);
-        hitung_jml_pakai();
+        if (data.status !== 'TRUE') {
+            hitung_jml_pakai();
+        } else {
+            $('#status').val(data.status);
+            $('#hjual').val(data.harga_jual);
+        }
         $('#dr').focus().select();
     });
     $('#dokter').autocomplete("models/autocomplete.php?method=dokter",
