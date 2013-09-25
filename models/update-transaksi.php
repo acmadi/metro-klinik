@@ -380,7 +380,7 @@ if ($method === 'save_retur_penerimaan') {
 if ($method === 'save_resep') {
     //session_start();
     $noresep    = $_POST['noresep'];
-    $waktu      = date2mysql($_POST['waktu']).' '.date("H:i:s");
+    //$waktu      = date2mysql($_POST['waktu']).' '.date("H:i:s");
     $dokter     = $_POST['id_dokter'];
     $pasien     = $_POST['id_pasien'];
     $keterangan = $_POST['keterangan'];
@@ -391,7 +391,6 @@ if ($method === 'save_resep') {
     if ($id_resep === '') {
         $sql = "insert into resep set
             id = '$noresep',
-            waktu = '$waktu',
             id_dokter = '$dokter',
             id_pendaftaran = '$id_daftar',
             id_pasien = '$pasien',
@@ -400,8 +399,7 @@ if ($method === 'save_resep') {
         $id = $noresep;
         $result['action'] = 'add';
     } else {
-        $sql = "update resep set 
-            waktu = '$waktu',
+        $sql = "update resep set
             id_dokter = '$dokter',
             id_pasien = '$pasien',
             keterangan = '$keterangan'

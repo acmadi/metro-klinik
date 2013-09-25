@@ -502,7 +502,7 @@ function pemeriksaan_load_data($param) {
         join pendaftaran pd on (p.id_pendaftaran = pd.id)
         join pelanggan pl on (pd.id_pelanggan = pl.id)
         join dokter d on (p.id_dokter = d.id)
-        where p.id is not NULL $q order by p.tanggal desc";
+        where p.id is not NULL $q order by p.id_auto";
     //echo "<pre>".$sql."</pre>";
     $query = mysql_query($sql.$limit);
     $data = array();
@@ -614,7 +614,7 @@ function load_data_pendaftaran($param) {
         join spesialisasi s on (p.id_spesialisasi = s.id)
         left join dokter d on (p.id_dokter = d.id)
         left join pemeriksaan pm on (p.id = pm.id_pendaftaran)
-        where date(p.waktu) = '".date("Y-m-d")."' $q order by s.id, p.no_antri";
+        where date(p.waktu) = '".date("Y-m-d")."' $q order by p.waktu";
     //echo $sql;
     $query = mysql_query($sql.$limit);
     $data = array();
