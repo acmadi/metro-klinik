@@ -52,7 +52,7 @@ $(document).tooltip();
         $str = $data->id.'#'.$data->id_dokter.'#'.$data->dokter.'#'.$data->id_pasien.'#'.$data->pasien.'#'.$data->keterangan;
         ?>
     <tr class="<?= ($data->id_resep !== $id_resep)?'odd':'even' ?>">
-        <td align="center"><?= ($data->id_resep !== $id_resep)?($no+$offset):NULL ?></td>
+        <td align="center"><?= ($data->id_resep !== $id_resep)?($no):NULL ?></td>
         <td align="center"><?= ($data->id_resep !== $id_resep)?$data->id_resep:NULL ?></td>
         <td align="center"><?= ($data->id_resep !== $id_resep)?datetimefmysql($data->waktu):NULL ?></td>
         <td align="center"><?= ($data->id_resep !== $id_resep)?$data->id_pasien:NULL ?></td>
