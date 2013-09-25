@@ -222,7 +222,7 @@ if ($method === 'save_penjualannr') {
     $reimburse  = isset($_POST['reimburse'])?$_POST['reimburse']:'0';
     $pembayaran = currencyToNumber($_POST['pembulatan']); // yang dientrikan pembulatan pembayarannya
     
-    $id_ikit    = isset($_POST['id_ikit'])?$_POST['id_ikit']:'NULL';
+    $id_ikit    = isset($_POST['id_ikit'])?$_POST['id_ikit']:NULL;
     $sql = "insert into penjualan set
         waktu = '$tanggal',
         id_pelanggan = $customer,
@@ -287,7 +287,7 @@ if ($method === 'save_penjualannr') {
             //}
         }
         
-        if (count($id_ikit) > 0) {
+        if ($id_ikit !== NULL) {
             foreach ($id_ikit as $nu => $rows) {
                 $get = mysql_query("select id.*, b.hna+(b.hna*(b.margin_non_resep/100)) as harga_jual, k.id_barang 
                     from item_kit i 
