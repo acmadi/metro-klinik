@@ -22,19 +22,8 @@ include_once '../inc/functions.php';
 </thead>
 <tbody>
     <?php 
-    $limit = 10;
-    $page  = $_GET['page'];
-    if ($_GET['page'] === '') {
-        $page = 1;
-        $offset = 0;
-    } else {
-        $offset = ($page-1)*$limit;
-    }
-    
     $param = array(
         'id' => '',
-        'limit' => $limit,
-        'start' => $offset,
         'awal' => date2mysql($_GET['awal']),
         'akhir' => date2mysql($_GET['akhir']),
         'pasien' => $_GET['id_pasien'],
@@ -42,15 +31,13 @@ include_once '../inc/functions.php';
     );
     $list_data = load_data_resep($param);
     $master_resep = $list_data['data'];
-    $total_data = $list_data['total'];
     $id_resep = "";
     $jasa = "";
     $no = 1;
     foreach ($master_resep as $key => $data) { 
-        $str = $data->id.'#'.$data->id_dokter.'#'.$data->dokter.'#'.$data->id_pasien.'#'.$data->pasien.'#'.$data->keterangan;
         ?>
     <tr class="<?= ($data->id_resep !== $id_resep)?'odd':'even' ?>">
-        <td align="center"><?= ($data->id_resep !== $id_resep)?($no+$offset):NULL ?></td>
+        <td align="center"><?= ($data->id_resep !== $id_resep)?($no):NULL ?></td>
         <td align="center"><?= ($data->id_resep !== $id_resep)?$data->id_resep:NULL ?></td>
         <td align="center"><?= ($data->id_resep !== $id_resep)?datetimefmysql($data->waktu):NULL ?></td>
         <td align="center"><?= ($data->id_resep !== $id_resep)?$data->id_pasien:NULL ?></td>
@@ -73,4 +60,3 @@ include_once '../inc/functions.php';
     } ?>
 </tbody>
 </table>
-<?= paging_ajax($total_data, $limit, $page, '1', $_GET['search']) ?>

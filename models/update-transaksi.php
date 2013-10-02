@@ -579,6 +579,8 @@ if ($method === 'save_pemeriksaan') {
     $tanggal    = date2mysql($_POST['tanggal']);
     $anamnesis  = $_POST['anamnesis'];
     $id_dokter  = $_POST['id_dokter'];
+    $perawat1   = ($_POST['id_perawat'] !== '')?$_POST['id_perawat']:'NULL';
+    $perawat2   = ($_POST['id_perawat2'] !== '')?$_POST['id_perawat2']:'NULL';
     
     $id_diagnosis = isset($_POST['id_diagnosis'])?$_POST['id_diagnosis']:'NULL';
     $id_tindakan  = isset($_POST['id_tindakan'])?$_POST['id_tindakan']:'NULL';
@@ -637,9 +639,11 @@ if ($method === 'save_pemeriksaan') {
         anamnesis = '$anamnesis',
         id_pendaftaran = '$id_daftar',
         id_dokter = '$id_dokter',
-        foto = '$NewFileName'";
+        foto = '$NewFileName',
+        id_perawat1 = $perawat1,
+        id_perawat2 = $perawat2";
    mysql_query($sql);
-   $id_pemeriksaan = $id;
+   //$id_pemeriksaan = $id;
    
    $sql2= "update pendaftaran set 
         waktu_pelayanan = NOW(),

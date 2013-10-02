@@ -609,8 +609,7 @@ if ($method === 'save_dokter') {
             profesi = '$profesi',
             no_str = '$nostr',
             spesialis = '$spesialis',
-            tgl_mulai_praktek = '".date2mysql($tgl_praktek)."',
-            fee = '$fee'
+            tgl_mulai_praktek = '".date2mysql($tgl_praktek)."'
     ";
     mysql_query($sql);
     $id_dktr = mysql_insert_id();
@@ -625,8 +624,7 @@ if ($method === 'save_dokter') {
             profesi = '$profesi',
             no_str = '$nostr',
             spesialis = '$spesialis',
-            tgl_mulai_praktek = '".date2mysql($tgl_praktek)."',
-            fee = '$fee'
+            tgl_mulai_praktek = '".date2mysql($tgl_praktek)."'
         where id = '$id_dokter'
     ";
     mysql_query($sql);

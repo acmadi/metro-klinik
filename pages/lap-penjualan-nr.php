@@ -1,7 +1,7 @@
 <?php
 $subNav = array(
 	"Lap. Penjualan Resep ; lap-penjualan.php ; #509601;",
-        "lap. Penjualan Bebas; lap-penjualan-nr.php ; #509601;",
+        "Lap. Penjualan Bebas; lap-penjualan-nr.php ; #509601;",
 );
 
 set_include_path("../");
@@ -71,6 +71,21 @@ $(function() {
         load_data_penjualan();
     });
 });
+
+function cetak_jual_nr() {
+    var awal    = $('#awal').val();
+    var akhir   = $('#akhir').val();
+    var pasien  = $('#id_pasien').val();
+    var dokter  = $('#id_dokter').val();
+    var status  = $('input:checked').val();
+    var wWidth = $(window).width();
+    var dWidth = wWidth * 0.9;
+    var wHeight= $(window).height();
+    var dHeight= wHeight * 1;
+    var x = screen.width/2 - dWidth/2;
+    var y = screen.height/2 - dHeight/2;
+    window.open('pages/penjualan-nr-print.php?awal='+awal+'&akhir='+akhir+'&pasien='+pasien+'&dokter='+dokter+'&status='+status, 'cetak penjualan', 'width='+dWidth+', height='+dHeight+', left='+x+',top='+y);
+}
 function load_data_penjualan(page, search, id) {
     pg = page; src = search; id_barg = id;
     if (page === undefined) { var pg = ''; }
@@ -80,10 +95,11 @@ function load_data_penjualan(page, search, id) {
     var akhir   = $('#akhir').val();
     var pasien  = $('#id_pasien').val();
     var dokter  = $('#id_dokter').val();
+    var status  = $('input:checked').val();
     $.ajax({
         url: 'pages/lap-penjualan-nr-list.php',
         cache: false,
-        data: 'page='+pg+'&search='+src+'&id_penjualan='+id_barg+'&hal=laporan&awal='+awal+'&akhir='+akhir+'&pasien='+pasien+'&dokter='+dokter,
+        data: 'page='+pg+'&search='+src+'&id_penjualan='+id_barg+'&hal=laporan&awal='+awal+'&akhir='+akhir+'&pasien='+pasien+'&dokter='+dokter+'&status='+status,
         success: function(data) {
             $('#result-info').html(data);
         }
@@ -95,7 +111,8 @@ function load_data_penjualan(page, search, id) {
 <table width="100%">
     <tr><td width="10%">Range Tanggal:</td><td><?= form_input('awal', date("d/m/Y"), 'id=awal size=10') ?> s . d <?= form_input('akhir', date("d/m/Y"), 'id=akhir size=10') ?></td></tr>
     <tr><td>Nama Customer:</td><td><?= form_input('pasien', NULL, 'id=pasien size=40') ?><?= form_hidden('id_pasien', NULL, 'id=id_pasien') ?></td></tr>  
-    <tr><td></td><td><?= form_button('Tampilkan', 'id=search') ?> <?= form_button('Reset', 'id=reset') ?> <?= form_button('Cetak', 'id=cetak onclick=cetak();') ?></td></tr>
+    <tr><td></td><td><?= form_radio('ket', 'group', 'group', 'Group', TRUE) ?> <?= form_radio('ket', 'detail', 'detail', 'Detail', FALSE) ?></td></tr>
+    <tr><td></td><td><?= form_button('Tampilkan', 'id=search') ?> <?= form_button('Reset', 'id=reset') ?> <?= form_button('Cetak', 'id=cetak onclick=cetak_jual_nr();') ?></td></tr>
 </table>
 </div>
 <div id="result-info">

@@ -2,25 +2,6 @@
 include_once '../models/transaksi.php';
 include_once '../inc/functions.php';
 ?>
-<script type="text/javascript">
-    $(function() {
-       $( document ).tooltip({
-        position: {
-          my: "center bottom-20",
-          at: "center top",
-          using: function( position, feedback ) {
-            $( this ).css( position );
-            $( "<div>" )
-              .addClass( "arrow" )
-              .addClass( feedback.vertical )
-              .addClass( feedback.horizontal )
-              .appendTo( this );
-          }
-        }
-      });
-    });
-</script>
-
 <table cellspacing="0" width="100%" class="list-data">
 <thead>
 <tr class="italic">

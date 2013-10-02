@@ -38,9 +38,9 @@ table.data-input input[type=text], table.data-input input[type=password], table.
 .input-parameter label { margin: 0; }
 .input-parameter table { margin: 10px; border-spacing: 0; }
 .input-parameter table tr {  }
-.input-parameter input[type=text] { font-size: inherit; border: 1px solid #f4f4f4; padding: 1px; }
+.input-parameter input[type=text] { font-size: inherit; border: 1px solid #f4f4f4; padding: 1px; font-family: inherit; }
 .input-parameter input[type=text]:focus { border: 1px solid #ccc; }
-.input-parameter select { min-width: 200px; }
+.input-parameter select { min-width: 200px; font-family: inherit; }
 .input-parameter input[type=button] { min-width: 70px; margin-right: 0; }
 
 /*paging*/

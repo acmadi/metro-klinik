@@ -55,8 +55,15 @@ $(function() {
     $('#cetak').button().click(function() {
         var awal = $('#awal').val();
         var akhir= $('#akhir').val();
-        var id   = $('#id_barang').val();
-        window.open('pages/arus-stok-print.php?awal='+awal+'&akhir='+akhir+'&id='+id, 'Stok', 'width=800px, height=350px, resizable=1, scrollable=1');
+        var id_pasien   = $('#id_pasien').val();
+        var id_dokter   = $('#id_dokter').val();
+        var wWidth = $(window).width();
+        var dWidth = wWidth * 0.9;
+        var wHeight= $(window).height();
+        var dHeight= wHeight * 1;
+        var x = screen.width/2 - dWidth/2;
+        var y = screen.height/2 - dHeight/2;
+        window.open('pages/lap-resep-print.php?awal='+awal+'&akhir='+akhir+'&id_pasien='+id_pasien+'&id_dokter='+id_dokter, 'Stok', 'width='+dWidth+', height='+dHeight+', left='+x+',top='+y);
     });
     var lebar = $('#supplier').width();
     $('#dokter').autocomplete("models/autocomplete.php?method=dokter",

@@ -604,11 +604,19 @@ function pemesanan_plant_load_data($param = NULL) {
 }
 
 function load_data_pendaftaran($param) {
-    $q = NULL;
-    if ($param['search'] !== '') {
+    $q = NULL; $limit = NULL;
+    if (isset($param['search']) and $param['search'] !== '') {
         $q.=" and (pl.id like ('%".$param['search']."%') or pl.nama like ('%".$param['search']."%') or s.nama like ('%".$param['search']."%') or d.nama like ('%".$param['search']."%'))";
     }
-    $limit = " limit ".$param['start'].", ".$param['limit']."";
+    if (isset($param['pasien']) and $param['pasien'] !== '') {
+        $q.=" and pl.id = '".$param['pasien']."'";
+    }
+    if (isset($param['pelayanan']) and $param['pelayanan'] !== '') {
+        $q.=" and s.id = '".$param['pelayanan']."'";
+    }
+    if ($param['limit'] !== '') {
+        $limit = " limit ".$param['start'].", ".$param['limit']."";
+    }
     $sql = "select p.*, pl.nama, s.nama as spesialisasi, d.nama as dokter, pm.id as id_pemeriksaan from pendaftaran p
         join pelanggan pl on (p.id_pelanggan = pl.id)
         join spesialisasi s on (p.id_spesialisasi = s.id)
@@ -901,6 +909,13 @@ function billing_get_total_jasa($tanggal, $id_pelanggan) {
         where pdf.id_pelanggan = '$id_pelanggan' and date(pdf.waktu) = '$tanggal' group by tr.id";
     $result =  mysql_fetch_object(mysql_query($sqk));
     return $result;
+}
+
+function laporan_jasa_pelayanan_load_data($param) {
+    $sql = "select * from pemeriksaan p 
+        join pendaftaran pd on (p.id_pendaftaran = pd.id)
+        join tindakan t on (t.id_pendaftaran = pd.id)
+        join tarif tr on (t.id_tarif = tr.id)";
 }
 
 ?>

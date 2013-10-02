@@ -11,6 +11,7 @@ include_once '../inc/functions.php';
 //header_surat();
 ?>
 <body onload="cetak()">
+<?php header_surat(); ?>
 <h1>
     LAPORAN ANALISIS ABC <br /> TANGGAL <?= $_GET['awal'] ?> s . d <?= $_GET['akhir'] ?>
 </h1>

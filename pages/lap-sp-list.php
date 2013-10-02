@@ -46,7 +46,7 @@ $(function() {
         <tr class="<?= ($key%2==0)?'even':'odd' ?>">
             <td align="center"><?= ($nomor_sp !== $data->id)?($no+$offset):NULL ?></td>
             <td><?= ($nomor_sp !== $data->id)?$data->id:NULL ?></td>
-            <td align="center"><?= ($nomor_sp !== $data->id)?datefmysql($data->tanggal):NULL ?></td>
+            <td align="center"><?= ($nomor_sp !== $data->id)?datetimefmysql($data->tanggal):NULL ?></td>
             <td><?= ($nomor_sp !== $data->id)?$data->supplier:NULL ?></td>
             <td><?= ($nomor_sp !== $data->id)?$data->karyawan:NULL ?></td>
             <td><?= $data->nama_barang ?></td>

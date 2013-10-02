@@ -35,8 +35,14 @@ $(function() {
     $('#cetak').button().click(function() {
         var awal = $('#awal').val();
         var akhir= $('#akhir').val();
-        var id   = $('#id_barang').val();
-        window.open('pages/arus-stok-print.php?awal='+awal+'&akhir='+akhir+'&id='+id, 'Stok', 'width=800px, height=350px, resizable=1, scrollable=1');
+        var supplier   = $('#id_supplier').val();
+        var wWidth = $(window).width();
+        var dWidth = wWidth * 0.8;
+        var wHeight= $(window).height();
+        var dHeight= wHeight * 1;
+        var x = screen.width/2 - dWidth/2;
+        var y = screen.height/2 - dHeight/2;
+        window.open('pages/lap-sp-print.php?awal='+awal+'&akhir='+akhir+'&id_supplier='+supplier, 'Stok', 'width='+dWidth+', height='+dHeight+', left='+x+',top='+y);
     });
     var lebar = $('#supplier').width();
     $('#supplier').autocomplete("models/autocomplete.php?method=supplier",

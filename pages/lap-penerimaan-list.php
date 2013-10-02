@@ -51,7 +51,7 @@ $(function() {
     $no = 1;
     foreach ($list_data as $key => $data) { ?>
         <tr class="<?= ($key%2==0)?'even':'odd' ?>">
-            <td align="center"><?= ($id !== $data->id)?(++$key+$offset):NULL ?></td>
+            <td align="center"><?= ($id !== $data->id)?($no):NULL ?></td>
             <td align="center"><?= ($id !== $data->id)?datefmysql($data->tanggal):NULL ?></td>
             <td align="center"><?= ($id !== $data->id)?$data->faktur:NULL ?></td>
             <td><?= ($id !== $data->id)?$data->supplier:NULL ?></td>

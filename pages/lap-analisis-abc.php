@@ -72,7 +72,7 @@ $(function() {
     });
 });
 </script>
-<h1 class="margin-t-0">Analisa ABC (Always Better Control)</h1>
+<h1 class="margin-t-0">Analisa ABC / Pareto</h1>
 <div class="input-parameter">
 <table width="100%">
     <tr><td width="10%">Range Tanggal:</td><td><?= form_input('awal', date("d/m/Y"), 'id=awal size=10') ?> s . d <?= form_input('akhir', date("d/m/Y"), 'id=akhir size=10') ?></td></tr>

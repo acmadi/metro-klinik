@@ -179,5 +179,13 @@ $tile[] = array("type"=>"img","group"=>2,"x"=>3,"y"=>1,'width'=>1,'height'=>1,"b
 	"img"=>"img/icons/billing.png","desc"=>"Billing","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
+$tile[] = array("type"=>"img","group"=>2,"x"=>3,"y"=>2,'width'=>1,'height'=>1,"background"=>"#180052","url"=>"lap-jasa-tarif.php",
+	"img"=>"img/icons/lap-resep.png","desc"=>"Jasa Tarif","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
+	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
+
+$tile[] = array("type"=>"img","group"=>2,"x"=>4,"y"=>0,'width'=>1,'height'=>1,"background"=>"#180052","url"=>"lap-control.php",
+	"img"=>"img/icons/lap-resep.png","desc"=>"Control","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
+	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
+
 
 ?> 

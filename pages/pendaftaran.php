@@ -66,6 +66,8 @@ function form_pemeriksaan(id_daftar, id_pasien, nama) {
                         '<tr><td>Diagnosis:</td><td><?= form_input('diagnosis', NULL, 'id=diagnosis size=40') ?><?= form_hidden('id_diagnosisisme', NULL, 'id=id_diagnosis') ?></td></tr>'+
                         '<tr><td>Tindakan:</td><td><?= form_input('tindakan', NULL, 'id=tindakan size=40') ?><?= form_hidden('id_tindakanisme', NULL, 'id=id_tindakan') ?></td></tr>'+
                         '<tr><td>Rekomendasi Tindakan:</td><td><?= form_input('rek_tindakan', NULL, 'id=rek_tindakan size=40') ?><?= form_hidden('id_rek_tindakanisme', NULL, 'id=id_rek_tindakan') ?></td></tr>'+
+                        '<tr><td>Perawat 1:</td><td><?= form_input(NULL, NULL, 'id=perawat size=40') ?><?= form_hidden('id_perawat', NULL, 'id=id_perawat') ?></td></tr>'+
+                        '<tr><td>Perawat 2:</td><td><?= form_input(NULL, NULL, 'id=perawat2 size=40') ?><?= form_hidden('id_perawat2', NULL, 'id=id_perawat2') ?></td></tr>'+
                     '</table>'+
                     '</td><td id=foto></td></tr></table>'+
                     '<table width=100% cellspacing="0" class="list-data-input" id="penjualan-list">'+
@@ -154,6 +156,58 @@ function form_pemeriksaan(id_daftar, id_pasien, nama) {
         $(this).val(data.nama);
         $('#id_dokter').val(data.id);
         //alert(data.id);
+    });
+    $('#perawat').autocomplete("models/autocomplete.php?method=dokter",
+    {
+        parse: function(data){
+            var parsed = [];
+            for (var i=0; i < data.length; i++) {
+                parsed[i] = {
+                    data: data[i],
+                    value: data[i].nama // nama field yang dicari
+                };
+            }
+            $('#id_perawat').val('');
+            return parsed;
+        },
+        formatItem: function(data,i,max){
+            var str = '<div class=result>'+data.nama+'<br/> '+data.no_str+'</div>';
+            return str;
+        },
+        width: lebar, // panjang tampilan pencarian autocomplete yang akan muncul di bawah textbox pencarian
+        dataType: 'json', // tipe data yang diterima oleh library ini disetup sebagai JSON
+        cacheLength: 0,
+        max: 100
+    }).result(
+    function(event,data,formated){
+        $(this).val(data.nama);
+        $('#id_perawat').val(data.id);
+    });
+    $('#perawat2').autocomplete("models/autocomplete.php?method=dokter",
+    {
+        parse: function(data){
+            var parsed = [];
+            for (var i=0; i < data.length; i++) {
+                parsed[i] = {
+                    data: data[i],
+                    value: data[i].nama // nama field yang dicari
+                };
+            }
+            $('#id_perawat2').val('');
+            return parsed;
+        },
+        formatItem: function(data,i,max){
+            var str = '<div class=result>'+data.nama+'<br/> '+data.no_str+'</div>';
+            return str;
+        },
+        width: lebar, // panjang tampilan pencarian autocomplete yang akan muncul di bawah textbox pencarian
+        dataType: 'json', // tipe data yang diterima oleh library ini disetup sebagai JSON
+        cacheLength: 0,
+        max: 100
+    }).result(
+    function(event,data,formated){
+        $(this).val(data.nama);
+        $('#id_perawat2').val(data.id);
     });
     $('#diagnosis').autocomplete("models/autocomplete.php?method=diagnosis",
     {

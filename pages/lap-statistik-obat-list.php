@@ -22,6 +22,7 @@ include_once '../inc/functions.php';
     $penjualan = statistik_penjualan_load_data($param);
     $list_data = $penjualan['data'];
     $total     = $penjualan['total'];
+    foreach ($total as $ttl);
     $ttl_barang= 0;
     $ttl_percen= 0;
     foreach ($list_data as $key => $data) { 
@@ -31,11 +32,11 @@ include_once '../inc/functions.php';
             <td align="center"><?= ++$key ?></td> 
             <td><?= $data->nama_barang ?></td> 
             <td align="center"><?= $data->jumlah ?></td>
-            <td align="center"><?= (($data->jumlah/$total)*100) ?> %</td> 
+            <td><?= (($data->jumlah/$ttl->jumlah)*100) ?> %</td> 
         </tr>
     <?php 
     $ttl_barang = $ttl_barang+$data->jumlah;
-    $ttl_percen = $ttl_percen+(($data->jumlah/$total)*100);
+    $ttl_percen = $ttl_percen+(($data->jumlah/$ttl->jumlah)*100);
     }
     ?>
 </tbody>

@@ -2,6 +2,11 @@
 include_once '../models/transaksi.php';
 include_once '../inc/functions.php';
 ?>
+<script type="text/javascript">
+$(function() {
+    $( document ).tooltip();
+});
+</script>
 <table cellspacing="0" width="100%" class="list-data">
 <thead>
     <tr class="italic">

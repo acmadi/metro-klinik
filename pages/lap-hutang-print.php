@@ -6,15 +6,13 @@ include_once '../inc/functions.php';
 <script type="text/javascript">
 function cetak() {
     window.print();
-    if (confirm('Apakah menu print ini akan ditutup?')) {
-        window.close();
-    }
-    //SCETAK.innerHTML = '<br /><input onClick=\'cetak()\' type=\'submit\' name=\'Submit\' value=\'Cetak\' class=\'tombol\'>';
+    setTimeout(function(){ window.close();},300);
 }
 </script>
-<body onload="cetak()">
+<body onload="cetak();">
+<?php    header_surat(); ?>
 <h1>
-    LAPORAN HUTANG SUPPLIER <br /> <?php if ($_GET['awal'] !== '') {  ?>TANGGAL <?= $_GET['awal'] ?> s . d <?= $_GET['akhir'] ?> <?php } ?>
+    LAPORAN HUTANG SUPPLIER <br /> <?php if ($_GET['awal_faktur'] !== '') {  ?>TANGGAL FAKTUR <?= $_GET['awal_faktur'] ?> s . d <?= $_GET['akhir_faktur'] ?> <?php } ?> <?php if ($_GET['awal'] !== '') {  ?>TANGGAL JATUH TEMPO <?= $_GET['awal'] ?> s . d <?= $_GET['akhir'] ?> <?php } ?>
 </h1>
 <table cellspacing="0" width="100%" class="list-data-print">
 <thead>

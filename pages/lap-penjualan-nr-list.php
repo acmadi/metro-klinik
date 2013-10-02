@@ -30,6 +30,13 @@ $(function() {
         <th width="5%">Embalage RP.</th>
         <th width="5%">Total</th>
         <th width="5%">Terbayar</th>
+        <?php if ($_GET['status'] === 'detail') { ?>
+        <th width="20%">Nama Barang</th>
+        <th width="5%">Kemasan</th>
+        <th width="5%">Jumlah</th>
+        <th width="5%">Harga</th>
+        <th width="10%">Subtotal</th>
+        <?php } ?>
     </tr>
 </thead>
 <tbody>
@@ -51,7 +58,8 @@ $(function() {
         'akhir' => date2mysql($_GET['akhir']),
         'laporan' => $_GET['hal'],
         'pasien' => $_GET['pasien'],
-        'dokter' => $_GET['dokter']
+        'dokter' => $_GET['dokter'],
+        'status' => $_GET['status']
     );
     $penjualan = penjualan_nr_load_data($param);
     $list_data = $penjualan['data'];
@@ -80,19 +88,29 @@ $(function() {
             <td align="right"><?= ($id !== $data->id)?rupiah($data->embalage):NULL ?></td>
             <td align="right"><?= ($id !== $data->id)?rupiah($data->total):NULL ?></td>
             <td align="right"><?= ($id !== $data->id)?rupiah($data->terbayar):NULL ?></td>
-            
+            <?php if ($_GET['status'] === 'detail') { ?>
+            <td><?= $data->nama_barang ?></td>
+            <td align="center"><?= $data->kemasan ?></td>
+            <td align="center"><?= $data->qty ?></td>
+            <td align="right"><?= rupiah($data->harga_jual) ?></td>
+            <td align="right"><?= rupiah($data->subtotal) ?></td>
+            <?php } ?>
         </tr>
     <?php 
     if ($id !== $data->id) {
         $no++;
+        $total_nota = $total_nota+$data->total;
+        $total_terbayar = $total_terbayar+$data->terbayar;
     }
     $id = $data->id;
-    $total_nota = $total_nota+$data->total;
-    $total_terbayar = $total_terbayar+$data->terbayar;
+    
     }
     ?>
         <tr>
             <td colspan="8" align="right">TOTAL</td><td align="right"><b><?= rupiah($total_nota) ?></b></td><td align="right"><b><?= rupiah($total_terbayar) ?></b></td>
+            <?php if ($_GET['status'] === 'detail') { ?>
+            <td colspan="4"></td><td align="right"><b><?= rupiah($total_nota) ?></b></td>
+            <?php } ?>
         </tr>
 </tbody>
 </table>
