@@ -912,10 +912,27 @@ function billing_get_total_jasa($tanggal, $id_pelanggan) {
 }
 
 function laporan_jasa_pelayanan_load_data($param) {
-    $sql = "select * from pemeriksaan p 
-        join pendaftaran pd on (p.id_pendaftaran = pd.id)
-        join tindakan t on (t.id_pendaftaran = pd.id)
-        join tarif tr on (t.id_tarif = tr.id)";
+    $q = NULL;
+    if ($param['awal'] !== '' and $param['akhir'] !== '') {
+        $q.=" and p.tanggal between '".$param['awal']."' and '".$param['akhir']."'";
+    }
+    if (isset($param['nakes']) and $param['nakes'] !== '') {
+        $q.=" and pp.id_nakes = '".$param['nakes']."'";
+    }
+    $sql = "select pp.*, d.nama, d.id as no_sip, t.nama as tarif, pl.nama as pasien, pl.id as no_rm from perawat_pemeriksaan pp
+            join pemeriksaan p on (pp.id_pemeriksaan = p.id_auto)
+            join dokter d on (pp.id_nakes = d.id)
+            join tarif t on (pp.id_tarif = t.id)
+            join pendaftaran pd on (p.id_pendaftaran = pd.id)
+            join pelanggan pl on (pd.id_pelanggan = pl.id)
+            where pp.id is not NULL $q order by pp.id_nakes asc";
+    //echo "<pre>".$sql."</pre>";
+    $result = mysql_query($sql);
+    $rows = array();
+    while ($metallica = mysql_fetch_object($result)) {
+        $rows[] = $metallica;
+    }
+    return $rows;
 }
 
 ?>

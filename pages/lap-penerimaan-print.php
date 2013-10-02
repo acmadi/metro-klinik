@@ -12,7 +12,7 @@ function cetak() {
 </script>
 <body onload="cetak();">
 <?php    header_surat(); ?>
-<h1>
+    <h1 style="text-align: left;">
     LAPORAN PENERIMAAN BARANG <br /> TANGGAL <?= $_GET['awal'] ?> s . d <?= $_GET['akhir'] ?>
 </h1>
 <table cellspacing="0" width="100%" class="list-data-print">

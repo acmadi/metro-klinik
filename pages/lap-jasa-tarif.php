@@ -34,33 +34,21 @@ include_once '../pages/message.php';
         });
         $('#reset').click(function() {
             $('input[type=text], select').val('');
-            $('#jenis_attr').html('');
+            $('#awal, #akhir').val('<?= date("d/m/Y") ?>');
+            $('#result-info').html('');
         });
         $('#cetak').click(function() {
             var wWidth = $(window).width();
-            var dWidth = wWidth * 0.8;
+            var dWidth = wWidth * 1;
             var wHeight= $(window).height();
             var dHeight= wHeight * 1;
             var x = screen.width/2 - dWidth/2;
             var y = screen.height/2 - dHeight/2;
-            var jenis   = $('#jenis').val();
-            if (jenis === 'Harian') {
                 var awal  = $('#awal').val();
                 var akhir = $('#akhir').val();
-                var jenis_trans = $('#transaksi').val();
-                window.open('pages/lap-jasa-tarif-harian-print.php?awal='+awal+'&akhir='+akhir+'&jenis_transaksi='+jenis_trans, 'Arus Kas', 'width='+dWidth+', height='+dHeight+', left='+x+',top='+y);
-            }
-            if (jenis === 'Bulanan') {
-                var bulan = $('#bulan').val();
-                var tahun = $('#tahun').val();
-                var jenis_trans = $('#transaksi').val();
-                window.open('pages/lap-jasa-tarif-bulanan-print.php?bulan='+tahun+'-'+bulan+'&jenis_transaksi='+jenis_trans, 'Arus Kas', 'width='+dWidth+', height='+dHeight+', left='+x+',top='+y);
-            }
-            if (jenis === 'Tahunan') {
-                var tahun = $('#tahun').val();
-                var jenis_trans = $('#transaksi').val();
-                window.open('pages/lap-jasa-tarif-tahunan-print.php?tahun='+tahun+'&jenis_transaksi='+jenis_trans, 'Arus Kas', 'width='+dWidth+', height='+dHeight+', left='+x+',top='+y);
-            }
+                var nakes = $('#id_nakes').val();
+                window.open('pages/lap-jasa-tarif-print.php?awal='+awal+'&akhir='+akhir+'&nakes='+nakes, 'Jasa Nakes', 'width='+dWidth+', height='+dHeight+', left='+x+',top='+y);
+            
         });
         var lebar = $('#nakes').width();
         $('#nakes').autocomplete("models/autocomplete.php?method=dokter",
@@ -87,7 +75,7 @@ include_once '../pages/message.php';
         }).result(
         function(event,data,formated){
             $(this).val(data.nama);
-            $('#id_perawat').val(data.id);
+            $('#id_nakes').val(data.id);
         });
     });
 </script>

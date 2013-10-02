@@ -639,11 +639,9 @@ if ($method === 'save_pemeriksaan') {
         anamnesis = '$anamnesis',
         id_pendaftaran = '$id_daftar',
         id_dokter = '$id_dokter',
-        foto = '$NewFileName',
-        id_perawat1 = $perawat1,
-        id_perawat2 = $perawat2";
+        foto = '$NewFileName'";
    mysql_query($sql);
-   //$id_pemeriksaan = $id;
+   $id_pemeriksaan = mysql_insert_id();
    
    $sql2= "update pendaftaran set 
         waktu_pelayanan = NOW(),
@@ -674,6 +672,44 @@ if ($method === 'save_pemeriksaan') {
                  nominal = '".$get->nominal."'
                  ";
             mysql_query($query);
+            
+            if ($id_dokter !== '') {
+                $tarif = mysql_fetch_object(mysql_query("select jasa_dokter from tarif where id = '$data'"));
+                $nominal = $tarif->jasa_dokter;
+                $jasa  = "insert into perawat_pemeriksaan set
+                    id_pemeriksaan = '$id_pemeriksaan',
+                    id_nakes = $id_dokter,
+                    id_tarif = '$data',
+                    nominal = '".$nominal."'";
+                mysql_query($jasa);
+            }
+            if ($_POST['id_perawat'] !== '') {
+                $tarif = mysql_fetch_object(mysql_query("select jasa_perawat from tarif where id = '$data'"));
+                $nominal = $tarif->jasa_perawat;
+                if ($_POST['id_perawat2'] !== '') {
+                    $nominal = $tarif->jasa_perawat/2;
+                }
+                $jasa  = "insert into perawat_pemeriksaan set
+                    id_pemeriksaan = '$id_pemeriksaan',
+                    id_nakes = $perawat1,
+                    id_tarif = '$data',
+                    nominal = '".$nominal."'";
+                mysql_query($jasa);
+            }
+            if ($_POST['id_perawat2'] !== '') {
+                $tarif = mysql_fetch_object(mysql_query("select jasa_perawat from tarif where id = '$data'"));
+                $nominal = $tarif->jasa_perawat;
+                if ($_POST['id_perawat'] !== '') {
+                    $nominal = $tarif->jasa_perawat/2;
+                }
+                $jasa  = "insert into perawat_pemeriksaan set
+                    id_pemeriksaan = '$id_pemeriksaan',
+                    id_nakes = $perawat2,
+                    id_tarif = '$data',
+                    nominal = '".$nominal."'";
+                mysql_query($jasa);
+            }
+            
         }
    }
    
