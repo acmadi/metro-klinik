@@ -875,16 +875,27 @@ if ($method === 'save_billing') {
     $id_pasien  = $_POST['id_pasien'];
     $pembayaran = currencyToNumber($_POST['pembayaran']);
     $nominal    = currencyToNumber($_POST['serahuang']);
-    
+    $id_bank    = ($_POST['bank'] !== '')?$_POST['bank']:'NULL';
+    $nokartu    = $_POST['nokartu'];
+    $cara_bayar = $_POST['cara_bayar'];
     $sql = "insert into pembayaran_billing set
         id_pelanggan = '$id_pasien',
         tanggal = NOW(),
         waktu = NOW(),
         bayar = '$pembayaran',
-        uang_serah = '$nominal'";
+        uang_serah = '$nominal',
+        cara_bayar = '$cara_bayar',
+        id_bank = $id_bank,
+        no_kartu = '$nokartu'";
     mysql_query($sql);
     $result['status'] = TRUE;
     $result['id'] = mysql_insert_id();
+    $result['id_pelanggan'] = $id_pasien;
     die(json_encode($result));
+}
+
+if ($method === 'delete_billing') {
+    $id =   $_GET['id'];
+    mysql_query("delete from pembayaran_billing where id = '$id'"); 
 }
 ?>

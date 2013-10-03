@@ -502,7 +502,7 @@ function pemeriksaan_load_data($param) {
         join pendaftaran pd on (p.id_pendaftaran = pd.id)
         join pelanggan pl on (pd.id_pelanggan = pl.id)
         join dokter d on (p.id_dokter = d.id)
-        where p.id is not NULL $q order by p.id_auto";
+        where p.id is not NULL $q order by p.id_auto desc";
     //echo "<pre>".$sql."</pre>";
     $query = mysql_query($sql.$limit);
     $data = array();

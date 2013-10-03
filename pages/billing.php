@@ -5,6 +5,8 @@ include_once("inc/functions.php");
 include_once("models/masterdata.php");
 include_once("pages/message.php");
 $akun = load_data_akun();
+$bank = load_data_bank();
+$cara_bayar = array('Cash','Voucher','Credit Card','Debet Card');
 ?>
 
 <script type="text/javascript">
@@ -37,6 +39,9 @@ var str = '<div id=form_add>'+
                 '<tr><td>No. RM:</td><td><?= form_input('id_pasien', NULL, 'id=id_pasien size=40') ?></td></tr>'+
                 '<tr><td>Nama Pasien:</td><td><?= form_input('pasien', NULL, 'id=pasien size=40') ?></td></tr>'+
                 '<tr><td>Total Tagihan:</td><td><?= form_input('total_tagihan', NULL, 'id=total_tagihan onblur="FormNum(this);" disabled onfocus="javascript:this.value=currencyToNumber(this.value);" size=40') ?></td></tr>'+
+                '<tr><td>Cara Bayar:</td><td><select name=cara_bayar id=cara_bayar><?php foreach($cara_bayar as $data) { ?><option value="<?= $data ?>"><?= $data ?></option><?php } ?></select></td></tr>'+
+                '<tr><td>Bank:</td><td><select name=bank id=bank><option value="">Pilih ...</option><?php foreach($bank['data'] as $data) { ?><option value="<?= $data->id ?>"><?= $data->nama ?></option><?php } ?></select></td></tr>'+
+                '<tr><td>No. Kartu:</td><td><?= form_input('nokartu', NULL, 'id=nokartu size=40') ?></td></tr>'+
                 '<tr><td>Pembayaran:</td><td><?= form_input('pembayaran', NULL, 'id=pembayaran onblur="FormNum(this);" onfocus="javascript:this.value=currencyToNumber(this.value);" size=40') ?></td></tr>'+
                 '<tr><td>Nominal Bayar:</td><td><?= form_input('serahuang', NULL, 'id=serahuang onblur="FormNum(this);" onfocus="javascript:this.value=currencyToNumber(this.value);" size=40') ?></td></tr>'+
                 '<tr><td id=label>Kembalian:</td><td id=kembalian></td></tr>'+
@@ -52,7 +57,7 @@ var str = '<div id=form_add>'+
         title: 'Pembayaran billing',
         autoOpen: true,
         width: 570,
-        height: 380,
+        height: 480,
         modal: true,
         hide: 'clip',
         show: 'blind',
@@ -119,6 +124,7 @@ var str = '<div id=form_add>'+
             cache: false,
             success: function(data) {
                 if (data.status === true) {
+                    cetak_nota(data.id_pelanggan,'<?= date("Y-m-d") ?>');
                     alert_refresh('Pembayaran berhasil di masukkan !');
                 }
             }
@@ -189,7 +195,7 @@ function delete_billing(id, page) {
             "OK": function() {
                 
                 $.ajax({
-                    url: 'models/update-masterdata.php?method=delete_billing&id='+id,
+                    url: 'models/update-transaksi.php?method=delete_billing&id='+id,
                     cache: false,
                     success: function() {
                         load_data_billing(page);

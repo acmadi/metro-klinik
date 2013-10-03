@@ -3,23 +3,23 @@
 
 /* GROUP 1 */
 
-$tile[] = array("type"=>"img","group"=>0,"x"=>0,"y"=>0,'width'=>1,'height'=>1,"background"=>"#6950AB","url"=>"penjualan-nr.php",
+$tile[] = array("type"=>"img","group"=>0,"x"=>2,"y"=>0,'width'=>1,'height'=>1,"background"=>"#6950AB","url"=>"penjualan-nr.php",
 	"img"=>"img/icons/penjualan.png","desc"=>"Penjualan","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
-$tile[] = array("type"=>"img","group"=>0,"x"=>1,"y"=>0,'width'=>1,'height'=>1,"background"=>"#009000","url"=>"pemesanan.php",
+$tile[] = array("type"=>"img","group"=>1,"x"=>0,"y"=>0,'width'=>1,'height'=>1,"background"=>"#009000","url"=>"pemesanan.php",
 	"img"=>"img/icons/pemesanan.png","desc"=>"Pemesanan","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
-$tile[] = array("type"=>"img","group"=>0,"x"=>2,"y"=>2,'width'=>1,'height'=>1,"background"=>"#0072bc","url"=>"inkaso.php",
+$tile[] = array("type"=>"img","group"=>1,"x"=>2,"y"=>0,'width'=>1,'height'=>1,"background"=>"#0072bc","url"=>"inkaso.php",
 	"img"=>"img/icons/pemesanan.png","desc"=>"Inkaso","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
-$tile[] = array("type"=>"img","group"=>0,"x"=>2,"y"=>1,'width'=>1,'height'=>1,"background"=>"#009fb0","url"=>"pemeriksaan.php",
+$tile[] = array("type"=>"img","group"=>0,"x"=>1,"y"=>0,'width'=>1,'height'=>1,"background"=>"#009fb0","url"=>"pemeriksaan.php",
 	"img"=>"img/icons/pendaftaran.png","desc"=>"Pemeriksaan","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
-$tile[] = array("type"=>"img","group"=>0,"x"=>2,"y"=>0,'width'=>1,'height'=>1,"background"=>"#ff0084","url"=>"pendaftaran.php",
+$tile[] = array("type"=>"img","group"=>0,"x"=>0,"y"=>0,'width'=>1,'height'=>1,"background"=>"#ff0084","url"=>"pendaftaran.php",
 	"img"=>"img/icons/pendaftaran2.png","desc"=>"Pendaftaran Antrian","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
@@ -30,28 +30,28 @@ $tile[] = array("type"=>"slideshow","group"=>0,"x"=>0,"y"=>1,"width"=>1,"height"
 	"labelText"=>"Slideshow","labelColor"=>"#11528f","labelPosition"=>"bottom",
 	"classes"=>"noClick");*/
 
-$tile[] = array("type"=>"img","group"=>0,"x"=>1,"y"=>2,'width'=>1,'height'=>1,"background"=>"#614040","url"=>"penerimaan.php",
+$tile[] = array("type"=>"img","group"=>1,"x"=>1,"y"=>0,'width'=>1,'height'=>1,"background"=>"#614040","url"=>"penerimaan.php",
 	"img"=>"img/icons/penerimaan.png","desc"=>"Penerimaan Produk","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
-$tile[] = array("type"=>"img","group"=>0,"x"=>0,"y"=>2,'width'=>1,'height'=>1,"background"=>"#15aa64","url"=>"stok-opname.php",
+$tile[] = array("type"=>"img","group"=>1,"x"=>2,"y"=>1,'width'=>1,'height'=>1,"background"=>"#15aa64","url"=>"stok-opname.php",
 	"img"=>"img/icons/resep.png","desc"=>"Stok Opname","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
 
-$tile[] = array("type"=>"img","group"=>0,"x"=>0,"y"=>1,'width'=>1,'height'=>1,"background"=>"#9a0f0f","url"=>"retur-penerimaan.php",
+$tile[] = array("type"=>"img","group"=>1,"x"=>0,"y"=>1,'width'=>1,'height'=>1,"background"=>"#9a0f0f","url"=>"retur-penerimaan.php",
 	"img"=>"img/icons/retur.png","desc"=>"Retur","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
-$tile[] = array("type"=>"img","group"=>0,"x"=>1,"y"=>1,'width'=>1,'height'=>1,"background"=>"#d34927","url"=>"retur-penerimaan.php",
+$tile[] = array("type"=>"img","group"=>1,"x"=>1,"y"=>1,'width'=>1,'height'=>1,"background"=>"#d34927","url"=>"retur-penerimaan.php",
 	"img"=>"img/icons/pemusnahan.png","desc"=>"Pemusnahan","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
-$tile[] = array("type"=>"img","group"=>0,"x"=>3,"y"=>0,'width'=>1,'height'=>1,"background"=>"#b44528","url"=>"uang-in-out.php",
+$tile[] = array("type"=>"img","group"=>1,"x"=>0,"y"=>2,'width'=>1,'height'=>1,"background"=>"#b44528","url"=>"uang-in-out.php",
 	"img"=>"img/icons/trans.png","desc"=>"Pemasukan / Pengeluaran Uang","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
-$tile[] = array("type"=>"img","group"=>0,"x"=>3,"y"=>1,'width'=>1,'height'=>1,"background"=>"#486887","url"=>"billing.php",
+$tile[] = array("type"=>"img","group"=>1,"x"=>1,"y"=>2,'width'=>1,'height'=>1,"background"=>"#486887","url"=>"billing.php",
 	"img"=>"img/icons/billing.png","desc"=>"Pembayaran Billing","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 /* GROUP 2*/
@@ -62,7 +62,7 @@ $tile[] = array("type"=>"slidefx","group"=>1,"x"=>0,"y"=>0,'width'=>2,'height'=>
 );
 */
 
-$tile[] = array("type"=>"img","group"=>1,"x"=>0,"y"=>0,'width'=>1,'height'=>1,"background"=>"#6950AB","url"=>"barang.php",
+$tile[] = array("type"=>"img","group"=>2,"x"=>0,"y"=>0,'width'=>1,'height'=>1,"background"=>"#6950AB","url"=>"barang.php",
 	"img"=>"img/icons/drug.png","desc"=>"Produk","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
@@ -78,11 +78,11 @@ $tile[] = array("type"=>"img","group"=>1,"x"=>0,"y"=>0,'width'=>1,'height'=>1,"b
 //	"labelText"=>"Pabrik","labelColor"=>"#00BFFF","labelPosition"=>"top",
 //);
 
-$tile[] = array("type"=>"img","group"=>1,"x"=>0,"y"=>2,'width'=>1,'height'=>1,"background"=>"#6950AB","url"=>"pelanggan.php",
+$tile[] = array("type"=>"img","group"=>2,"x"=>0,"y"=>2,'width'=>1,'height'=>1,"background"=>"#6950AB","url"=>"pelanggan.php",
 	"img"=>"img/icons/user.png","desc"=>"Pelanggan","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
-$tile[] = array("type"=>"img","group"=>1,"x"=>1,"y"=>2,'width'=>1,'height'=>1,"background"=>"#eb6796","url"=>"golongan.php",
+$tile[] = array("type"=>"img","group"=>2,"x"=>1,"y"=>2,'width'=>1,'height'=>1,"background"=>"#eb6796","url"=>"golongan.php",
 	"img"=>"img/icons/golongan.png","desc"=>"Golongan Harga","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
@@ -95,27 +95,27 @@ $tile[] = array("type"=>"img","group"=>1,"x"=>1,"y"=>2,'width'=>1,'height'=>1,"b
 //"title"=>"Bank","text"=>"Manajemen data bank.
 //");
 
-$tile[] = array("type"=>"img","group"=>1,"x"=>1,"y"=>1,'width'=>1,'height'=>1,"background"=>"#e8641b","url"=>"farmakoterapi.php",
+$tile[] = array("type"=>"img","group"=>2,"x"=>1,"y"=>1,'width'=>1,'height'=>1,"background"=>"#e8641b","url"=>"farmakoterapi.php",
 	"img"=>"img/icons/kategori-produk.png","desc"=>"Kategori Produk","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
-$tile[] = array("type"=>"img","group"=>1,"x"=>2,"y"=>1,'width'=>1,'height'=>1,"background"=>"#00709f","url"=>"penyakit.php",
+$tile[] = array("type"=>"img","group"=>2,"x"=>2,"y"=>1,'width'=>1,'height'=>1,"background"=>"#00709f","url"=>"penyakit.php",
 	"img"=>"img/icons/farmakoterapi.png","desc"=>"Penyakit ICD X","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
-$tile[] = array("type"=>"img","group"=>1,"x"=>2,"y"=>0,'width'=>1,'height'=>1,"background"=>"#0072bc","url"=>"pabrik.php",
+$tile[] = array("type"=>"img","group"=>2,"x"=>2,"y"=>0,'width'=>1,'height'=>1,"background"=>"#0072bc","url"=>"pabrik.php",
 	"img"=>"img/icons/asuransi.png","desc"=>"Instansi-instansi","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
-$tile[] = array("type"=>"img","group"=>1,"x"=>1,"y"=>0,'width'=>1,'height'=>1,"background"=>"#be1e4a","url"=>"karyawan.php",
+$tile[] = array("type"=>"img","group"=>2,"x"=>1,"y"=>0,'width'=>1,'height'=>1,"background"=>"#be1e4a","url"=>"karyawan.php",
 	"img"=>"img/icons/karyawan.png","desc"=>"Karyawan & Dokter","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
-$tile[] = array("type"=>"img","group"=>1,"x"=>0,"y"=>1,'width'=>1,'height'=>1,"background"=>"#180052","url"=>"layanan.php",
-	"img"=>"img/icons/layanan.png","desc"=>"Layanan","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
+$tile[] = array("type"=>"img","group"=>2,"x"=>0,"y"=>1,'width'=>1,'height'=>1,"background"=>"#180052","url"=>"layanan.php",
+	"img"=>"img/icons/layanan.png","desc"=>"Menu Perawatan","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
-$tile[] = array("type"=>"img","group"=>1,"x"=>2,"y"=>2,'width'=>1,'height'=>1,"background"=>"#180052","url"=>"user-account.php",
+$tile[] = array("type"=>"img","group"=>2,"x"=>2,"y"=>2,'width'=>1,'height'=>1,"background"=>"#180052","url"=>"user-account.php",
 	"img"=>"img/icons/user.png","desc"=>"User Account","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
@@ -134,57 +134,57 @@ $tile[] = array("type"=>"flip","group"=>1,"x"=>2,"y"=>1,'width'=>1,'height'=>1,"
 */
 	
 /* GROUP 3 */
-$tile[] = array("type"=>"img","group"=>2,"x"=>0,"y"=>0,'width'=>1,'height'=>1,"background"=>"#5f5f5f","url"=>"arus-stok.php",
+$tile[] = array("type"=>"img","group"=>3,"x"=>0,"y"=>0,'width'=>1,'height'=>1,"background"=>"#5f5f5f","url"=>"arus-stok.php",
 	"img"=>"img/icons/chart.png","desc"=>"Arus Stok",
 	"showDescAlways"=>true,"showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 	
-$tile[] = array("type"=>"img","group"=>2,"x"=>1,"y"=>0,'width'=>1,'height'=>1,"background"=>"#4577a4","url"=>"lap-sp.php",
+$tile[] = array("type"=>"img","group"=>3,"x"=>1,"y"=>0,'width'=>1,'height'=>1,"background"=>"#4577a4","url"=>"lap-sp.php",
 	"img"=>"img/icons/lap-sp.png","desc"=>"Pemesanan","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
-$tile[] = array("type"=>"img","group"=>2,"x"=>2,"y"=>0,'width'=>1,'height'=>1,"background"=>"#175e88","url"=>"lap-penjualan.php",
+$tile[] = array("type"=>"img","group"=>3,"x"=>2,"y"=>0,'width'=>1,'height'=>1,"background"=>"#eb6796","url"=>"lap-penjualan.php",
 	"img"=>"img/icons/penjualan.png","desc"=>"Penjualan","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
-$tile[] = array("type"=>"img","group"=>2,"x"=>0,"y"=>1,'width'=>1,'height'=>1,"background"=>"#3c17b7","url"=>"lap-resep.php",
+$tile[] = array("type"=>"img","group"=>4,"x"=>0,"y"=>1,'width'=>1,'height'=>1,"background"=>"#3c17b7","url"=>"lap-resep.php",
 	"img"=>"img/icons/lap-resep.png","desc"=>"Resep","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
-$tile[] = array("type"=>"img","group"=>2,"x"=>1,"y"=>1,'width'=>1,'height'=>1,"background"=>"#180052","url"=>"lap-penerimaan.php",
-	"img"=>"img/icons/lap-resep.png","desc"=>"Penerimaan","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
+$tile[] = array("type"=>"img","group"=>3,"x"=>1,"y"=>1,'width'=>1,'height'=>1,"background"=>"#180052","url"=>"lap-penerimaan.php",
+	"img"=>"img/icons/lap-penerimaan.png","desc"=>"Penerimaan","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
-$tile[] = array("type"=>"img","group"=>2,"x"=>2,"y"=>1,'width'=>1,'height'=>1,"background"=>"#180052","url"=>"lap-hutang.php",
-	"img"=>"img/icons/lap-resep.png","desc"=>"Hutang","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
+$tile[] = array("type"=>"img","group"=>3,"x"=>2,"y"=>1,'width'=>1,'height'=>1,"background"=>"#97c024","url"=>"lap-hutang.php",
+	"img"=>"img/icons/lap-hutang.png","desc"=>"Hutang","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
-$tile[] = array("type"=>"img","group"=>2,"x"=>0,"y"=>2,'width'=>1,'height'=>1,"background"=>"#180052","url"=>"lap-arus-kas.php",
-	"img"=>"img/icons/lap-resep.png","desc"=>"Arus Kas","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
+$tile[] = array("type"=>"img","group"=>3,"x"=>0,"y"=>2,'width'=>1,'height'=>1,"background"=>"#ff6621","url"=>"lap-arus-kas.php",
+	"img"=>"img/icons/lap-arus-kas.png","desc"=>"Arus Kas","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
-$tile[] = array("type"=>"img","group"=>2,"x"=>1,"y"=>2,'width'=>1,'height'=>1,"background"=>"#180052","url"=>"lap-statistik-obat.php",
-	"img"=>"img/icons/lap-resep.png","desc"=>"Analisa Probabilitas","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
+$tile[] = array("type"=>"img","group"=>4,"x"=>1,"y"=>0,'width'=>1,'height'=>1,"background"=>"#c17e0f","url"=>"lap-statistik-obat.php",
+	"img"=>"img/icons/probabilitas.png","desc"=>"Analisa Probabilitas","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
-$tile[] = array("type"=>"img","group"=>2,"x"=>2,"y"=>2,'width'=>1,'height'=>1,"background"=>"#180052","url"=>"lap-analisis-abc.php",
-	"img"=>"img/icons/lap-resep.png","desc"=>"Analisa ABC","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
+$tile[] = array("type"=>"img","group"=>4,"x"=>1,"y"=>1,'width'=>1,'height'=>1,"background"=>"#3c17b7","url"=>"lap-analisis-abc.php",
+	"img"=>"img/icons/lap-abc.png","desc"=>"Analisa ABC/PARETO","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
-$tile[] = array("type"=>"img","group"=>2,"x"=>3,"y"=>0,'width'=>1,'height'=>1,"background"=>"#4c4344","url"=>"expired-date.php",
-	"img"=>"img/icons/expiry.png","desc"=>"Expiry Date","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
+$tile[] = array("type"=>"img","group"=>3,"x"=>1,"y"=>2,'width'=>1,'height'=>1,"background"=>"#aa3f41","url"=>"expired-date.php",
+	"img"=>"img/icons/expiry.png","desc"=>"Barang Kadaluarsa","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
-$tile[] = array("type"=>"img","group"=>2,"x"=>3,"y"=>1,'width'=>1,'height'=>1,"background"=>"#4c4344","url"=>"lap-billing.php",
+$tile[] = array("type"=>"img","group"=>3,"x"=>0,"y"=>1,'width'=>1,'height'=>1,"background"=>"#be1e4a","url"=>"lap-billing.php",
 	"img"=>"img/icons/billing.png","desc"=>"Billing","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
-$tile[] = array("type"=>"img","group"=>2,"x"=>3,"y"=>2,'width'=>1,'height'=>1,"background"=>"#180052","url"=>"lap-jasa-tarif.php",
-	"img"=>"img/icons/lap-resep.png","desc"=>"Jasa Tarif","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
+$tile[] = array("type"=>"img","group"=>3,"x"=>2,"y"=>2,'width'=>1,'height'=>1,"background"=>"#009000","url"=>"lap-jasa-tarif.php",
+	"img"=>"img/icons/lap-resep.png","desc"=>"Pendapatan Jasa","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
-$tile[] = array("type"=>"img","group"=>2,"x"=>4,"y"=>0,'width'=>1,'height'=>1,"background"=>"#180052","url"=>"lap-control.php",
-	"img"=>"img/icons/lap-resep.png","desc"=>"Control","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
+$tile[] = array("type"=>"img","group"=>3,"x"=>4,"y"=>0,'width'=>1,'height'=>1,"background"=>"#180052","url"=>"lap-control.php",
+	"img"=>"img/icons/lap-arus-kas.png","desc"=>"Sistem Kontrol","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
 
