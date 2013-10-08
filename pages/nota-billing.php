@@ -40,10 +40,10 @@ function cetak() {
             $total_brg = $total_brg + ($data->harga_jual*$data->qty);
             ?>
         <tr>
-            <td><?= $data->nama.' '.$data->kekuatan.' '.$data->satuan ?></td>
+            <td><?= $data->nama_barang ?></td>
             <td align="center"><?= $data->qty ?></td>
             <td align="right"><?= rupiah($data->harga_jual) ?></td>
-            <td align="right"><?= rupiah($data->harga_jual*$data->qty) ?></td>
+            <td align="right"><?= rupiah($data->harga_jual) ?></td>
         </tr>
         <?php 
         } ?>

@@ -256,19 +256,28 @@ if ($method === 'save_penjualannr') {
     $kemasan    = $_POST['kemasan'];
     $jumlah     = $_POST['jumlah'];
     $harga_jual = $_POST['harga_jual'];
-    $ed         = $_POST['ed'];
+    $ed         = isset($_POST['ed'])?$_POST['ed']:NULL;
         foreach ($id_barang as $key => $data) {
-            $query = mysql_query("select * from kemasan where id = '$kemasan[$key]'");
+            $query = mysql_query("select k.*, b.nama as nama_barang from kemasan k join barang b on (k.id_barang = b.id) where k.id = '$kemasan[$key]'");
             $rows  = mysql_fetch_object($query);
             $isi   = $rows->isi*$rows->isi_satuan;
             
             $sql = "insert into detail_penjualan set
                 id_penjualan = '$id_penjualan',
                 id_kemasan = '$kemasan[$key]',
+                expired = ".(isset($ed[$key])?$ed[$key]:'NULL').",
                 qty = '".($jumlah[$key]*$isi)."',
-                harga_jual = '$harga_jual[$key]'
+                harga_jual = '".currencyToNumber($harga_jual[$key])."'
                 ";
             mysql_query($sql);
+            
+            $qry = "insert into detail_penjualan_nota set
+                id_penjualan = '$id_penjualan',
+                nama_barang = '".$rows->nama_barang."',
+                jumlah = '".($jumlah[$key]*$isi)."',
+                harga_jual = '".currencyToNumber($harga_jual[$key])."'";
+            //echo $qry."<br/>";
+            mysql_query($qry);
             
             $last = mysql_fetch_object(mysql_query("select * from stok where id_barang = '$data' order by id desc limit 1"));
             
@@ -280,7 +289,7 @@ if ($method === 'save_penjualannr') {
                     id_transaksi = '$id_penjualan',
                     transaksi = 'Penjualan',
                     id_barang = '$data',
-                    ed = '".($ed[$key] !== '')?date2mysql($ed[$key]):NULL."',
+                    ed = ".(isset($ed[$key])?$ed[$key]:'NULL').",
                     keluar = '".($jumlah[$key]*$isi)."'";
                 //echo $stok;
                 mysql_query($stok);
@@ -289,6 +298,13 @@ if ($method === 'save_penjualannr') {
         
         if ($id_ikit !== NULL) {
             foreach ($id_ikit as $nu => $rows) {
+                $cek = mysql_fetch_object(mysql_query("select nama as nama_barang, harga_jual from item_kit where id = '$rows'"));
+                $qry = "insert into detail_penjualan_nota set
+                    id_penjualan = '$id_penjualan',
+                    nama_barang = '".$cek->nama_barang."',
+                    jumlah = '$jumlah[$nu]',
+                    harga_jual = '".$cek->harga_jual."'";
+                mysql_query($qry);
                 $get = mysql_query("select id.*, b.hna+(b.hna*(b.margin_non_resep/100)) as harga_jual, k.id_barang 
                     from item_kit i 
                     join item_kit_detail id on (i.id = id.id_item_kit) 
@@ -378,7 +394,7 @@ if ($method === 'save_retur_penerimaan') {
 }
 
 if ($method === 'save_resep') {
-    //session_start();
+    session_start();
     $noresep    = $_POST['noresep'];
     //$waktu      = date2mysql($_POST['waktu']).' '.date("H:i:s");
     $dokter     = $_POST['id_dokter'];
@@ -386,7 +402,7 @@ if ($method === 'save_resep') {
     $keterangan = $_POST['keterangan'];
     $id_resep   = $_POST['id_resep'];
     $id_daftar  = $_POST['id_pendaftaran'];
-    $id_ikit    = isset($_POST['id_ikit'])?$_POST['id_ikit']:'NULL';
+    
     //$id_user    = 'NULL';
     if ($id_resep === '') {
         $sql = "insert into resep set
@@ -410,8 +426,30 @@ if ($method === 'save_resep') {
         $result['action'] = 'edit';
     }
     
+    $customer   = $_POST['id_pasien'];
+    $diskon_pr  = 0;
+    $diskon_rp  = 0;
+    $ppn        = 0;
+    $total      = $_POST['total_penjualan'];
+    $tuslah     = 0;
+    $asuransi   = 'NULL';
+    $embalage   = 0;
+    $reimburse  = 0;
+    $pembayaran = 0; // yang dientrikan pembulatan pembayarannya
+    // cek apakah nomor resep pernah ditransaksikan
+    $cek = mysql_query("select count(*) as jumlah, id from penjualan where id_resep = '$id_resep'");
+    $row = mysql_fetch_object($cek);
+    
+    $sql = "insert into penjualan set
+        waktu = NOW(),
+        id_resep = '$id',
+        id_pelanggan = '$pasien'";
+    
+    mysql_query($sql);
+    $id_penjualan = mysql_insert_id();
+    
     $no_r       = $_POST['no_r'];
-    $id_barang  = $_POST['id_barang'];
+    $id_barang  = isset($_POST['id_barang'])?$_POST['id_barang']:NULL;
     $jml_minta  = $_POST['jp'];
     $jml_tebus  = $_POST['jt'];
     $aturan     = $_POST['a'];
@@ -422,9 +460,10 @@ if ($method === 'save_resep') {
     $jml_pakai  = $_POST['jpi'];
     $id_tarif   = $_POST['id_tarif'];
     $jasa_apt   = $_POST['jasa'];
-    $harga_brg  = $_POST['hrg_barang'];
+    $harga_brg  = $_POST['hrg_pokok'];
     
     foreach ($no_r as $arr => $data) {
+        
         if (isset($id_barang[$arr])) {
             $query = "insert into resep_r set
                 id_resep = '$id',
@@ -439,41 +478,148 @@ if ($method === 'save_resep') {
                 id_barang = '$id_barang[$arr]',
                 jual_harga = '".  currencyToNumber($harga_brg[$arr])."',
                 dosis_racik = '$dosis_racik[$arr]',
-                jumlah_pakai = '$jml_pakai[$arr]'
-                ";
+                jumlah_pakai = '$jml_pakai[$arr]'";
             //echo $query."<br/>";
             mysql_query($query);
             //$id_resep_r = mysql_insert_id();
-        } else {
+            $qwert = "insert into resep_ikit set
+                id_resep = '$id',
+                id_barang = '$id_barang[$arr]',
+                jumlah = '$jml_pakai[$arr]',
+                harga_jual = '".  currencyToNumber($harga_brg[$arr])."'";
+            //echo $qwert."<br/>";
+            mysql_query($qwert);
+            
+            /*FROM PENJUALAN*/
+            $query = mysql_query("select k.*, b.nama as nama_barang from kemasan k join barang b on (k.id_barang = b.id) where b.id = '$id_barang[$arr]' and k.default_kemasan = '1'");
+            $rows  = mysql_fetch_object($query);
+            $isi   = $rows->isi*$rows->isi_satuan;
+            $sql = "insert into detail_penjualan set
+                id_penjualan = '$id_penjualan',
+                id_kemasan = '".$rows->id."',
+                qty = '".($jml_pakai[$arr]*$isi)."',
+                harga_jual = '".currencyToNumber($harga_brg[$arr])."'";
+            mysql_query($sql);
+            
+            $qry = "insert into detail_penjualan_nota set
+                id_penjualan = '$id_penjualan',
+                nama_barang = '".$rows->nama_barang."',
+                jumlah = '".($jml_pakai[$arr]*$isi)."',
+                harga_jual = '".currencyToNumber($harga_brg[$arr])."'";
+            mysql_query($qry);
+            
+            $last = mysql_fetch_object(mysql_query("select * from stok where id_barang = '$id_barang[$arr]' order by id desc limit 1"));
+            
+            $fefo  = mysql_query("SELECT id_barang, ed, IFNULL((sum(masuk)-sum(keluar)),'0') as sisa FROM `stok` WHERE id_barang = '$id_barang[$arr]' and ed > '".date("Y-m-d")."' group by ed HAVING sisa > 0 order by ed limit 1");
+            $ed    = mysql_fetch_object($fefo);
+            $stok = "insert into stok set
+                waktu = NOW(),
+                id_transaksi = '$id_penjualan',
+                transaksi = 'Penjualan',
+                id_barang = '$id_barang[$arr]',
+                ed = ".(isset($ed->ed)?$ed->ed:'NULL').",
+                keluar = '".($jml_pakai[$arr]*$isi)."'";
+            //echo $stok;
+            mysql_query($stok);
+            /*END FROM PENJUAALAN*/
+            
+        }
+    }
+    
+    $id_ikit    = isset($_POST['id_ikit'])?$_POST['id_ikit']:NULL;
+    $no_rik     = $_POST['no_rik'];
+    $harga_brgik= $_POST['hrg_barangik'];
+    $jml_mintaik= $_POST['jpik'];
+    $jml_tebusik= $_POST['jtik'];
+    $aturanik   = $_POST['aik'];
+    $pakaiik    = $_POST['pik'];
+    $iterasiik  = $_POST['itik'];
+    //$kekuatan   = $_POST['kekuatan'];
+    $dosis_racikik= $_POST['drik'];
+    $jml_pakaiik= $_POST['jpiik'];
+    $id_tarifik = $_POST['id_tarifik'];
+    $jasa_aptik = $_POST['jasaik'];
+    
+    foreach ($no_rik as $arr => $data) {
+        if (isset($id_ikit[$arr])) {
             foreach ($id_ikit as $nu => $rows) {
-                $get = mysql_query("select id.*, b.hna+(b.hna*(b.margin_resep/100)) as harga_jual, k.id_barang 
-                        from item_kit i 
-                        join item_kit_detail id on (i.id = id.id_item_kit) 
-                        join kemasan k on (id.id_kemasan = k.id) 
-                        join barang b on (k.id_barang = b.id)
-                        where i.id = '$rows'");
+            
+            $qwert = "insert into resep_ikit set
+                id_resep = '$id',
+                id_item_kit = '$rows',
+                jumlah = '$jml_pakaiik[$arr]',
+                harga_jual = '". currencyToNumber($harga_brgik[$arr])."'";
+            //echo $qwert."<br/>";
+            mysql_query($qwert);
+            
+            $qru = "select id.*, b.hna+(b.hna*(b.margin_resep/100)) as harga_jual, k.id_barang 
+                    from item_kit i 
+                    join item_kit_detail id on (i.id = id.id_item_kit) 
+                    join kemasan k on (id.id_kemasan = k.id) 
+                    join barang b on (k.id_barang = b.id)
+                    where i.id = '$rows'";
+            
+            $query = mysql_query("select * from item_kit where id = '$rows'");
+            $rows  = mysql_fetch_object($query);
+            
+            $qry = "insert into detail_penjualan_nota set
+                    id_penjualan = '$id_penjualan',
+                    nama_barang = '".$rows->nama."',
+                    jumlah = '$jml_pakaiik[$arr]',
+                    harga_jual = '".$rows->harga_jual."'";
+            mysql_query($qry);
+                
+            $get = mysql_query($qru);
+            //echo $qru."<br/>";
                 while ($do = mysql_fetch_object($get)) {
-                    $query = "insert into resep_r set
-                        id_resep = '$id',
-                        r_no = '$no_r[$arr]',
-                        resep_r_jumlah = '$jml_minta[$arr]',
-                        tebus_r_jumlah = '$jml_tebus[$arr]',
-                        aturan = '$aturan[$arr]',
-                        pakai = '$pakai[$arr]',
-                        iter = '$iterasi[$arr]',
-                        id_tarif = ".(($id_tarif[$arr] !== '0')?$id_tarif[$arr]:'NULL').",
-                        nominal = '".  currencyToNumber($jasa_apt[$arr])."',
-                        id_barang = '".$do->id_barang."',
-                        jual_harga = '".$do->harga_jual."',
-                        dosis_racik = '$dosis_racik[$arr]',
-                        jumlah_pakai = '$jml_pakai[$arr]'
-                        ";
-                    //echo $query."<br/>";
-                    mysql_query($query);
+                $query = "insert into resep_r set
+                    id_resep = '$id',
+                    r_no = '$data',
+                    resep_r_jumlah = '$jml_mintaik[$nu]',
+                    tebus_r_jumlah = '$jml_tebusik[$nu]',
+                    aturan = '$aturanik[$nu]',
+                    pakai = '$pakaiik[$nu]',
+                    iter = '$iterasiik[$nu]',
+                    id_tarif = ".(($id_tarifik[$nu] !== '0')?$id_tarifik[$nu]:'NULL').",
+                    nominal = '".  currencyToNumber($jasa_aptik[$nu])."',
+                    id_barang = '".$do->id_barang."',
+                    jual_harga = '".$do->harga_jual."',
+                    dosis_racik = '$dosis_racikik[$nu]',
+                    jumlah_pakai = '".($jml_pakaiik[$nu]*$do->jumlah)."'
+                    ";
+                mysql_query($query);
+                
+                /*FROM PENJUALAN*/
+                $query = mysql_query("select k.*, b.nama as nama_barang from kemasan k join barang b on (k.id_barang = b.id) where b.id = '".$do->id_barang."' and k.default_kemasan = '1'");
+                $rows  = mysql_fetch_object($query);
+                $isi   = $rows->isi*$rows->isi_satuan;
+                $sql = "insert into detail_penjualan set
+                    id_penjualan = '$id_penjualan',
+                    id_kemasan = '".$rows->id."',
+                    qty = '".($jml_pakaiik[$nu]*$isi)."',
+                    harga_jual = '".$do->harga_jual."'";
+                mysql_query($sql);
+
+                $last = mysql_fetch_object(mysql_query("select * from stok where id_barang = '".$do->id_barang."' order by id desc limit 1"));
+
+                $fefo  = mysql_query("SELECT id_barang, ed, IFNULL((sum(masuk)-sum(keluar)),'0') as sisa FROM `stok` WHERE id_barang = '".$do->id_barang."' and ed > '".date("Y-m-d")."' group by ed HAVING sisa > 0 order by ed limit 1");
+                $ed    = mysql_fetch_object($fefo);
+                $stok = "insert into stok set
+                    waktu = NOW(),
+                    id_transaksi = '$id_penjualan',
+                    transaksi = 'Penjualan',
+                    id_barang = '".$do->id_barang."',
+                    ed = ".(isset($ed->ed)?$ed->ed:'NULL').",
+                    keluar = '".($jml_pakaiik[$nu]*$isi)."'";
+                //echo $stok;
+                mysql_query($stok);
+                /*END FROM PENJUAALAN*/
+                
                 }
             }
         }
     }
+    
     $result['status'] = TRUE;
     $result['id'] = $id;
     die(json_encode($result));
@@ -537,7 +683,7 @@ if ($method === 'save_penjualan') {
     $jumlah     = $_POST['jumlah'];
     $harga_jual = $_POST['harga_jual'];
         foreach ($id_barang as $key => $data) {
-            $query = mysql_query("select * from kemasan where id = '$kemasan[$key]'");
+            $query = mysql_query("select k.*, b.nama as nama_barang from kemasan k join barang b on (k.id_barang = b.id) where k.id = '$kemasan[$key]'");
             $rows  = mysql_fetch_object($query);
             $isi   = $rows->isi*$rows->isi_satuan;
             $sql = "insert into detail_penjualan set
@@ -547,6 +693,14 @@ if ($method === 'save_penjualan') {
                 harga_jual = '$harga_jual[$key]'
                 ";
             mysql_query($sql);
+            
+            $qry = "insert into detail_penjualan_nota set
+                id_penjualan = '$id_penjualan',
+                nama_barang = '".$rows->nama_barang."',
+                jumlah = '".($jumlah[$key]*$isi)."',
+                harga_jual = '".currencyToNumber($harga_jual[$key])."'";
+            //echo $qry."<br/>";
+            mysql_query($qry);
             
             $last = mysql_fetch_object(mysql_query("select * from stok where id_barang = '$data' order by id desc limit 1"));
             
@@ -888,8 +1042,12 @@ if ($method === 'save_billing') {
         id_bank = $id_bank,
         no_kartu = '$nokartu'";
     mysql_query($sql);
+    $id = mysql_insert_id();
+    $upt = "update pendaftaran set is_bayar = '1' where id_pelanggan = '$id_pasien' and date(waktu_pelayanan) = '".date("Y-m-d")."'";
+    mysql_query($upt);
+    
     $result['status'] = TRUE;
-    $result['id'] = mysql_insert_id();
+    $result['id'] = $id;
     $result['id_pelanggan'] = $id_pasien;
     die(json_encode($result));
 }

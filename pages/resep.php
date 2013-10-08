@@ -2,8 +2,7 @@
 session_start();
 $subNav = array(
 	"Penjualan Bebas ; penjualan-nr.php ; #509601;",
-        "Entri Resep ; resep.php ; #509601;",
-        "Penjualan Resep ; penjualan.php ; #509601;"
+        "Entri Resep ; resep.php ; #509601;"
 );
 set_include_path("../");
 include_once("inc/essentials.php");
@@ -143,7 +142,8 @@ function addnoresep() {
                 '<td><input type=text name=dr[] id=dr'+i+' value="'+dosis_racik+'" style="text-align: center;" /></td>'+
                 '<td><input type=text name=jpi[] id=jpi'+i+' value="'+jml_pakai+'" style="text-align: center;" /></td>'+
                 '<td><input type=hidden name=id_tarif[] id=id_tarif'+i+' value="'+jasa_apt[0]+'" /> <input type=text name=jasa[] id=jasa'+i+' onkeyup=FormNum(this) value="'+numberToCurrency(jasa)+'" style="text-align: right;" /></td>'+
-                '<td><input type=text name=hrg_barang[] id=hrg_barang'+i+' value="" style="text-align: right;" /></td>'+
+                '<td><input type=text name=hrg_barang[] id=hrg_barang'+i+' value="" style="text-align: right;" />'+
+                '<input type=hidden name=hrg_pokok[] id=hrg_pokok'+i+' /></td>'+
                 '<td class=aksi><img onclick=removeMe(this); title="Klik untuk hapus" src="img/icons/delete.png" class=add_kemasan align=left /></td>'+
               '</tr>';
         $('#resep-list tbody').append(str);
@@ -154,6 +154,7 @@ function addnoresep() {
             success: function(data) {
                 //hitung_detail_total(jml, jum, data.diskon_rupiah, data.diskon_persen, data.harga_jual);
                 $('#hrg_barang'+i).val(numberToCurrency(parseInt(data.harga_jual*jml_pakai)));
+                $('#hrg_pokok'+i).val(numberToCurrency(parseInt(data.harga_jual)));
                 total_perkiraan_resep();
             }
         });
@@ -191,17 +192,17 @@ function addnoresep_ik() {
     var harga_jual  = numberToCurrency($('#hjual').val());
     var str = '<tr class="tr_rows">'+
                 '<td align=center>'+i+'</td>'+
-                '<td><input type=text name=no_r[] id=no_r'+i+' value="'+no_r+'" style="text-align: center;" /></td>'+
+                '<td><input type=text name=no_rik[] id=no_r'+i+' value="'+no_r+'" style="text-align: center;" /></td>'+
                 '<td>'+barang+' <input type=hidden name=id_ikit[] value="'+id_barang+'" class=id_ikit id=id_ikit'+i+' /></td>'+
-                '<td><input type=text name=jp[] id=jp'+i+' value="'+permintaan+'" style="text-align: center;" /></td>'+
-                '<td><input type=text name=jt[] id=jt'+i+' value="'+tebus+'" style="text-align: center;" /></td>'+
+                '<td><input type=text name=jpik[] id=jp'+i+' value="'+permintaan+'" style="text-align: center;" /></td>'+
+                '<td><input type=text name=jtik[] id=jt'+i+' value="'+tebus+'" style="text-align: center;" /></td>'+
                 '<td align=center id=sisa'+i+'>-</td>'+
-                '<td><input type=text name=a[] id=a'+i+' value="'+a+'" style="text-align: right; width: 40%" /> X <input type=text name=p[] id=p'+i+' value="'+p+'" style="text-align: left; width: 40%" /></td>'+
-                '<td><input type=text name=it[] id=it'+i+' value="'+iterasi+'" style="text-align: center;" /></td>'+
-                '<td><input type=text name=dr[] id=dr'+i+' value="'+dosis_racik+'" style="text-align: center;" /></td>'+
-                '<td><input type=text name=jpi[] id=jpi'+i+' value="'+jml_pakai+'" style="text-align: center;" /></td>'+
-                '<td><input type=hidden name=id_tarif[] id=id_tarif'+i+' value="'+jasa_apt[0]+'" /> <input type=text name=jasa[] id=jasa'+i+' onkeyup=FormNum(this) value="'+numberToCurrency(jasa)+'" style="text-align: right;" /></td>'+
-                '<td><input type=text name=hrg_barang[] id=hrg_barang'+i+' value="'+harga_jual+'" style="text-align: right;" /></td>'+
+                '<td><input type=text name=aik[] id=a'+i+' value="'+a+'" style="text-align: right; width: 40%" /> X <input type=text name=pik[] id=p'+i+' value="'+p+'" style="text-align: left; width: 40%" /></td>'+
+                '<td><input type=text name=itik[] id=it'+i+' value="'+iterasi+'" style="text-align: center;" /></td>'+
+                '<td><input type=text name=drik[] id=dr'+i+' value="'+dosis_racik+'" style="text-align: center;" /></td>'+
+                '<td><input type=text name=jpiik[] id=jpi'+i+' value="'+jml_pakai+'" style="text-align: center;" /></td>'+
+                '<td><input type=hidden name=id_tarifik[] id=id_tarif'+i+' value="'+jasa_apt[0]+'" /> <input type=text name=jasaik[] id=jasa'+i+' onkeyup=FormNum(this) value="'+numberToCurrency(jasa)+'" style="text-align: right;" /></td>'+
+                '<td><input type=text name=hrg_barangik[] id=hrg_barang'+i+' value="'+harga_jual+'" style="text-align: right;" /></td>'+
                 '<td class=aksi><img onclick=removeMe(this); title="Klik untuk hapus" src="img/icons/delete.png" class=add_kemasan align=left /></td>'+
               '</tr>';
         $('#resep-list tbody').append(str);
@@ -223,6 +224,7 @@ function total_perkiraan_resep() {
         total   = total + subtotal + jasa;
     }
     $('#total').html(numberToCurrency(parseInt(total)));
+    $('#total_penjualan').val(total);
 }
 
 function hitung_jml_pakai() {
@@ -287,7 +289,7 @@ function form_receipt() {
                         '<tr><td>Kekuatan:</td><td><span class=label id=kekuatan>-</span></td></tr>'+
                         '<tr><td>Dosis Racik:</td><td> <input type=text name=dr id=dr class=dr size=10 onblur="hitung_jml_pakai();" /></td></tr>'+
                         '<tr><td>Jumlah Pakai:</td><td><?= form_input('jmlpakai', NULL, 'id=jmlpakai size=10') ?><?= form_hidden(NULL, NULL, 'id=status') ?><?= form_hidden(NULL, NULL, 'id=hjual') ?></td></tr>'+
-                        '<tr><td>TOTAL:</td><td style="font-size: 30px;"><span>Rp </span><span id=total></span>,00</td></tr>'+
+                        '<tr><td>TOTAL:</td><td style="font-size: 30px;"><span>Rp </span><span id=total></span>,00 <?= form_hidden('total_penjualan', NULL, 'id=total_penjualan') ?></td></tr>'+
                     '</table>'+
                     '</td></tr></table>'+
                 '<table width=100% cellspacing="0" class="list-data-input" id="resep-list"><thead>'+

@@ -5,6 +5,7 @@ include_once '../inc/functions.php';
 
 $apt = apotek_atribute();
 $attr= penjualan_load_data_barang($_GET['id']);
+$array = penjualan_load_data_barang_nota($_GET['id']);
 foreach ($attr as $rows);
 ?>
 <title>Nota</title>
@@ -19,7 +20,7 @@ function cetak() {
     setTimeout(function(){ window.close();},300);
 }
 </script>
-<body onload="cetak();">
+<body onload="">
 <div class="layout-print-struk">
     <table style="border-bottom: 1px solid #000;" width="100%">
         <tr><td align="center" style="text-transform: uppercase; font-size: 12px;"><?= $apt->nama ?></td> </tr>
@@ -43,11 +44,11 @@ function cetak() {
         </tr>
         <?php 
         $total_brg = 0;
-        foreach ($attr as $key => $data) { 
+        foreach ($array as $key => $data) { 
             $total_brg = $total_brg + ($data->harga_jual*$data->qty);
             ?>
         <tr>
-            <td><?= $data->nama.' '.$data->kekuatan.' '.$data->satuan ?></td>
+            <td><?= $data->nama ?></td>
             <td align="center"><?= $data->qty ?></td>
             <td align="right"><?= rupiah($data->harga_jual) ?></td>
             <td align="right"><?= rupiah($data->harga_jual*$data->qty) ?></td>

@@ -38,6 +38,7 @@ include_once '../inc/functions.php';
             $total_jasa   = $jasa->total_jasa;
         }
         $total_tagih  = $total_barang+$total_jasa;
+        
         ?>
         <tr class="<?= ($key%2==0)?'even':'odd' ?>">
             <td align="center"><?= (++$key) ?></td>
@@ -47,7 +48,7 @@ include_once '../inc/functions.php';
             <td align="right"><?= rupiah($data->terbayar) ?></td>
             
         </tr>
-    <?php 
+        <?php
     $total = $total;
     $terbayar = $terbayar;
     }

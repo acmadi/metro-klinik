@@ -1,8 +1,7 @@
 <?php
 $subNav = array(
 	"Penjualan Bebas ; penjualan-nr.php ; #509601;",
-        "Entri Resep ; resep.php ; #509601;",
-        "Penjualan Resep ; penjualan.php ; #509601;"
+        "Entri Resep ; resep.php ; #509601;"
 );
 set_include_path("../");
 include_once("inc/essentials.php");
@@ -98,7 +97,7 @@ function add_new_rows_ik(id_item_kit, nama_brg, jumlah, harga_jual) {
                 '<td align=center><input type=hidden name=harga_jual[] id=harga_jual'+jml+' value='+numberToCurrency(harga_jual)+' />KIT</td>'+
                 '<td align=center>-</td>'+
                 '<td align=center id=sisa'+jml+'>-</td>'+
-                '<td align=right id=hargajual'+jml+'>'+numberToCurrency(harga_jual)+'</td>'+
+                '<td align=right id=hargajual'+jml+'>'+numberToCurrency(harga_jual)+' <input type=hidden name=harga_jual[] value="'+harga_jual+'" id=harga_jual'+jml+' /></td>'+
                 '<td><input type=text name=diskon_rupiah_ik[] style="text-align: right;" id=diskon_rupiah_ik'+jml+' value="0" onblur="FormNum(this)" /></td>'+
                 '<td><input type=text name=diskon_persen_ik[] style="text-align: center;" id=diskon_persen_ik'+jml+' value="0" /></td>'+
                 '<td align=right id=subtotal'+jml+'>'+numberToCurrency(jumlah*harga_jual)+'</td>'+

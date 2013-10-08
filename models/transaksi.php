@@ -279,7 +279,7 @@ function load_data_resep($param) {
         left join dokter d on (d.id = r.id_dokter)
         left join sediaan sd on (sd.id = b.id_sediaan)
         left join karyawan k on (k.id = rr.id_karyawan)
-        where r.id is not NULL $q
+        where r.id is not NULL $q order by r.id, rr.r_no
     ";
     //echo "<pre>".$sql."</pre>";
     $query = mysql_query($sql.$limit);
@@ -483,6 +483,16 @@ function penjualan_load_data_barang($id) {
         join barang b on (k.id_barang = b.id)
         left join satuan s on (b.satuan_kekuatan = s.id)
         where dp.id_penjualan = '$id'";
+    $query = mysql_query($sql);
+    $data = array();
+    while ($row = mysql_fetch_object($query)) {
+        $data[] = $row;
+    }
+    return $data;
+}
+
+function penjualan_load_data_barang_nota($id) {
+    $sql = "select id, nama_barang as nama, jumlah as qty, harga_jual from detail_penjualan_nota where id_penjualan = '$id'";
     $query = mysql_query($sql);
     $data = array();
     while ($row = mysql_fetch_object($query)) {
@@ -831,16 +841,13 @@ function nota_billing_load_data($id_pelanggan, $tanggal) {
     
     $return['atribute'] = $qwe;
     
-    $sql = "select b.*, s.nama as satuan, dp.qty, dp.harga_jual, 
+    $sql = "select dp.nama_barang, dp.jumlah as qty, dp.harga_jual, 
         p.waktu, p.total, p.tuslah, p.embalage, p.ppn, p.diskon_persen, p.diskon_rupiah, p.id_resep, pl.nama as pelanggan,
-        (dp.qty*dp.harga_jual) as subtotal from detail_penjualan dp
+        (dp.jumlah*dp.harga_jual) as subtotal from detail_penjualan_nota dp
         join penjualan p on (dp.id_penjualan = p.id)
         join resep r on (r.id = p.id_resep)
         join pendaftaran pdf on (pdf.id = r.id_pendaftaran)
         left join pelanggan pl on (p.id_pelanggan = pl.id)
-        join kemasan k on (dp.id_kemasan = k.id)
-        join barang b on (k.id_barang = b.id)
-        left join satuan s on (b.satuan_kekuatan = s.id)
         where p.id_pelanggan = '$id_pelanggan' and date(p.waktu) = '$tanggal'";
     //echo "<pre>".$sql."</pre>";
     $query = mysql_query($sql);
@@ -869,12 +876,20 @@ function billing_load_data($param) {
     if (isset($param['awal'])) {
         $q.=" and date(p.waktu) between '".$param['awal']."' and '".$param['akhir']."'";
     }
+    if (isset($param['pasien']) and $param['pasien'] !== '') {
+        $q.=" and p.id_pelanggan = '".$param['pasien']."'";
+    }
+    if (isset($param['status']) and $param['status'] !== '') {
+        if ($param['status'] === 'Lunas') {
+            //$q.=" and p.is_bayar = '1'";
+        }
+    }
     $sql = "select p.*, date(p.waktu) as tanggal, pl.nama as pelanggan, pb.bayar as terbayar
         from pendaftaran p
         join pelanggan pl on (p.id_pelanggan = pl.id)
         left join pembayaran_billing pb on (p.id_pelanggan = pb.id_pelanggan and date(p.waktu) = pb.tanggal)
         where p.id is not NULL $q group by p.id_pelanggan, pb.tanggal";
-    //echo $sql;
+    //echo "<pre>".$sql."</pre>";
     $result = mysql_query($sql);
     $rows = array();
     while ($metallica = mysql_fetch_object($result)) {
@@ -898,6 +913,7 @@ function billing_get_total_barang($tanggal, $id_pelanggan) {
         join barang b on (k.id_barang = b.id)
         left join satuan s on (b.satuan_kekuatan = s.id)
         where p.id_pelanggan = '$id_pelanggan' and date(p.waktu) = '$tanggal'";
+    //echo $sql;
     $row = mysql_fetch_object(mysql_query($sql));
     return $row;
 }
@@ -906,7 +922,9 @@ function billing_get_total_jasa($tanggal, $id_pelanggan) {
     $sqk = "select sum(t.nominal) as total_jasa, t.*, tr.nama from tindakan t
         join tarif tr on (t.id_tarif = tr.id)
         join pendaftaran pdf on (t.id_pendaftaran = pdf.id)
-        where pdf.id_pelanggan = '$id_pelanggan' and date(pdf.waktu) = '$tanggal' group by tr.id";
+        where pdf.id_pelanggan = '$id_pelanggan' and date(pdf.waktu) = '$tanggal'";
+    // group by tr.id
+    //echo $sqk;
     $result =  mysql_fetch_object(mysql_query($sqk));
     return $result;
 }

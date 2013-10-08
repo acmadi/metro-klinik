@@ -518,7 +518,7 @@ if ($method === 'pasien_pendaftar') {
         inner join (
             select id_pelanggan, max(id) as id_max from pendaftaran group by id_pelanggan
         ) pdf on (pd.id_pelanggan = pdf.id_pelanggan and pd.id = pdf.id_max)
-        where p.nama like ('%$q%') or p.id like ('%$q%') order by locate('$q', p.id)");
+        where pd.is_bayar = '0' and p.nama like ('%$q%') or p.id like ('%$q%') order by locate('$q', p.id)");
     $rows = array();
     while ($data = mysql_fetch_object($sql)) {
         $rows[] = $data;
@@ -528,15 +528,17 @@ if ($method === 'pasien_pendaftar') {
 
 if ($method === 'get_total_tagihan') {
     $id  = $_GET['id_pasien']; // idpasien
-    $sql = mysql_query("select sum(p.total) as total_obat from resep r 
-        left join penjualan p on (r.id = p.id_resep)
-        where r.id_pasien = '$id' and date(r.waktu) = '".date("Y-m-d")."'");
+    $sql = mysql_query("select sum(dpn.jumlah*dpn.harga_jual) as total_obat from detail_penjualan_nota dpn
+        left join penjualan p on (dpn.id_penjualan = p.id)
+        join resep r on (p.id_resep = r.id)
+        join pendaftaran pdf on (r.id_pendaftaran = pdf.id)
+        where r.id_pasien = '$id' and date(r.waktu) = '".date("Y-m-d")."' and pdf.is_bayar = '0'");
     $row = mysql_fetch_object($sql);
     
     $sqw = mysql_query("select sum(nominal) as total_jasa 
         from tindakan t 
         join pendaftaran pdf on (t.id_pendaftaran = pdf.id) 
-        where pdf.id_pelanggan = '$id' and date(pdf.waktu) = '".date("Y-m-d")."'");
+        where pdf.id_pelanggan = '$id' and date(pdf.waktu) = '".date("Y-m-d")."' and pdf.is_bayar = '0'");
     $roq = mysql_fetch_object($sqw);
     
     $total_tagihan = $row->total_obat+$roq->total_jasa;

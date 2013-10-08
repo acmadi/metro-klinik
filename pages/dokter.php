@@ -34,7 +34,7 @@ var str = '<div id=form_add>'+
                 '<tr><td>No. STR:</td><td><?= form_input('nostr', '', 'id=nostr size=40') ?></td></tr>'+
                 '<tr><td>Spesialis:</td><td><?= form_input('spesialis', '', 'id=spesialis size=40') ?></td></tr>'+
                 '<tr><td>Tgl Mulai Praktek:</td><td><?= form_input('tglmulai', '', 'id=tglmulai size=40') ?></td></tr>'+
-                //'<tr><td>Fee:</td><td><?= form_input('fee', '', 'id=fee size=10') ?> %</td></tr>'+
+                '<tr><td>Fee:</td><td><?= form_input('fee', '', 'id=fee size=10') ?> %</td></tr>'+
             '</table>'+
             '</form>'+
             '</div>';
