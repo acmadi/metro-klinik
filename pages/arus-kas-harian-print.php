@@ -2,12 +2,19 @@
 include_once '../models/transaksi.php';
 include_once '../inc/functions.php';
 ?>
+<link rel="stylesheet" href="../themes/theme_default/theme-print.css" />
 <script type="text/javascript">
-$(function() {
-    $( document ).tooltip();
-});
+function cetak() {  		
+    window.print();
+    setTimeout(function(){ window.close();},300);
+}
 </script>
-<table cellspacing="0" width="100%" class="list-data">
+<body onload="cetak();">
+<?= header_surat(); ?>
+<h1>
+    LAPORAN ARUS STOK <br /> TANGGAL <?= $_GET['awal'] ?> s . d <?= $_GET['akhir'] ?>
+</h1>
+<table cellspacing="0" width="100%" class="list-data-print">
 <thead>
     <tr class="italic">
         <th width="2%">No.</th>
@@ -60,3 +67,4 @@ $(function() {
     </tr>
 </tfoot>
 </table>
+</body>

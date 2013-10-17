@@ -3,7 +3,7 @@
 include_once '../config/database.php';
 
 function get_jenis_transaksi() {
-    return array('Total Penjualan','Penjualan Resep','Penjualan Non Resep','Inkaso', 'Lain-lain');
+    return array('Total Penjualan','Penjualan Resep','Penjualan Non Resep','Penjualan Jasa','Inkaso', 'Lain-lain');
 }
 
 function header_surat() {
@@ -627,12 +627,14 @@ function load_data_pendaftaran($param) {
     if ($param['limit'] !== '') {
         $limit = " limit ".$param['start'].", ".$param['limit']."";
     }
-    $sql = "select p.*, pl.nama, s.nama as spesialisasi, d.nama as dokter, pm.id as id_pemeriksaan from pendaftaran p
+    $sql = "select p.*, pl.nama, s.nama as spesialisasi, d.nama as dokter, pm.id as kode_periksa, pm.id_auto as id_pemeriksaan, 
+        pm.no_antri, pm.id_spesialisasi, pm.tanggal
+        from pendaftaran p
         join pelanggan pl on (p.id_pelanggan = pl.id)
-        join spesialisasi s on (p.id_spesialisasi = s.id)
-        left join dokter d on (p.id_dokter = d.id)
         left join pemeriksaan pm on (p.id = pm.id_pendaftaran)
-        where date(p.waktu) = '".date("Y-m-d")."' $q order by p.waktu";
+        join spesialisasi s on (pm.id_spesialisasi = s.id)
+        left join dokter d on (pm.id_dokter = d.id)
+        where date(p.waktu) = '".date("Y-m-d")."' $q order by pm.id_auto";
     //echo $sql;
     $query = mysql_query($sql.$limit);
     $data = array();
@@ -645,11 +647,12 @@ function load_data_pendaftaran($param) {
     return $result;
 }
 
-function cetak_no_antri($id_daftar) {
-    $sql = "select p.*, pl.nama, s.nama as layanan from pendaftaran p
+function cetak_no_antri($id_pemeriksaan) {
+    $sql = "select p.*, pl.nama, s.nama as layanan, pm.no_antri from pendaftaran p
         join pelanggan pl on (p.id_pelanggan = pl.id)
-        join spesialisasi s on (p.id_spesialisasi = s.id)
-        where p.id = '$id_daftar'";
+        join pemeriksaan pm on (pm.id_pendaftaran = p.id)
+        join spesialisasi s on (pm.id_spesialisasi = s.id)
+        where pm.id_auto = '$id_pemeriksaan'";
     $result = mysql_query($sql);
     $rows   = mysql_fetch_object($result);
     return $rows;
@@ -777,8 +780,8 @@ function retur_penjualan_load_data($param) {
     return $result;
 }
 
-function diagnosis_load_by_pendaftaran($id_daftar) {
-    $sql = "select p.topik from diagnosis d join penyakit p on (d.id_penyakit = p.id) where d.id_pendaftaran = '$id_daftar'";
+function diagnosis_load_by_pendaftaran($id_periksa) {
+    $sql = "select p.topik from diagnosis d join penyakit p on (d.id_penyakit = p.id) where d.id_pemeriksaan = '$id_periksa'";
     $query = mysql_query($sql);
     $data = array();
     while ($row = mysql_fetch_object($query)) {
@@ -787,8 +790,8 @@ function diagnosis_load_by_pendaftaran($id_daftar) {
     return $data;
 }
 
-function tindakan_load_by_pendaftaran($id_daftar) {
-    $sql = "select tr.nama, tr.nominal from tindakan t join tarif tr on (t.id_tarif = tr.id) where id_pendaftaran = '$id_daftar'";
+function tindakan_load_by_pendaftaran($id_periksa) {
+    $sql = "select tr.nama, tr.nominal from tindakan t join tarif tr on (t.id_tarif = tr.id) where id_pemeriksaan = '$id_periksa'";
     $query = mysql_query($sql);
     $data = array();
     while ($row = mysql_fetch_object($query)) {
@@ -797,8 +800,8 @@ function tindakan_load_by_pendaftaran($id_daftar) {
     return $data;
 }
 
-function rek_tindakan_load_by_pendaftaran($id_daftar) {
-    $sql = "select tr.nama, tr.nominal from rek_tindakan t join tarif tr on (t.id_tarif = tr.id) where id_pendaftaran = '$id_daftar'";
+function rek_tindakan_load_by_pendaftaran($id_periksa) {
+    $sql = "select tr.nama, tr.nominal from rek_tindakan t join tarif tr on (t.id_tarif = tr.id) where id_pemeriksaan = '$id_periksa'";
     $query = mysql_query($sql);
     $data = array();
     while ($row = mysql_fetch_object($query)) {
@@ -813,9 +816,11 @@ function load_data_billing($param) {
         $q.="";
     }
     $limit = " limit ".$param['start'].", ".$param['limit']."";
-    $sql = "select pb.*, pl.nama as pasien
+    $sql = "select pb.*, pl.nama as pasien, b.nama as nama_bank
         from pembayaran_billing pb
-        join pelanggan pl on (pb.id_pelanggan = pl.id)
+        join pendaftaran pdf on (pb.id_pendaftaran = pdf.id)
+        join pelanggan pl on (pl.id = pdf.id_pelanggan)
+        left join bank b on (b.id = pb.id_bank)
         where pb.id is not NULL";
     $query = mysql_query($sql.$limit);
     $data = array();
@@ -828,10 +833,11 @@ function load_data_billing($param) {
     return $result;
 }
 
-function nota_billing_load_data($id_pelanggan, $tanggal) {
+function nota_billing_load_data($id_billing) {
     $sqw = "select pb.*, pl.id as no_rm, pl.nama as pelanggan from pembayaran_billing pb
-        join pelanggan pl on (pl.id = pb.id_pelanggan)
-        where pb.id_pelanggan = '$id_pelanggan' and pb.tanggal = '$tanggal'";
+        join pendaftaran pdf on (pb.id_pendaftaran = pdf.id)
+        join pelanggan pl on (pl.id = pdf.id_pelanggan)
+        where pb.id = '$id_billing'";
     //echo $sqw;
     $qwe = array();
     $ewq = mysql_query($sqw);
@@ -848,7 +854,7 @@ function nota_billing_load_data($id_pelanggan, $tanggal) {
         join resep r on (r.id = p.id_resep)
         join pendaftaran pdf on (pdf.id = r.id_pendaftaran)
         left join pelanggan pl on (p.id_pelanggan = pl.id)
-        where p.id_pelanggan = '$id_pelanggan' and date(p.waktu) = '$tanggal'";
+        where r.id_pendaftaran = (select id_pendaftaran from pembayaran_billing where id = '$id_billing')";
     //echo "<pre>".$sql."</pre>";
     $query = mysql_query($sql);
     $data = array();
@@ -858,8 +864,11 @@ function nota_billing_load_data($id_pelanggan, $tanggal) {
     
     $sqk = "select count(tr.id) as frek, t.*, tr.nama from tindakan t
         join tarif tr on (t.id_tarif = tr.id)
-        join pendaftaran pdf on (t.id_pendaftaran = pdf.id)
-        where pdf.id_pelanggan = '$id_pelanggan' and date(pdf.waktu) = '$tanggal' group by tr.id";
+        join pemeriksaan pm on (t.id_pemeriksaan = pm.id_auto)
+        join pendaftaran pdf on (pm.id_pendaftaran = pdf.id)
+        where pm.id_pendaftaran = (select id_pendaftaran from pembayaran_billing where id = '$id_billing')
+        group by t.id_tarif";
+    //echo $sqk;
     $result = mysql_query($sqk);
     $rows = array();
     while ($metallica = mysql_fetch_object($result)) {
@@ -884,11 +893,12 @@ function billing_load_data($param) {
             //$q.=" and p.is_bayar = '1'";
         }
     }
-    $sql = "select p.*, date(p.waktu) as tanggal, pl.nama as pelanggan, pb.bayar as terbayar
+    $sql = "select pb.*, date(p.waktu) as tanggal, pl.nama as pelanggan, pb.bayar as terbayar, b.nama as nama_bank
         from pendaftaran p
         join pelanggan pl on (p.id_pelanggan = pl.id)
-        left join pembayaran_billing pb on (p.id_pelanggan = pb.id_pelanggan and date(p.waktu) = pb.tanggal)
-        where p.id is not NULL $q group by p.id_pelanggan, pb.tanggal";
+        left join pembayaran_billing pb on (p.id = pb.id_pendaftaran)
+        left join bank b on (b.id = pb.id_bank)
+        where p.id is not NULL $q";
     //echo "<pre>".$sql."</pre>";
     $result = mysql_query($sql);
     $rows = array();

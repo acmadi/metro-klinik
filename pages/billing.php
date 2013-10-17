@@ -95,7 +95,7 @@ var str = '<div id=form_add>'+
         $('#id_pasien').val(data.id);
         $('#id_pendaftaran').val(data.id_pendaftaran);
         $.ajax({
-            url: 'models/autocomplete.php?method=get_total_tagihan&id_pasien='+data.id,
+            url: 'models/autocomplete.php?method=get_total_tagihan&id_pendaftaran='+data.id_pendaftaran,
             cache: false,
             dataType: 'json',
             success: function(msg) {
@@ -124,7 +124,7 @@ var str = '<div id=form_add>'+
             cache: false,
             success: function(data) {
                 if (data.status === true) {
-                    cetak_nota(data.id_pelanggan,'<?= date("Y-m-d") ?>');
+                    cetak_nota(data.id);
                     alert_refresh('Pembayaran berhasil di masukkan !');
                 }
             }
@@ -210,14 +210,14 @@ function delete_billing(id, page) {
     });
 }
 
-function cetak_nota(id_pelanggan, tanggal) {
+function cetak_nota(id_billing) {
     var wWidth = $(window).width();
     var dWidth = wWidth * 0.3;
     var wHeight= $(window).height();
     var dHeight= wHeight * 1;
     var x = screen.width/2 - dWidth/2;
     var y = screen.height/2 - dHeight/2;
-    window.open('pages/nota-billing.php?id='+id_pelanggan+'&tanggal='+tanggal,'Billing Cetak','width='+dWidth+', height='+dHeight+', left='+x+',top='+y);
+    window.open('pages/nota-billing.php?id_billing='+id_billing,'Billing Cetak','width='+dWidth+', height='+dHeight+', left='+x+',top='+y);
 }
 
 </script>

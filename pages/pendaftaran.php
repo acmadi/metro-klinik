@@ -47,11 +47,12 @@ function delete_tindakan(el) {
     parent.parentNode.removeChild(parent);
 }
 
-function form_pemeriksaan(id_daftar, id_pasien, nama) {
+function form_pemeriksaan(id_daftar, id_pasien, nama, id_pemeriksaan) {
     
     var str = '<div id=form_pemeriksaan>'+
                 '<form id=save_pemeriksaan action="models/update-transaksi.php?method=save_pemeriksaan" enctype=multipart/form-data>'+
                     '<span id=output></span><?= form_hidden('id_pendaftaran', NULL, 'id=id_pendaftaran') ?>'+
+                    '<input type=hidden name=id_pemeriksaan value="'+id_pemeriksaan+'" />'+
                     '<table width=100% class=data-input><tr valign=top><td width=33%>'+
                     '<table width=100%>'+
                         '<tr><td>No. Pemeriksaan</td><td><?= form_input('nopemeriksaan', NULL, 'id=nopemeriksaan readonly size=10') ?></td></tr>'+
@@ -382,6 +383,14 @@ $(function() {
         $(this).val(data.id+' - '+data.nama);
         $('#id_pasien').val(data.id);
         $('#spesialisasi').focus().select();
+        $.ajax({
+            url: 'models/autocomplete.php?method=get_pendaftaran',
+            data: 'id_pasien='+data.id,
+            dataType: 'json',
+            success: function(val) {
+                $('#id_pendaftaran').val(val.id);
+            }
+        });
     });
     $('#spesialisasi').autocomplete("models/autocomplete.php?method=spesialisasi",
     {
@@ -427,9 +436,10 @@ $(function() {
         var pasien      = $('#id_pasien').val();
         var spesialis   = $('#id_spesialisasi').val();
         var noantri     = $('#noantri').html();
+        var id_daftar   = $('#id_pendaftaran').val();
         $.ajax({
             url: 'models/update-transaksi.php?method=save_pendaftaran',
-            data: 'waktu='+waktu+'&pasien='+pasien+'&spesialis='+spesialis+'&noantri='+noantri,
+            data: 'waktu='+waktu+'&pasien='+pasien+'&spesialis='+spesialis+'&noantri='+noantri+'&id_pendaftaran='+id_daftar,
             cache: false,
             dataType: 'json',
             success: function(data) {
@@ -486,6 +496,7 @@ function load_data_pendaftaran(page, search, id) {
 <h1 class="margin-t-0">Formulir Pendaftaran Antrian</h1>
 <div class="input-parameter">
     <?= form_input('search', NULL, 'id=search placeholder="Search ..." size=40 class=search style="margin-top: 13px; margin-right: 10px;"') ?>
+    <?= form_hidden('id_pendaftaran', NULL, 'id=id_pendaftaran') ?>
     <table width="70%">
         <tr><td width="15%">Waktu:</td><td><?= form_input('waktu', date("d/m/Y H:i"), 'size=27 readonly id=waktu') ?></td></tr>
         <tr><td>No. RM / Nama Pasien:</td><td><?= form_input('pasien', NULL, 'id=pasien size=40') ?><?= form_hidden('id_pasien', NULL, 'id=id_pasien') ?></td></tr>

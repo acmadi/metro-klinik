@@ -70,9 +70,9 @@ $(function() {
     $no = 1;
     $tindakan = "";
     foreach ($list_data as $key => $data) { 
-        $diagnosis = diagnosis_load_by_pendaftaran($data->id_pendaftaran);
-        $tindakan  = tindakan_load_by_pendaftaran($data->id_pendaftaran);
-        $rek_tindakan  = rek_tindakan_load_by_pendaftaran($data->id_pendaftaran);
+        $diagnosis = diagnosis_load_by_pendaftaran($data->id_auto);
+        $tindakan  = tindakan_load_by_pendaftaran($data->id_auto);
+        $rek_tindakan  = rek_tindakan_load_by_pendaftaran($data->id_auto);
         ?>
         <tr valign="top" id="<?= $data->id ?>" class="detail <?= ($id !== $data->id)?'odd':NULL ?>">
             <td align="center"><?= ($id !== $data->id)?($no+$offset):NULL ?></td>

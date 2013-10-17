@@ -4,7 +4,7 @@ include_once '../models/masterdata.php';
 include_once '../inc/functions.php';
 
 $apt = apotek_atribute();
-$attr= nota_billing_load_data($_GET['id'], $_GET['tanggal']);
+$attr= nota_billing_load_data($_GET['id_billing']);
 foreach ($attr['atribute'] as $rows);
 ?>
 <title>Nota</title>

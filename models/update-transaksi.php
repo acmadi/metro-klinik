@@ -443,7 +443,8 @@ if ($method === 'save_resep') {
     $sql = "insert into penjualan set
         waktu = NOW(),
         id_resep = '$id',
-        id_pelanggan = '$pasien'";
+        id_pelanggan = '$pasien',
+        total = '$total'";
     
     mysql_query($sql);
     $id_penjualan = mysql_insert_id();
@@ -728,8 +729,17 @@ if ($method === 'save_penjualan') {
 }
 
 if ($method === 'save_pemeriksaan') {
+    $qwe = mysql_query("select count(*) as jumlah from pemeriksaan where tanggal like '%".date("Y-m")."%'");
+    $row = mysql_fetch_object($qwe);
+    if (!isset($row->jumlah)) {
+        $str = "PR.001-".date("m")."/".date("Y");
+    } else {
+        $str = "PR.".str_pad((string)($row->jumlah+1), 3, "0", STR_PAD_LEFT)."-".date("m")."/".date("Y");
+    }
+    
     $id_daftar  = $_POST['id_pendaftaran'];
-    $id         = $_POST['nopemeriksaan'];
+    $id_pemeriksaan = $_POST['id_pemeriksaan'];
+    $id         = $str;
     $tanggal    = date2mysql($_POST['tanggal']);
     $anamnesis  = $_POST['anamnesis'];
     $id_dokter  = $_POST['id_dokter'];
@@ -787,26 +797,19 @@ if ($method === 'save_pemeriksaan') {
             //die('error uploading File!');
        }
     }
-    $sql = "insert into pemeriksaan set
+    $sql = "update pemeriksaan set
         id = '$id',
         tanggal = '$tanggal',
-        anamnesis = '$anamnesis',
-        id_pendaftaran = '$id_daftar',
         id_dokter = '$id_dokter',
-        foto = '$NewFileName'";
+        anamnesis = '$anamnesis',
+        foto = '$NewFileName'
+            where id_auto = '$id_pemeriksaan'";
    mysql_query($sql);
-   $id_pemeriksaan = mysql_insert_id();
-   
-   $sql2= "update pendaftaran set 
-        waktu_pelayanan = NOW(),
-        id_dokter = '$id_dokter'
-        where id = '$id_daftar'";
-   mysql_query($sql2);
    
    if ($id_diagnosis !== 'NULL') {
         foreach ($id_diagnosis as $key => $data) {
             $query = "insert into diagnosis set
-                 id_pendaftaran = '$id_daftar',
+                 id_pemeriksaan = '$id_pemeriksaan',
                  waktu = '$tanggal ".date("H:i:s")."',
                  id_penyakit = '$data'";
             mysql_query($query);
@@ -818,7 +821,7 @@ if ($method === 'save_pemeriksaan') {
             $get   = mysql_fetch_object(mysql_query("select * from tarif where id = '$data'"));
             $query = "insert into tindakan set
                  waktu = '$tanggal ".date("H:i:s")."',
-                 id_pendaftaran = '$id_daftar',
+                 id_pemeriksaan = '$id_pemeriksaan',
                  id_tarif = '$data',
                  jasa_dokter = '".$get->jasa_dokter."',
                  jasa_perawat = '".$get->jasa_perawat."',
@@ -872,7 +875,7 @@ if ($method === 'save_pemeriksaan') {
             $get   = mysql_fetch_object(mysql_query("select * from tarif where id = '$data'"));
             $query = "insert into rek_tindakan set
                  waktu = '$tanggal ".date("H:i:s")."',
-                 id_pendaftaran = '$id_daftar',
+                 id_pemeriksaan = '$id_pemeriksaan',
                  id_tarif = '$data'";
             mysql_query($query);
         }
@@ -980,13 +983,33 @@ if ($method === 'save_pendaftaran') {
     $pasien     = $_GET['pasien'];
     $spesialis  = $_GET['spesialis'];
     $noantri    = $_GET['noantri'];
-    $sql = "insert into pendaftaran set
-        waktu = '$waktu',
-        id_pelanggan = '$pasien',
-        no_antri = '$noantri',
-        id_spesialisasi = '$spesialis'";
-    mysql_query($sql);
-    $result['id'] = mysql_insert_id();
+    $id_daftar  = $_GET['id_pendaftaran'];
+    
+    if ($id_daftar === '') {
+        $sql = "insert into pendaftaran set
+            waktu = '$waktu',
+            id_pelanggan = '$pasien'";
+        mysql_query($sql);
+        $id_pendaftaran = mysql_insert_id();
+        
+        $sql2= "insert into pemeriksaan set
+            id_pendaftaran = '$id_pendaftaran',
+            tanggal_antri = NOW(),
+            no_antri = '$noantri',
+            id_spesialisasi = '$spesialis'";
+        mysql_query($sql2);
+        $id_antri = mysql_insert_id();
+    } else {
+        
+        $sql2= "insert into pemeriksaan set
+            id_pendaftaran = '$id_daftar',
+            tanggal_antri = NOW(),
+            no_antri = '$noantri',
+            id_spesialisasi = '$spesialis'";
+        mysql_query($sql2);
+        $id_antri = mysql_insert_id();
+    }
+    $result['id'] = $id_antri;
     $result['status'] = TRUE;
     die(json_encode($result));
 }
@@ -1026,14 +1049,16 @@ if ($method === 'delete_in_out_uang') {
 }
 
 if ($method === 'save_billing') {
+    session_start();
     $id_pasien  = $_POST['id_pasien'];
+    $id_daftar  = $_POST['id_pendaftaran'];
     $pembayaran = currencyToNumber($_POST['pembayaran']);
     $nominal    = currencyToNumber($_POST['serahuang']);
     $id_bank    = ($_POST['bank'] !== '')?$_POST['bank']:'NULL';
     $nokartu    = $_POST['nokartu'];
     $cara_bayar = $_POST['cara_bayar'];
     $sql = "insert into pembayaran_billing set
-        id_pelanggan = '$id_pasien',
+        id_pendaftaran = '$id_daftar',
         tanggal = NOW(),
         waktu = NOW(),
         bayar = '$pembayaran',
@@ -1043,12 +1068,42 @@ if ($method === 'save_billing') {
         no_kartu = '$nokartu'";
     mysql_query($sql);
     $id = mysql_insert_id();
-    $upt = "update pendaftaran set is_bayar = '1' where id_pelanggan = '$id_pasien' and date(waktu_pelayanan) = '".date("Y-m-d")."'";
+    $upt = "update pendaftaran set is_bayar = '1' where id = '$id_daftar'";
     mysql_query($upt);
+    
+    $qyr = mysql_query("select p.id, p.total 
+        FROM penjualan p 
+        join resep r on (p.id_resep = r.id) 
+        where r.id_pendaftaran = '$id_daftar'");
+    while ($row = mysql_fetch_object($qyr)) {
+        $query = "insert into arus_kas set 
+            transaksi = 'Penjualan Resep',
+            id_transaksi = '".$row->id."',
+            id_users = '".$_SESSION['id_user']."',
+            waktu = NOW(),
+            masuk = '".$row->total."'";
+        mysql_query($query);
+    }
+    
+    $qwe = mysql_query("select t.id, t.nominal 
+        from tindakan t
+        join pemeriksaan pm on (t.id_pemeriksaan = pm.id_auto)
+        join pendaftaran pdf on (pm.id_pendaftaran = pdf.id)
+        where pm.id_pendaftaran = '$id_daftar'");
+    while ($rows= mysql_fetch_object($qwe)) {
+        $query = "insert into arus_kas set 
+            transaksi = 'Penjualan Jasa',
+            id_transaksi = '".$rows->id."',
+            id_users = '".$_SESSION['id_user']."',
+            waktu = NOW(),
+            masuk = '".$rows->nominal."'";
+        mysql_query($query);
+    }
     
     $result['status'] = TRUE;
     $result['id'] = $id;
     $result['id_pelanggan'] = $id_pasien;
+    $result['id_pendaftaran'] = $id_daftar;
     die(json_encode($result));
 }
 
