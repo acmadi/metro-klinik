@@ -21,7 +21,7 @@ $(document).tooltip();
     <th width="20%">Nama Barang</th>
     <th width="3%">Dosis <br/> Racik</th>
     <th width="4%">Jumlah<br/> Pakai</th>
-    <th width="5%">Harga<br/>Barang</th>
+    <th width="5%">Total Harga</th>
     <th width="3%">#</th>
 </tr>
 </thead>
@@ -64,7 +64,7 @@ $(document).tooltip();
         <td><?= $data->nama_barang ?></td>
         <td align="center"><?= $data->dosis_racik ?></td>
         <td align="center"><?= $data->jumlah_pakai ?></td>
-        <td align="right"><?= rupiah($data->jual_harga) ?></td>
+        <td align="right"><?= ($data->id_resep !== $id_resep)?rupiah($data->total):NULL ?></td>
         <td class='aksi' align='center'>
             <?php
             if ($data->id_resep !== $id_resep) { ?>

@@ -270,8 +270,9 @@ function load_data_resep($param) {
     $sql   = "select r.*, rr.id as id_rr, rr.id_resep, rr.id_barang, rr.id_tarif, rr.r_no, concat_ws(' ',b.nama, b.kekuatan, s.nama) as nama_barang, 
         rr.dosis_racik, rr.jumlah_pakai, rr.jual_harga, d.nama as dokter, k.nama as apoteker, t.nama as tarif, p.nama as pasien, p.tanggal_lahir, b.kekuatan,
         rr.resep_r_jumlah, sd.nama as sediaan, concat_ws(' ',rr.pakai, rr.aturan) as pakai_aturan, d.no_str as sip_no, d.alamat as alamat_dokter,
-        rr.tebus_r_jumlah, rr.pakai, rr.aturan, rr.iter, rr.nominal from resep r
+        rr.tebus_r_jumlah, rr.pakai, rr.aturan, rr.iter, rr.nominal, pj.total from resep r
         join resep_r rr on (r.id = rr.id_resep)
+        join penjualan pj on (r.id = pj.id_resep)
         join barang b on (b.id = rr.id_barang)
         left join satuan s on (b.satuan_kekuatan = s.id)
         left join tarif t on (t.id = rr.id_tarif)
