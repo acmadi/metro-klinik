@@ -920,17 +920,35 @@ if ($method === 'save_item_kit') {
     $diskon_pr  = $_POST['diskon_pr'];
     $diskon_rp  = $_POST['diskon_rp'];
     $harga_jual = $_POST['harga_jual'];
+    $id_item    = $_POST['id_item_kit'];
     
-    $query = "insert into item_kit set
-        nama = '$nama',
-        margin_persen = '$margin_pr',
-        margin_rupiah = '$margin_rp',
-        diskon_persen = '$diskon_pr',
-        diskon_rupiah = '$diskon_rp',
-        harga_jual = '$harga_jual',
-        status = 'TRUE'";
-    mysql_query($query);
-    $id_item_kit= mysql_insert_id();
+    if ($id_item === '') {
+        $query = "insert into item_kit set
+            nama = '$nama',
+            margin_persen = '$margin_pr',
+            margin_rupiah = '$margin_rp',
+            diskon_persen = '$diskon_pr',
+            diskon_rupiah = '$diskon_rp',
+            harga_jual = '$harga_jual',
+            status = 'TRUE'";
+        mysql_query($query);
+        $id_item_kit= mysql_insert_id();
+    } else {
+        $query = "update item_kit set
+            nama = '$nama',
+            margin_persen = '$margin_pr',
+            margin_rupiah = '$margin_rp',
+            diskon_persen = '$diskon_pr',
+            diskon_rupiah = '$diskon_rp',
+            harga_jual = '$harga_jual',
+            status = 'TRUE'
+            where id = '$id_item'";
+        mysql_query($query);
+        $id_item_kit= $id_item;
+        
+        mysql_query("delete from item_kit_detail where id_item_kit = '$id_item'");
+    }
+    
     $id_barang  = $_POST['id_barang']; // array
     $kemasan    = $_POST['kemasan']; // array
     $jumlah     = $_POST['jumlah']; // array

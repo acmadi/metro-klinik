@@ -80,13 +80,16 @@ function removeMe(el) {
     hitung_estimasi();
 }
 
-function add_new_rows(id_brg, nama_brg, jumlah, id_kemasan) {
+function add_new_rows(id_brg, nama_brg, jumlah, id_kemasan, nama_kemasan) {
     if (id_kemasan === null) {
         alert('Kemasan tidak boleh kosong !');
         return false;
     }
     var jml     = $('.tr_rows').length+1;
-    var kemasan = $('#kemasan option:selected').text();
+    var kemasan = nama_kemasan;
+    if (nama_kemasan === undefined) {
+        kemasan = $('#kemasan option:selected').text();
+    }
     var str = '<tr class="tr_rows">'+
                 '<td align=center>'+jml+'</td>'+
                 '<td>&nbsp;'+nama_brg+' <input type=hidden name=id_barang[] value="'+id_brg+'" class=id_barang id=id_barang'+jml+' /></td>'+
@@ -109,10 +112,18 @@ function add_new_rows(id_brg, nama_brg, jumlah, id_kemasan) {
             hitung_estimasi();
         }
     });
+    $('#jumlah'+jml).keyup(function() {
+        var harga = parseFloat(currencyToNumber($('#harga'+jml).html()));
+        var jumlah= $(this).val();
+        var subtotal = harga*jumlah;
+        $('#subtotal'+jml).html(numberToCurrency(subtotal));
+        hitung_estimasi();
+    });
 }
 
 function form_add() {
     var str = '<div id="item_kit"><form id="form_item_kit">'+
+                '<input type=hidden name="id_item_kit" id="id_item_kit" />'+
                 '<table width=100% class=data-input><tr valign=top><td width=50%>'+
                     '<table width=100%>'+
                         '<tr><td width=30%>Nama Item:</td><td><?= form_input('nama_item', NULL, 'id=nama_item size=40 onBlur="javascript:this.value=this.value.toUpperCase();"') ?></td></tr>'+
@@ -272,7 +283,7 @@ function form_add() {
             cache: false,
             success: function(data) {
                 if (data.status === true) {
-                    alert_tambah('#nama_item');
+                    alert_refresh('Data item kit berhasil di simpan');
                     $('#nama_item').val('');
                     $('#margin_pr, #margin_rp, #diskon_pr, #diskon_rp').val('0');
                     $('#estimasi').html('0');
@@ -295,6 +306,24 @@ function load_data_itemkit(page, search, id) {
         success: function(data) {
             $('#result-itemkit').html(data);
         }
+    });
+}
+
+function edit_itemkit(id, data) {
+    form_add();
+    var arr = data.split('#');
+    $('#id_item_kit').val(id);
+    $('#nama_item').val(arr[0]);
+    $('#margin_pr').val(arr[1]);
+    $('#margin_rp').val(arr[2]);
+    $('#diskon_pr').val(arr[3]);
+    $('#diskon_rp').val(arr[4]);
+    $('#harga_jual').val(arr[5]);
+    $('#estimasi').html(numberToCurrency(arr[5]));
+    $.getJSON('models/autocomplete.php?method=get_data_item_kit&id='+id, function(data){
+        $.each(data, function (index, value) {
+            add_new_rows(value.id_barang, value.nama_barang, value.jumlah, value.id_kemasan, value.nama_kemasan);
+        });
     });
 }
 

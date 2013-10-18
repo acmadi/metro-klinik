@@ -553,4 +553,20 @@ if ($method === 'get_total_tagihan') {
     $total_tagihan = $row->total_obat+$roq->total_jasa;
     die(json_encode(array('total' => $total_tagihan,'total_obat' => $row->total_obat,'total_jasa' => $roq->total_jasa)));
 }
+
+if ($method === 'get_data_item_kit') {
+    $id = $_GET['id'];
+    $sql = mysql_query("select i.*, b.id as id_barang, st.id as id_kemasan, st.nama as nama_kemasan, concat_ws(' ',b.nama,b.kekuatan,s.nama) as nama_barang, st.nama as kemasan, id.jumlah from item_kit i
+        join item_kit_detail id on (i.id = id.id_item_kit)
+        join kemasan k on (id.id_kemasan = k.id)
+        join barang b on (k.id_barang = b.id)
+        left join satuan s on (s.id = b.satuan_kekuatan)
+        left join satuan st on (k.id_kemasan = st.id)
+        where i.id is not NULL and i.id = '$id' order by i.nama");
+    $rows = array();
+    while ($data = mysql_fetch_object($sql)) {
+        $rows[] = $data;
+    }
+    die(json_encode($rows));
+}
 ?>

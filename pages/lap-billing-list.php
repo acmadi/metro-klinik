@@ -43,8 +43,8 @@ include_once '../inc/functions.php';
             <td><?= $data->no_kartu ?></td>
         </tr>
         <?php
-    $total = $total;
-    $terbayar = $terbayar;
+    $total = $total + $data->total;
+    $terbayar = $terbayar + $data->terbayar;
     }
     ?>
 </tbody>
