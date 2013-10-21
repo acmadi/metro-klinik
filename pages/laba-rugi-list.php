@@ -115,7 +115,8 @@ if ($total_pengeluaran_kas !== 0) {
                         <?php 
                             $hpps = 0;
                             if ($total_pendapatan > 0) {
-                                $hpps = (($hpp->total_hna/$total_pendapatan)*100); echo $hpps;  
+                                $hpps = (($hpp->total_hna/$total_pendapatan)*100); 
+                                echo $hpps;  
                             }
                         ?>
                     </td>

@@ -10,8 +10,10 @@ include_once '../inc/functions.php';
     <tr class="italic">
         <th width="2%">No.</th>
         <th width="5%">Tanggal</th>
-        <th width="30%">Pelanggan</th>
+        <th width="13%">Pelanggan</th>
         <th width="10%">Total Tagihan RP.</th>
+        <th width="10%">Diskon %</th>
+        <th width="10%">Total (Rp.)</th>
         <th width="10%">Terbayar RP.</th>
         <th width="10%">Cara Bayar</th>
         <th width="10%">Nama Bank</th>
@@ -37,6 +39,8 @@ include_once '../inc/functions.php';
             <td align="center"><?= datefmysql($data->tanggal) ?></td>
             <td><?= $data->pelanggan ?></td>
             <td align="right"><?= rupiah($data->total) ?></td>
+            <td align="center"><?= rupiah($data->diskon) ?></td>
+            <td align="right"><?= rupiah($data->total-($data->total*($data->diskon/100))) ?></td>
             <td align="right"><?= rupiah($data->terbayar) ?></td>
             <td align="center"><?= $data->cara_bayar ?></td>
             <td><?= $data->nama_bank ?></td>
@@ -52,6 +56,7 @@ include_once '../inc/functions.php';
     <tr>
         <td colspan="3" align="right">TOTAL</td>
         <td align="right"><?= rupiah($total) ?></td>
+        <td></td>
         <td align="right"><?= rupiah($terbayar) ?></td>
     </tr>
 </tfoot>

@@ -21,9 +21,30 @@ $(function() {
     });
 });
 
+function hitung_total() {
+    var jumlah = $('.tr_rows').length;
+    var total = 0;
+    for (i = 1; i <= jumlah; i++) {
+        var subtotal = parseInt(currencyToNumber($('#subtotal'+i).html()));
+        total = total + subtotal;
+    }
+    $('#total_display').html('Rp. '+numberToCurrency(total)+',00');
+    $('#total_submit').val(total);
+}
+
 function removeMe(el) {
     var parent = el.parentNode.parentNode;
     parent.parentNode.removeChild(parent);
+    var jumlah = $('.tr_rows').length;
+    var col = 0;
+    for (i = 1; i <= jumlah; i++) {
+        $('.tr_rows:eq('+col+')').children('td:eq(0)').html(i);
+        $('.tr_rows:eq('+col+')').children('td:eq(4)').children('.jumlah').attr('id','jumlah'+i);
+        $('.tr_rows:eq('+col+')').children('td:eq(5)').attr('id','harga_jual'+i);
+        $('.tr_rows:eq('+col+')').children('td:eq(6)').attr('id','subtotal'+i);
+        col++;
+    }
+    hitung_total();
 }
 function load_list_data() {
     var nama_barang = $('#barang').val();
@@ -38,7 +59,7 @@ function load_list_data() {
                     '<td><input type=text name=barang value="'+nama_barang+'" id=barang'+no+' size=50 /> <input type=hidden name=id_barang[] id=id_barang'+no+' value="'+id_barang+'" /></td>'+
                     '<td align=center id=kemasan'+no+'>'+kemasan+'<input type=hidden name=id_kemasan[] id=id_kemasan'+no+' value="'+id_kemasan+'" /></td>'+
                     '<td><input type=text name=ed[] id=ed'+no+' value="'+ed+'" size=10 style="text-align: center;" /></td>'+
-                    '<td><input type=text name=jumlah[] id=jumlah'+no+' value="'+jumlah+'" size=10 style="text-align: center;" /></td>'+
+                    '<td><input type=text name=jumlah[] id=jumlah'+no+' value="'+jumlah+'" size=10 style="text-align: center;" class=jumlah /></td>'+
                     '<td align=center class=aksi><img src="img/icons/delete.png" align=left title="Klik untuk hapus" onclick="removeMe(this);" /></td>'+
                '</tr>';
     $('#retur_penjualan-list tbody').append(list);
@@ -58,7 +79,8 @@ function load_list_data() {
     $('#barang').focus();
     $('#ed'+no).datepicker({
         changeMonth: true,
-        changeYear: true
+        changeYear: true,
+        minDate: 0
     });
 }
 
@@ -71,8 +93,10 @@ function load_list_data_by_id_penjualan(id) {
             var id_barang   = val.id_barang;
             var kemasan     = val.kemasan;
             var id_kemasan  = val.id_kemasan;
-            var ed          = '';
+            var ed          = datefmysql(val.expired);
             var jumlah      = val.qty;
+            var harga_jual  = val.harga_jual;
+            var subtotal    = harga_jual*jumlah;
             var no   = $('.tr_rows').length+1;
             var list = '<tr class=tr_rows>'+
                             '<td align=center>'+no+'</td>'+
@@ -80,6 +104,8 @@ function load_list_data_by_id_penjualan(id) {
                             '<td align=center id=kemasan'+no+'>'+kemasan+'<input type=hidden name=id_kemasan[] id=id_kemasan'+no+' value="'+id_kemasan+'" /></td>'+
                             '<td><input type=text name=ed[] id=ed'+no+' value="'+ed+'" size=10 style="text-align: center;" /></td>'+
                             '<td><input type=text name=jumlah[] id=jumlah'+no+' value="'+jumlah+'" size=10 style="text-align: center;" /></td>'+
+                            '<td align=right id=harga'+no+'>'+numberToCurrency(harga_jual)+'</td>'+
+                            '<td align=right id=subtotal'+no+'>'+numberToCurrency(subtotal)+'</td>'+
                             '<td align=center class=aksi><img src="img/icons/delete.png" align=left title="Klik untuk hapus" onclick="removeMe(this);" /></td>'+
                        '</tr>';
             $('#retur_penjualan-list tbody').append(list);
@@ -94,41 +120,51 @@ function load_list_data_by_id_penjualan(id) {
                     }
                 }
             });
+            $('#jumlah'+no).keyup(function() {
+                var jumlah = $('#jumlah'+no).val();
+                var harga  = parseInt(currencyToNumber($('#harga'+no).html()));
+                var subtotal    = jumlah*harga;
+                $('#subtotal'+no).html(numberToCurrency(parseInt(subtotal)));
+                hitung_total();
+            });
             $('#barang,#id_barang,#ed,#pilih').val('');
             $('#kemasan').html('').append('<option value="">Pilih ...</option>');
             $('#barang').focus();
             $('#ed'+no).datepicker({
                 changeMonth: true,
-                changeYear: true
+                changeYear: true,
+                minDate: 0
             });
         });
     });
-    
 }
 
 function form_add() {
     var str = '<div id="retur_penjualan"><form id="save_retur_penjualan">'+
                 '<input type=hidden name=id_retur_penjualan id=id_retur_penjualan />'+
                 '<table width=100% class=data-input><tr valign=top><td width=50%>'+
-                    '<table width=100%>'+
+                    '<table width=70%>'+
                         '<tr><td>Tanggal:</td><td><input type=text value="<?= date("d/m/Y") ?>" name=tanggal id=tanggal size=10 /></td></tr>'+
                         '<tr><td>Nomer Nota:</td><td><?= form_input('nonota', NULL, 'id=nonota size=40') ?></td></tr>'+
-                        '<tr><td width=20%>Nama Barang:</td><td><?= form_input('barang', NULL, 'id=barang size=40') ?><?= form_hidden('id_barang', NULL, 'id=id_barang') ?></td></tr>'+
+                        '<tr><td width=25%>Nama Barang:</td><td><?= form_input('barang', NULL, 'id=barang size=40') ?><?= form_hidden('id_barang', NULL, 'id=id_barang') ?></td></tr>'+
                         '<tr><td>Kemasan:</td><td><select name=id_kemasan id=kemasan style="min-width: 86px;"><option value="">Pilih ...</option></select></td></tr>'+
                         '<tr><td>Expired Date:</td><td><input type=text name=ed id=ed size=10 /><?= form_hidden(NULL, NULL, 'id=nobatch') ?></td></tr>'+
                         '<tr><td>Jumlah:</td><td><input type=text size=10 id=pilih /></td></tr>'+
                     '</table>'+
+                    '<span style="font-size: 30px; position: absolute; top: 10px; left: 50%;">Total Retur: <span id=total_display></span></span><?= form_hidden('total', NULL, 'id=total_submit') ?>'+
                     '</td><td width=50%>'+
                     
                 '</td></tr></table>'+
                 '<table width=100% cellspacing="0" class="list-data-input" id="retur_penjualan-list"><thead>'+
                     '<tr>'+
                         '<th width=8%>No.</th>'+
-                        '<th width=60%>Nama Barang</th>'+
+                        '<th width=41%>Nama Barang</th>'+
                         '<th width=10%>Kemasan</th>'+
                         '<th width=10%>ED</th>'+
                         '<th width=10%>Jumlah</th>'+
-                        '<th width=2%>#</th>'+
+                        '<th width=10%>Harga @</th>'+
+                        '<th width=10%>Subtotal</th>'+
+                        '<th width=1%>#</th>'+
                     '</tr></thead>'+
                     '<tbody></tbody>'+
                 '</table>'+
@@ -299,7 +335,7 @@ function form_add() {
             success: function(data) {
                 if (data.status === true) {
                     if (data.action === 'add') {
-                        alert_tambah('#supplier');
+                        alert_refresh('Data berhasil diinputkan');
                         $('#supplier, #id_supplier').val('');
                         load_data_retur_penjualan();
                         $('#retur_penjualan-list tbody').html('');

@@ -11,13 +11,13 @@ $(function() {
 <thead>
     <tr class="italic">
         <th width="5%">No.</th>
-        <th width="5%">No. Retur</th>
-        <th width="20%">Nama Supplier</th>
+        <th width="5%">No. Nota</th>
         <th width="10%">Tanggal</th>
         <th width="20%">Nama Barang</th>
         <th width="5%">Kemasan</th>
         <th width="5%">Expired</th>
         <th width="5%">Jumlah</th>
+        <th width="5%">Total</th>
         <th width="5%">#</th>
     </tr>
 </thead>
@@ -46,13 +46,13 @@ $(function() {
     foreach ($list_data as $key => $data) { ?>
         <tr class="<?= ($key%2==0)?'even':'odd' ?>">
             <td align="center"><?= ($data->id_retur_penjualan !== $nama)?($no+$offset):NULL ?></td>
-            <td align="center"><?= ($data->id_retur_penjualan !== $nama)?$data->id_retur_penjualan:NULL ?></td>
-            <td><?= ($data->id_retur_penjualan !== $nama)?$data->supplier:NULL ?></td>
-            <td align="center"><?= datefmysql($data->tanggal) ?></td>
+            <td align="center"><?= ($data->id_retur_penjualan !== $nama)?$data->id_penjualan:NULL ?></td>
+            <td align="center"><?= ($data->id_retur_penjualan !== $nama)?datefmysql($data->waktu):NULL ?></td>
             <td><?= $data->barang.' '.$data->kekuatan.' '.$data->satuan ?></td>
             <td align="center"><?= $data->kemasan ?></td>
             <td align="center"><?= datefmysql($data->expired) ?></td>
-            <td align="center"><?= $data->jumlah ?></td>
+            <td align="center"><?= $data->qty ?></td>
+            <td align="right"><?= ($data->id_retur_penjualan !== $nama)?rupiah($data->total):NULL ?></td>
             <td class='aksi' align='center'>
                 <!--<a class='edition' onclick="edit_retur_penjualan('<?= $str ?>');" title="Klik untuk edit retur_penjualan">&nbsp;</a>-->
                 <a class='deletion' onclick="delete_retur_penjualan('<?= $data->id ?>','<?= $page ?>');" title="Klik untuk hapus">&nbsp;</a>

@@ -19,6 +19,7 @@ if ($method === 'save_pemesanan') {
         tgl_datang = '$tgl_datang',
         id_supplier = '$id_supplier',
         id_users = '".$_SESSION['id_user']."'";
+    
     mysql_query($sql);
     $id_pemesanan = $id;
     
@@ -1055,15 +1056,19 @@ if ($method === 'save_billing') {
     $id_pasien  = $_POST['id_pasien'];
     $id_daftar  = $_POST['id_pendaftaran'];
     $pembayaran = currencyToNumber($_POST['pembayaran']);
+    $total      = currencyToNumber($_POST['total_tagihan']);
     $nominal    = currencyToNumber($_POST['serahuang']);
     $id_bank    = ($_POST['bank'] !== '')?$_POST['bank']:'NULL';
     $nokartu    = $_POST['nokartu'];
     $cara_bayar = $_POST['cara_bayar'];
+    $diskon     = $_POST['diskon'];
     $sql = "insert into pembayaran_billing set
         id_pendaftaran = '$id_daftar',
         tanggal = NOW(),
         waktu = NOW(),
+        total = '$total',
         bayar = '$pembayaran',
+        diskon = '$diskon',
         uang_serah = '$nominal',
         cara_bayar = '$cara_bayar',
         id_bank = $id_bank,

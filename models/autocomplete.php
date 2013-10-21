@@ -520,13 +520,14 @@ if ($method === 'get_expiry_barang') {
 }
 
 if ($method === 'pasien_pendaftar') {
-    $sql = mysql_query("select p.*, a.nama as asuransi, a.diskon as reimburse, pd.id as id_pendaftaran from pelanggan p
+    $sql = mysql_query("select p.*, a.nama as asuransi, a.diskon as reimburse, pd.id as id_pendaftaran 
+        from pelanggan p
         left join asuransi a on (p.id_asuransi = a.id) 
         join pendaftaran pd on (pd.id_pelanggan = p.id)
         inner join (
             select id_pelanggan, max(id) as id_max from pendaftaran group by id_pelanggan
         ) pdf on (pd.id_pelanggan = pdf.id_pelanggan and pd.id = pdf.id_max)
-        where pd.is_bayar = '0' and p.nama like ('%$q%') or p.id like ('%$q%') order by locate('$q', p.id)");
+        where pd.is_bayar = '0' and (p.nama like ('%$q%') or p.id like ('%$q%')) order by locate('$q', p.id)");
     $rows = array();
     while ($data = mysql_fetch_object($sql)) {
         $rows[] = $data;

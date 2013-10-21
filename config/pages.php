@@ -67,5 +67,6 @@ $pageTitles['expired-date.php'] = "Laporan Expired Date";
 $pageTitles['lap-billing.php'] = "Laporan Billing";
 $pageTitles['lap-jasa-tarif.php'] = "Laporan Jasa Layanan";
 $pageTitles['lap-control.php'] = "Laporan Control";
-
+$pageTitles['neraca.php'] = "Neraca";
+$pageTitles['laba-rugi.php'] = "Laba Rugi";
 ?>

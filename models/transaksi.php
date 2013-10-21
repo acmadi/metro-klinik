@@ -761,15 +761,15 @@ function retur_penjualan_load_data($param) {
         $q.="and rp.id = '".$param['id']."' ";
     }
     $limit = " limit ".$param['start'].", ".$param['limit']."";
-    $sql = "select rp.waktu, st.nama as kemasan, b.nama as barang, b.kekuatan, 
+    $sql = "select rp.id_penjualan, rp.total, rp.waktu, st.nama as kemasan, b.nama as barang, b.kekuatan, 
         stn.nama as satuan, dp.* from retur_penjualan rp
         join detail_retur_penjualan dp on (rp.id = dp.id_retur_penjualan)
         join kemasan k on (k.id = dp.id_kemasan)
         join barang b on (b.id = k.id_barang)
-        join satuan st on (st.id = k.id_kemasan)
+        left join satuan st on (st.id = k.id_kemasan)
         left join satuan stn on (stn.id = b.satuan_kekuatan)
         where rp.id is not NULL $q order by rp.id";
-    //echo $sql;
+    //echo "<pre>".$sql."</pre>";
     $query = mysql_query($sql.$limit);
     $data = array();
     while ($row = mysql_fetch_object($query)) {
@@ -962,6 +962,64 @@ function laporan_jasa_pelayanan_load_data($param) {
         $rows[] = $metallica;
     }
     return $rows;
+}
+
+/*Laba Rugi*/
+function pendapatan_penjualan_load_data($awal, $akhir) {
+    $sql = "select IFNULL(sum(masuk),'0') as penjualan_barang from arus_kas where transaksi like ('Penjualan%') and date(waktu) between '".  date2mysql($awal)."' and '".  date2mysql($akhir)."'";
+    $row = mysql_fetch_object(mysql_query($sql));
+    return $row;
+}
+
+function pendapatan_jasa_load_data($awal, $akhir) {
+    $sql = "select IFNULL(sum(rr.nominal),'0') as jasa from resep_r rr join resep r on (r.id = rr.id_resep) where date(r.waktu) between '".  date2mysql($awal)."' and '".  date2mysql($akhir)."'";
+    $row = mysql_fetch_object(mysql_query($sql));
+    return $row;
+}
+
+function penerimaan_kas_load_data($awal, $akhir) {
+    $sql = "select masuk as penerimaan, keterangan as penerimaan_pengeluaran_nama from arus_kas where transaksi = 'Lain-lain' and keluar = '0' and date(waktu) between '".  date2mysql($awal)."' and '".  date2mysql($akhir)."'";
+    $query = mysql_query($sql);
+    $data = array();
+    while ($row = mysql_fetch_object($query)) {
+        $data[] = $row;
+    }
+    return $data;
+}
+
+function total_penerimaan_kas_load_data($awal, $akhir) {
+    $sql = "select sum(masuk) as penerimaan_total from arus_kas where date(waktu) between '".  date2mysql($awal)."' and '".  date2mysql($akhir)."'";
+    
+    $row = mysql_fetch_object(mysql_query($sql));
+    return $row;
+}
+
+function pendapatan_lain_lain_load_data($awal, $akhir) {
+    $sql = "select IFNULL(sum(masuk),'0') as penerimaan_lain from arus_kas where transaksi = 'Lain-lain' and date(waktu) between '".  date2mysql($awal)."' and '".  date2mysql($akhir)."'";
+    $row = mysql_fetch_object(mysql_query($sql));
+    return $row;
+}
+
+function hna_load_data($awal, $akhir) {
+    $sql = "select IFNULL(sum(dp.hna*dp.qty),'0') as total_hna from detail_penjualan dp join penjualan p on (p.id = dp.id_penjualan) where date(p.waktu) between '".  date2mysql($awal)."' and '".  date2mysql($akhir)."'";
+    //echo $sql;
+    $row = mysql_fetch_object(mysql_query($sql));
+    return $row;
+}
+
+function pengeluaran_kas_load_data($awal, $akhir) {
+    $sql = "select IFNULL(keluar,'0') as pengeluaran, keterangan as penerimaan_pengeluaran_nama from arus_kas where transaksi = 'Lain-lain' and masuk = '0' and date(waktu) between '".  date2mysql($awal)."' and '".  date2mysql($akhir)."'";
+    $query = mysql_query($sql);
+    $data = array();
+    while ($row = mysql_fetch_object($query)) {
+        $data[] = $row;
+    }
+    return $data;
+}
+function total_pengeluaran_kas_load_data($awal, $akhir) {
+    $sql = "select IFNULL(sum(keluar),'0') as pengeluaran_total from arus_kas where transaksi = 'Lain-lain' and date(waktu) between '".  date2mysql($awal)."' and '".  date2mysql($akhir)."'";
+    $row = mysql_fetch_object(mysql_query($sql));
+    return $row;
 }
 
 ?>

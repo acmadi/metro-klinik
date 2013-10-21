@@ -31,6 +31,14 @@ function hitung_kembalian() {
         $('#kembalian').html(numberToCurrency(kembalian));
     }
 }
+
+function hitung_diskon() {
+    var total_tagihan = parseInt(currencyToNumber($('#total_tagihan').val()));
+    var diskon        = $('#diskon').val()/100;
+    var terdiskon     = total_tagihan-(total_tagihan*diskon);
+    $('#pembayaran,#serahuang').val(numberToCurrency(Math.ceil(terdiskon)));
+}
+
 function form_add() {
 var str = '<div id=form_add>'+
             '<form action="" method=post id="save_barang">'+
@@ -38,7 +46,8 @@ var str = '<div id=form_add>'+
             '<table width=100% class=data-input style="font-size: 20px;">'+
                 '<tr><td>No. RM:</td><td><?= form_input('id_pasien', NULL, 'id=id_pasien size=40') ?></td></tr>'+
                 '<tr><td>Nama Pasien:</td><td><?= form_input('pasien', NULL, 'id=pasien size=40') ?></td></tr>'+
-                '<tr><td>Total Tagihan:</td><td><?= form_input('total_tagihan', NULL, 'id=total_tagihan onblur="FormNum(this);" disabled onfocus="javascript:this.value=currencyToNumber(this.value);" size=40') ?></td></tr>'+
+                '<tr><td>Total Tagihan:</td><td><?= form_input('total_tagihan', NULL, 'id=total_tagihan onblur="FormNum(this);" readonly onfocus="javascript:this.value=currencyToNumber(this.value);" size=40') ?></td></tr>'+
+                '<tr><td>Diskon (%):</td><td><?= form_input('diskon', NULL, 'id=diskon onblur="hitung_diskon();" maxlength=5 size="12.5"') ?></td></tr>'+
                 '<tr><td>Cara Bayar:</td><td><select name=cara_bayar id=cara_bayar><?php foreach($cara_bayar as $data) { ?><option value="<?= $data ?>"><?= $data ?></option><?php } ?></select></td></tr>'+
                 '<tr><td>Bank:</td><td><select name=bank id=bank><option value="">Pilih ...</option><?php foreach($bank['data'] as $data) { ?><option value="<?= $data->id ?>"><?= $data->nama ?></option><?php } ?></select></td></tr>'+
                 '<tr><td>No. Kartu:</td><td><?= form_input('nokartu', NULL, 'id=nokartu size=40') ?></td></tr>'+
@@ -100,7 +109,7 @@ var str = '<div id=form_add>'+
             dataType: 'json',
             success: function(msg) {
                 $('#total_tagihan, #pembayaran, #serahuang').val(numberToCurrency(Math.ceil(msg.total)));
-                $('#serahuang').select().focus();
+                $('#diskon').val('0').select().focus();
                 $('#kembalian').html('0');
             }
         });

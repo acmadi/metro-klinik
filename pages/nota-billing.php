@@ -73,7 +73,9 @@ function cetak() {
         <tr><td colspan="3"><b>Total Jasa:</b></td><td align="right"><b><?= rupiah($total_jasa) ?></b></td></tr>
     </table>
     <?php
-    $kembali = $rows->uang_serah-($total_brg+$total_jasa);
+    
+    $diskon = ($rows->total*($rows->diskon/100));
+    $kembali = $rows->uang_serah-(($total_brg+$total_jasa)-$diskon);
     if ($kembali <= 0) {
         $kembalian = '0';
     } else {
@@ -81,9 +83,11 @@ function cetak() {
     }
     ?>
     <table width="100%">
-        <tr><td>Total:</td><td align="right"><?= rupiah($total_brg+$total_jasa) ?></td></tr>
+        <tr><td>Sub Total:</td><td align="right"><?= rupiah($total_brg+$total_jasa) ?></td></tr>
+        <tr><td><b>DISKON PROMO <?= $rows->diskon ?> %</b>:</td><td align="right"><?= rupiah($diskon) ?></td></tr>
+        <tr><td>Total:</td><td align="right"><?= rupiah(($total_brg+$total_jasa)-$diskon) ?></td></tr>
         <tr><td>Bayar:</td><td align="right"><?= rupiah($rows->uang_serah) ?></td></tr>
-        <tr><td>Kembalian:</td><td align="right"><?= rupiah($kembalian) ?></td></tr>
+        <tr><td>Kembali:</td><td align="right"><?= rupiah($kembalian) ?></td></tr>
         
     </table>
     <br/>

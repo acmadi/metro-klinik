@@ -187,5 +187,8 @@ $tile[] = array("type"=>"img","group"=>3,"x"=>4,"y"=>0,'width'=>1,'height'=>1,"b
 	"img"=>"img/icons/lap-arus-kas.png","desc"=>"Sistem Kontrol","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
 	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
+$tile[] = array("type"=>"img","group"=>4,"x"=>0,"y"=>2,'width'=>1,'height'=>1,"background"=>"#180052","url"=>"laba-rugi.php",
+	"img"=>"img/icons/laba-rugi.png","desc"=>"Laba Rugi","showDescAlways"=>true,"imgWidth"=>1,"imgHeight"=>1,
+	"labelText"=>"","labelColor"=>"#000","labelPosition"=>"","classes"=>"");
 
 ?> 
