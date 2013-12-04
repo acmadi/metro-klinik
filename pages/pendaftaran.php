@@ -426,6 +426,7 @@ $(function() {
         });
     });
     $('#simpan').click(function() {
+        $('#simpan').attr('disabled','disabled');
         if ($('#id_pasien').val() === '') {
             alert_empty('No. pasien','#pasien'); return false;
         }

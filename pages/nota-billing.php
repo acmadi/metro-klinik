@@ -24,7 +24,7 @@ function cetak() {
     </table>
     <table width="100%" style="border-bottom: 1px solid #000;">
         <tr><td width="40%">Nomor:</td><td><?= $rows->id ?></td></tr>
-        <tr><td>Waktu:</td><td style="white-space: nowrap"><?= datetimefmysql(date("Y-m-d H:i:s"), TRUE) ?></td></tr>
+        <tr><td>Waktu:</td><td style="white-space: nowrap"><?= datetimefmysql($rows->waktu, TRUE) ?></td></tr>
         <tr><td>Pelanggan:</td><td style="white-space: nowrap"><?= $rows->no_rm ?> / <?= $rows->pelanggan ?></td></tr>
     </table>
     <table width="100%" style="border-bottom: 1px solid #000;">
@@ -43,7 +43,7 @@ function cetak() {
             <td><?= $data->nama_barang ?></td>
             <td align="center"><?= $data->qty ?></td>
             <td align="right"><?= rupiah($data->harga_jual) ?></td>
-            <td align="right"><?= rupiah($data->harga_jual) ?></td>
+            <td align="right"><?= rupiah($data->qty*$data->harga_jual) ?></td>
         </tr>
         <?php 
         } ?>

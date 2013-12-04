@@ -38,7 +38,7 @@ include_once '../inc/functions.php';
         <td><?= isset($data->nama)?$data->nama:NULL ?></td>
         <td align="center"><?= $data->no_antri ?></td>
         <td><?= $data->spesialisasi ?></td>
-        <td align="center"><?= datetimefmysql($data->waktu_pelayanan,'yes') ?></td>
+        <td align="center"><?= datefmysql($data->waktu_pelayanan,'yes') ?></td>
         <td><?= $data->dokter ?></td>
         <td>
             <ul>

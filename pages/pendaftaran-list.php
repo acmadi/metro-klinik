@@ -46,7 +46,7 @@ include_once '../inc/functions.php';
         <td><?= isset($data->nama)?$data->nama:NULL ?></td>
         <td><?= $data->spesialisasi ?></td>
         <td align="center"><?= $data->no_antri ?></td>
-        <td align="center"><?= datefmysql($data->tanggal) ?></td>
+        <td align="center"><?= datetimefmysql($data->tanggal, true) ?></td>
         <td><?= $data->dokter ?></td>
         <td class='aksi' align='center'>
             <?php if ($data->kode_periksa === NULL) { ?>

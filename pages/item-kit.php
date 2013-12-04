@@ -1,6 +1,7 @@
 <?php
 $subNav = array(
-	"Basic Data ; barang.php ; #509601;",
+	"Barang Aktif ; barang.php ; #509601;",
+        "Barang Tidak Aktif ; barang-inactive.php ; #509601;",
         "Pelengkap ; pelengkap.php ; #509601;",
         "Item Kit ; item-kit.php ; #509601;"
 );

@@ -90,9 +90,9 @@ if ($method === 'barang') {
         left join pabrik p on (b.id_pabrik = p.id)
         left join golongan g on (b.id_golongan = g.id)
         left join satuan st on (b.satuan_kekuatan = st.id)
-        left join sediaan sd on (b.id_sediaan = sd.id) having nama_barang like ('%$q%')
+        left join sediaan sd on (b.id_sediaan = sd.id) where b.aktif = '1' having nama_barang like ('%$q%')
         UNION
-        select i.id, b.barcode, b.nama, b.id_pabrik, b.id_golongan, b.kekuatan, b.satuan_kekuatan, 
+        select i.id, b.barcode, b.nama, b.id_pabrik, b.id_golongan, IF(b.kekuatan!='0',1,1) as kekuatan, b.satuan_kekuatan, 
         p.nama as pabrik, g.nama as golongan, st.nama as satuan, sd.nama as sediaan,
         i.nama as nama_barang, i.status, i.harga_jual
         from item_kit i
@@ -102,7 +102,7 @@ if ($method === 'barang') {
         left join pabrik p on (b.id_pabrik = p.id)
         left join golongan g on (b.id_golongan = g.id)
         left join satuan st on (b.satuan_kekuatan = st.id)
-        left join sediaan sd on (b.id_sediaan = sd.id) group by i.id having nama_barang like ('%$q%')
+        left join sediaan sd on (b.id_sediaan = sd.id) where b.aktif = '1' group by i.id having nama_barang like ('%$q%')
         ");
     while ($data = mysql_fetch_object($sql)) {
         $rows[] = $data;
@@ -202,13 +202,13 @@ if ($method === 'get_attr_penerimaan') {
 }
 
 if ($method === 'get_next_no_rm') {
-    $sql = mysql_query("select substr(id,12,3) as no_rm from pelanggan where date(waktu_daftar) = '".date("Y-m-d")."' order by waktu_daftar desc limit 1");
+    $sql = mysql_query("select substr(id,4,3) as no_rm from pelanggan where date(waktu_daftar) = '".date("Y-m-d")."' order by waktu_daftar desc limit 1");
     $row = mysql_fetch_object($sql);
     
     if (isset($row->no_rm)) {
-        $no_rm = "MDN".date("Ymd").str_pad((string)($row->no_rm+1), 3, "0", STR_PAD_LEFT);
+        $no_rm = "KS.".str_pad((string)($row->no_rm+1), 3, "0", STR_PAD_LEFT).".".date("m/Y");
     } else {
-        $no_rm = "MDN".date("Ymd")."001";
+        $no_rm = "KS.001.".date("m/Y");
     }
     die(json_encode(array('no_rm' => $no_rm)));
 }

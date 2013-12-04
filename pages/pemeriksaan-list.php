@@ -48,7 +48,7 @@ $(function() {
 </thead>
 <tbody>
     <?php
-    $limit = 10;
+    $limit = 5;
     $page  = $_GET['page'];
     if ($_GET['page'] === '') {
         $page = 1;
@@ -77,7 +77,7 @@ $(function() {
         <tr valign="top" id="<?= $data->id ?>" class="detail <?= ($id !== $data->id)?'odd':NULL ?>">
             <td align="center"><?= ($id !== $data->id)?($no+$offset):NULL ?></td>
             <td align="center"><?= ($id !== $data->id)?$data->id:NULL ?></td>
-            <td align="center"><?= ($id !== $data->id)?datefmysql($data->tanggal):NULL ?></td>
+            <td align="center"><?= ($id !== $data->id)?datetimefmysql($data->tanggal, true):NULL ?></td>
             <td title="<img src='img/pemeriksaan/<?= $data->foto ?>' width='200px' />"><?= ($id !== $data->id)?$data->pasien:NULL ?></td>
             <td><?= ($id !== $data->id)?$data->dokter:NULL ?></td>
             <td><?= ($id !== $data->id)?$data->anamnesis:NULL ?></td>

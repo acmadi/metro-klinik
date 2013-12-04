@@ -9,7 +9,7 @@ function apotek_atribute() {
 }
 
 function load_data_barang($param) {
-    $q = NULL;
+    $q = "and b.aktif = '".$_GET['aktif']."'";
     if ($param['id'] !== '') {
         $q.= "and b.id = '".$param['id']."'";
     }

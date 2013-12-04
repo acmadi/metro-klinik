@@ -41,7 +41,7 @@ function hitung_detail_total(jml, jum, diskon_rupiah, diskon_persen, harga_jual,
     //$('#diskon_rupiah'+jml).val(numberToCurrency(parseInt(dr)));
     //$('#diskon_persen'+jml).val(dp);
     var subtotal = (jum*harga_jual*isi_satuan);
-    $('#subtotal'+jml).html(numberToCurrency(parseInt(subtotal)));
+    $('#subtotal'+jml).html(numberToCurrency(Math.ceil(subtotal)));
     hitung_total_penjualan();
 }
 
@@ -94,16 +94,74 @@ function add_new_rows_ik(id_item_kit, nama_brg, jumlah, harga_jual) {
                 '<td align=center>'+jml+'</td>'+
                 '<td>&nbsp;'+nama_brg+' <input type=hidden name=id_ikit[] value="'+id_item_kit+'" class=id_ikit id=id_ikit'+jml+' /></td>'+
                 '<td><input type=text name=jumlah[] id=jumlah'+jml+' value="'+jumlah+'" style="text-align: center;" /></td>'+
-                '<td align=center><input type=hidden name=harga_jual[] id=harga_jual'+jml+' value='+numberToCurrency(harga_jual)+' />KIT</td>'+
+                '<td align=center><input type=hidden name=harga_jual[] id=harga_jual'+jml+' value='+numberToCurrency(harga_jual)+' /><input type=hidden name=isi_satuan[] value=1 id=isi_satuan'+jml+' />KIT</td>'+
                 '<td align=center>-</td>'+
                 '<td align=center id=sisa'+jml+'>-</td>'+
                 '<td align=right id=hargajual'+jml+'>'+numberToCurrency(harga_jual)+' <input type=hidden name=harga_jual[] value="'+harga_jual+'" id=harga_jual'+jml+' /></td>'+
-                '<td><input type=text name=diskon_rupiah_ik[] style="text-align: right;" id=diskon_rupiah_ik'+jml+' value="0" onblur="FormNum(this)" /></td>'+
-                '<td><input type=text name=diskon_persen_ik[] style="text-align: center;" id=diskon_persen_ik'+jml+' value="0" /></td>'+
+                '<td><input type=text name=diskon_rupiah_ik[] style="text-align: right;" id=diskon_rupiah'+jml+' value="0" onblur="FormNum(this)" /></td>'+
+                '<td><input type=text name=diskon_persen_ik[] style="text-align: center;" id=diskon_persen'+jml+' value="0" /></td>'+
                 '<td align=right id=subtotal'+jml+'>'+numberToCurrency(jumlah*harga_jual)+'</td>'+
                 '<td align=center><img onclick=removeMe(this); title="Klik untuk hapus" src="img/icons/delete.png" class=add_kemasan align=left /></td>'+
               '</tr>';
     $('#pesanan-list tbody').append(str);
+    $('#jumlah'+jml).blur(function() {
+        var jumlah      = $('#jumlah'+jml).val();
+        var hrg_jual    = parseInt(currencyToNumber($('#hargajual'+jml).html()));
+        var isi_satuan  = parseInt($('#isi_satuan'+jml).val());
+        var diskon      = 0;
+        if ($('#diskon_rupiah'+jml).val() !== '0') {
+            diskon  = parseInt(currencyToNumber($('#diskon_rupiah'+jml).val()));
+        }
+        else if ($('#diskon_persen'+jml).val() !== '0') {
+            var diskonpr= $('#diskon_persen'+jml).val()/100;
+            diskon  = ((jumlah*hrg_jual)*diskonpr);
+        }
+        
+        var subtotal    = (hrg_jual*jumlah*isi_satuan)-diskon;
+        $('#subtotal'+jml).html(numberToCurrency(parseInt(subtotal)));
+        hitung_total_penjualan();
+    });
+    $('#diskon_rupiah'+jml).blur(function() {
+        if ($(this).val() !== '0') {
+            $('#diskon_persen'+jml).val('0');
+        }
+        var jumlah      = $('#jumlah'+jml).val();
+        var hrg_jual    = parseInt(currencyToNumber($('#hargajual'+jml).html()));
+        var isi_satuan  = parseInt($('#isi_satuan'+jml).val());
+        var diskon      = 0;
+        if ($('#diskon_rupiah'+jml).val() !== '0') {
+            diskon  = parseInt(currencyToNumber($('#diskon_rupiah'+jml).val()));
+        }
+        else if ($('#diskon_persen'+jml).val() !== '0') {
+            var diskonpr= $('#diskon_persen'+jml).val()/100;
+            diskon  = ((jumlah*hrg_jual)*diskonpr);
+        }
+        
+        var subtotal    = (hrg_jual*jumlah*isi_satuan)-diskon;
+        $('#subtotal'+jml).html(numberToCurrency(Math.ceil(subtotal)));
+        hitung_total_penjualan();
+    });
+    $('#diskon_persen'+jml).blur(function() {
+        if ($(this).val() !== '0') {
+            $('#diskon_rupiah'+jml).val('0');
+        }
+        var jumlah      = $('#jumlah'+jml).val();
+        var hrg_jual    = parseInt(currencyToNumber($('#hargajual'+jml).html()));
+        var isi_satuan  = parseInt($('#isi_satuan'+jml).val());
+        var diskon      = 0;
+        alert(jumlah+' - '+hrg_jual+' - '+isi_satuan);
+        if ($('#diskon_rupiah'+jml).val() !== '0') {
+            diskon  = parseInt(currencyToNumber($('#diskon_rupiah'+jml).val()));
+        }
+        else if ($('#diskon_persen'+jml).val() !== '0') {
+            var diskonpr= $('#diskon_persen'+jml).val()/100;
+            diskon  = ((jumlah*hrg_jual)*diskonpr);
+        }
+        
+        var subtotal    = (hrg_jual*jumlah*isi_satuan)-diskon;
+        $('#subtotal'+jml).html(numberToCurrency(Math.ceil(subtotal)));
+        hitung_total_penjualan();
+    });
     hitung_total_penjualan();
 }
 function add_new_rows(id_brg, nama_brg, jumlah, id_packing) {
@@ -197,7 +255,7 @@ function add_new_rows(id_brg, nama_brg, jumlah, id_packing) {
         }
         
         var subtotal    = (hrg_jual*jumlah*isi_satuan)-diskon;
-        $('#subtotal'+jml).html(numberToCurrency(parseInt(subtotal)));
+        $('#subtotal'+jml).html(numberToCurrency(Math.ceil(subtotal)));
         hitung_total_penjualan();
     });
     $('#diskon_persen'+jml).blur(function() {
@@ -217,7 +275,7 @@ function add_new_rows(id_brg, nama_brg, jumlah, id_packing) {
         }
         
         var subtotal    = (hrg_jual*jumlah*isi_satuan)-diskon;
-        $('#subtotal'+jml).html(numberToCurrency(parseInt(subtotal)));
+        $('#subtotal'+jml).html(numberToCurrency(Math.ceil(subtotal)));
         hitung_total_penjualan();
     });
     $('#kemasan'+jml).change(function() {
@@ -564,6 +622,7 @@ function form_add() {
                     $('#barang').focus();
                     $.cookie('session', 'true');
                     $.cookie('formbayar', 'false');
+                    alert_refresh('Transaksi penjualan berhasil dilakukan');
                     cetak_struk(data.id);
                     $('#form_penjualannr').dialog().remove();
                     //alert_tambah('#barcode');

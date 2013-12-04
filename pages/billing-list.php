@@ -9,10 +9,10 @@ include_once '../inc/functions.php';
     <th width="10%">Waktu</th>
     <th width="25%">Pasien</th>
     <th width="10%">Tagihan (Rp.)</th>
-    <th width="10%">Diskon %</th>
+    <th width="5%">Diskon %</th>
     <th width="10%">Total (Rp.)</th>
     <th width="10%">Tunai (Rp.)</th>
-    <th width="10%">Cara Bayar</th>
+    <th width="5%">Cara Bayar</th>
     <th width="10%">Nama Bank</th>
     <th width="10%">No. Kartu</th>
     <th width="3%">#</th>
@@ -45,7 +45,7 @@ include_once '../inc/functions.php';
         <td align="center"><?= datetimefmysql($data->waktu, TRUE) ?></td>
         <td><?= $data->pasien ?></td>
         <td align="right"><?= rupiah($data->total) ?></td>
-        <td align="center"><?= rupiah($data->diskon) ?></td>
+        <td align="center"><?= $data->diskon ?></td>
         <td align="center"><?= rupiah($data->total-($data->total*($data->diskon/100))) ?></td>
         <td align="right"><?= rupiah($data->uang_serah) ?></td>
         <td align="center"><?= $data->cara_bayar ?></td>

@@ -475,7 +475,7 @@ function analisis_abc__load_data($param) {
 }
 
 function penjualan_load_data_barang($id) {
-    $sql = "select b.*, s.nama as satuan, dp.qty, dp.harga_jual, 
+    $sql = "select b.*, p.bayar, s.nama as satuan, dp.qty, dp.harga_jual, dp.disc_pr, dp.disc_rp,
         p.waktu, p.total, p.tuslah, p.embalage, p.ppn, p.diskon_persen, p.diskon_rupiah, p.id_resep, pl.nama as pelanggan,
         (dp.qty*dp.harga_jual) as subtotal from detail_penjualan dp
         join penjualan p on (dp.id_penjualan = p.id)
@@ -493,7 +493,7 @@ function penjualan_load_data_barang($id) {
 }
 
 function penjualan_load_data_barang_nota($id) {
-    $sql = "select id, nama_barang as nama, jumlah as qty, harga_jual from detail_penjualan_nota where id_penjualan = '$id'";
+    $sql = "select id, nama_barang as nama, jumlah as qty, harga_jual, disc_rp, disc_pr from detail_penjualan_nota where id_penjualan = '$id'";
     $query = mysql_query($sql);
     $data = array();
     while ($row = mysql_fetch_object($query)) {
@@ -628,7 +628,7 @@ function load_data_pendaftaran($param) {
     if ($param['limit'] !== '') {
         $limit = " limit ".$param['start'].", ".$param['limit']."";
     }
-    $sql = "select p.*, pl.nama, s.nama as spesialisasi, d.nama as dokter, pm.id as kode_periksa, pm.id_auto as id_pemeriksaan, 
+    $sql = "select p.*, pl.nama, s.nama as spesialisasi, d.nama as dokter, pm.id as kode_periksa, pm.id_auto as id_pemeriksaan, pm.tanggal as waktu_pelayanan,
         pm.no_antri, pm.id_spesialisasi, pm.tanggal
         from pendaftaran p
         join pelanggan pl on (p.id_pelanggan = pl.id)

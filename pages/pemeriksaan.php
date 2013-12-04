@@ -300,6 +300,10 @@ function delete_pemeriksaan(id, id_daftar, page) {
         }
     });
 }
+
+function paging(page, search) {
+    load_data_pemeriksaan(page, search);
+}
 </script>
 <h1>Pemeriksaan</h1>
 <hr>

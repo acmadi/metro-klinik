@@ -15,6 +15,7 @@ $pageTitles['typography.php'] = "Typography";
 $pageTitles['accordions.php'] = "Accordions";
 $pageTitles['sidebars.php'] = "Sidebars";
 $pageTitles['barang.php'] = "Barang";
+$pageTitles['barang-inactive.php'] = "Barang Tidak Aktif";
 $pageTitles['item-kit.php'] = "Item Kit";
 $pageTitles['pabrik.php'] = "Pabrik";
 $pageTitles['pelanggan.php'] = "Customer";

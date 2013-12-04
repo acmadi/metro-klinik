@@ -42,6 +42,7 @@ $(function() {
         'id' => $_GET['id_barang'],
         'limit' => $limit,
         'start' => $offset,
+        'aktif' => $_GET['aktif'],
         'search' => $_GET['search']
     );
     $master_barang = load_data_barang($param);

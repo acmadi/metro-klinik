@@ -313,11 +313,15 @@ if ($method === 'save_barang') {
                     }
                 }
             }
-            
         }
     }
     
     die(json_encode(array('status' => TRUE, 'id_barang' => $id)));
+}
+
+if ($method === 'delete_kemasan') {
+    $id_kemasan = $_GET['id_kemasan'];
+    mysql_query("delete from kemasan where id = '$id_kemasan'");
 }
 
 if ($method === 'delete_barang') {
@@ -916,9 +920,9 @@ if ($method === 'delete_penyakit') {
 if ($method === 'save_item_kit') {
     $nama       = $_POST['nama_item'];
     $margin_pr  = $_POST['margin_pr'];
-    $margin_rp  = $_POST['margin_rp'];
+    $margin_rp  = currencyToNumber($_POST['margin_rp']);
     $diskon_pr  = $_POST['diskon_pr'];
-    $diskon_rp  = $_POST['diskon_rp'];
+    $diskon_rp  = currencyToNumber($_POST['diskon_rp']);
     $harga_jual = $_POST['harga_jual'];
     $id_item    = $_POST['id_item_kit'];
     

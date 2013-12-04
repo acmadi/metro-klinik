@@ -470,7 +470,7 @@ function load_data_barang(page, search, id) {
     $.ajax({
         url: 'pages/barang-list.php',
         cache: false,
-        data: 'page='+pg+'&search='+src+'&id_barang='+id_barg+'&aktif=1',
+        data: 'page='+pg+'&search='+src+'&id_barang='+id_barg+'&aktif=0',
         success: function(data) {
             $('#result-barang').html(data);
         }
