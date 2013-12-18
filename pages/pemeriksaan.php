@@ -13,6 +13,11 @@ include_once("pages/message.php");
 $.cookie('session','false');
 $(function() {
     load_data_pemeriksaan();
+    $('#search').focus();
+    $('#search').keyup(function() {
+        var value = $(this).val();
+        load_data_pemeriksaan('',value,'');
+    });
     $('#button').button({
         icons: {
             primary: 'ui-icon-newwin'
@@ -26,6 +31,7 @@ $(function() {
         }
     }).click(function() {
         load_data_pemeriksaan();
+        $('#search').val('');
     });
     $(document).on('keydown', function(e) {
         if (e.keyCode === 120) {
@@ -33,10 +39,6 @@ $(function() {
                 form_add();
             }
         }
-    });
-    
-    $('#search').click(function() {
-        load_data_penjualan();
     });
 });
 
@@ -269,6 +271,7 @@ function load_data_pemeriksaan(page, search, id) {
     if (page === undefined) { var pg = ''; }
     if (search === undefined) { var src = ''; }
     if (id === undefined) { var id_barg = ''; }
+    
     $.ajax({
         url: 'pages/pemeriksaan-list.php',
         cache: false,
@@ -301,7 +304,7 @@ function delete_pemeriksaan(id, id_daftar, page) {
     });
 }
 
-function paging(page, search) {
+function paging(page, tab, search) {
     load_data_pemeriksaan(page, search);
 }
 </script>
@@ -309,6 +312,7 @@ function paging(page, search) {
 <hr>
 <!--<button id="button">Pemeriksaan (F9)</button>-->
 <button id="reset">Reset</button>
+<?= form_input('search', NULL, 'id=search placeholder="Search pasien / dokter..." class=search size=25') ?>
 <div id="result-pemeriksaan">
     
 </div>

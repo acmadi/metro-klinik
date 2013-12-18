@@ -234,7 +234,7 @@ function cetak_nota(id_billing) {
 <hr>
 <button id="button">Tambah Data</button>
 <button id="reset">Reset</button>
-<?= form_input('search', NULL, 'id=search placeholder="Search ..." class=search') ?>
+<?= form_input('search', NULL, 'id=search placeholder="Search pasien ..." class=search') ?>
 <div id="result-billing">
     
 </div>

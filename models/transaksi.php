@@ -44,7 +44,7 @@ function pemesanan_load_data($param) {
         join satuan st on (st.id = km.id_kemasan)
         left join users u on (p.id_users = u.id)
         left join karyawan k on (u.id_karyawan = k.id)
-        where p.id is not NULL $q order by p.tanggal desc";
+        where p.id is not NULL $q order by p.id desc";
     //echo $sql;
     $query = mysql_query($sql.$limit);
     $data = array();
@@ -507,6 +507,9 @@ function pemeriksaan_load_data($param) {
     if ($param['id'] !== '') {
         $q.=" and p.id = '".$param['id']."'";
     }
+    if ($param['search'] !== '' and $param['search'] !== 'undefined') {
+        $q.=" and (pl.nama like ('%".$param['search']."%') or d.nama like ('%".$param['search']."%'))";
+    }
     $limit = " limit ".$param['start'].", ".$param['limit']."";
     $sql = "select p.*, pl.nama as pasien, d.nama as dokter
         from pemeriksaan p
@@ -816,13 +819,16 @@ function load_data_billing($param) {
     if ($param['id'] !== '') {
         $q.="";
     }
+    if ($param['search'] !== '' and $param['search'] !== 'undefined') {
+        $q.=" and pl.nama like ('%".$param['search']."%')";
+    }
     $limit = " limit ".$param['start'].", ".$param['limit']."";
     $sql = "select pb.*, pl.nama as pasien, b.nama as nama_bank
         from pembayaran_billing pb
         join pendaftaran pdf on (pb.id_pendaftaran = pdf.id)
         join pelanggan pl on (pl.id = pdf.id_pelanggan)
         left join bank b on (b.id = pb.id_bank)
-        where pb.id is not NULL";
+        where pb.id is not NULL $q";
     $query = mysql_query($sql.$limit);
     $data = array();
     while ($row = mysql_fetch_object($query)) {

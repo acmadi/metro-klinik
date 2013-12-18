@@ -1,5 +1,6 @@
 <?php
 include_once '../config/database.php';
+include_once '../inc/functions.php';
 $method = isset($_GET['method'])?$_GET['method']:NULL;
 $q      = isset($_GET['q'])?$_GET['q']:NULL;
 if ($method === 'login') {
@@ -202,13 +203,14 @@ if ($method === 'get_attr_penerimaan') {
 }
 
 if ($method === 'get_next_no_rm') {
-    $sql = mysql_query("select substr(id,4,3) as no_rm from pelanggan where date(waktu_daftar) = '".date("Y-m-d")."' order by waktu_daftar desc limit 1");
+    $sql = mysql_query("select substr(id,5,3) as no_rm from pelanggan where date(waktu_daftar) like '%".date("Y-m")."%' order by waktu_daftar desc limit 1");
+    //echo "select substr(id,5,3) as no_rm from pelanggan where date(waktu_daftar) like '%".date("Y-m")."%' order by waktu_daftar desc limit 1";
     $row = mysql_fetch_object($sql);
     
     if (isset($row->no_rm)) {
-        $no_rm = "KS.".str_pad((string)($row->no_rm+1), 3, "0", STR_PAD_LEFT).".".date("m/Y");
+        $no_rm = "KSS.".str_pad((string)($row->no_rm+1), 3, "0", STR_PAD_LEFT).".".date("m/Y");
     } else {
-        $no_rm = "KS.001.".date("m/Y");
+        $no_rm = "KSS.001.".date("m/Y");
     }
     die(json_encode(array('no_rm' => $no_rm)));
 }
@@ -375,7 +377,9 @@ if ($method === 'tindakan') {
 }
 
 if ($method === 'generate_new_sp') {
-    $sql = mysql_query("select substr(id, 4,3) as id  from pemesanan order by tanggal desc limit 1");
+    $tanggal = date2mysql($_GET['tanggal']);
+    $moyear  = substr($tanggal, 0, 7);
+    $sql = mysql_query("select substr(id, 4,3) as id  from pemesanan where tanggal like ('%".$moyear."%') order by tanggal desc limit 1");
     $row = mysql_fetch_object($sql);
     if (!isset($row->id)) {
         $result['sp'] = "SP.001/".date("m/Y");

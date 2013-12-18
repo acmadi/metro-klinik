@@ -187,7 +187,21 @@ function form_add() {
         $('#id_supplier').val(data.id);
         $('#barang').focus();
     });
-    $('#tanggal,#tanggal_datang').datepicker({
+    $('#tanggal').datepicker({
+        onSelect: function() {
+            var tanggal = $(this).val();
+            $.ajax({
+                url: 'models/autocomplete.php?method=generate_new_sp',
+                data: 'tanggal='+tanggal,
+                dataType: 'json',
+                cache: false,
+                success: function(data) {
+                    $('#no_sp').val(data.sp);
+                }
+            });
+        }
+    });
+    $('#tanggal_datang').datepicker({
         changeYear: true,
         changeMonth: true
     });
@@ -220,6 +234,7 @@ function form_add() {
             $.cookie('session', 'true');
             $.ajax({
                 url: 'models/autocomplete.php?method=generate_new_sp',
+                data: 'tanggal=<?= date("d/m/Y") ?>',
                 dataType: 'json',
                 cache: false,
                 success: function(data) {
